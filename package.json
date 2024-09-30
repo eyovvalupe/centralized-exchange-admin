@@ -1,0 +1,98 @@
+{
+  "name": "sungame-admin",
+  "private": true,
+  "version": "3.0.0",
+  "description": "sungame admin",
+  "scripts": {
+    "dev": "cross-env --max_old_space_size=4096 vite --host 0.0.0.0",
+    "build": "rimraf dist && cross-env vite build",
+    "build:dev": "rimraf dist && cross-env vite build --mode dev",
+    "build:staging": "rimraf dist && cross-env vite build --mode staging",
+    "report": "rimraf dist && cross-env vite build",
+    "vis": "set vis=true && vite build",
+    "lint-fix": "eslint --fix --ext .js,.ts,.jsx,.tsx,.vue src",
+    "lint-prettier": "prettier --write  \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
+    "lint": "npm run lint-prettier && npm run lint-fix",
+    "preview": "vite preview",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
+    "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^9.5.0",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "@zxcvbn-ts/core": "^3.0.4",
+    "animate.css": "^4.1.1",
+    "autoprefixer": "^10.4.13",
+    "axios": "^1.1.3",
+    "clipboard": "^2.0.11",
+    "dayjs": "^1.11.7",
+    "element-plus": "^2.5.0",
+    "js-cookie": "^3.0.1",
+    "mitt": "^3.0.0",
+    "nprogress": "^0.2.0",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
+    "pinia": "^2.0.23",
+    "pinia-plugin-persistedstate": "^3.1.0",
+    "postcss": "^8.4.19",
+    "qrcode.vue": "^3.4.1",
+    "qs": "^6.11.0",
+    "socket.io-client": "^2.5.0",
+    "tailwindcss": "^3.2.4",
+    "vue": "^3.2.45",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/eslint-parser": "^7.19.1",
+    "@vitejs/plugin-legacy": "^2.3.1",
+    "@vitejs/plugin-vue": "^3.2.0",
+    "@vitejs/plugin-vue-jsx": "^2.1.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.27.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.7.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-visualizer": "^5.8.3",
+    "sass": "^1.56.1",
+    "svg-sprite-loader": "^6.0.11",
+    "unplugin-auto-import": "^0.15.3",
+    "unplugin-vue-components": "^0.24.1",
+    "unplugin-vue-define-options": "^0.12.8",
+    "vite": "^3.2.3",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-mock": "^2.9.6",
+    "vue-eslint-parser": "^9.1.0"
+  },
+  "homepage": "",
+  "keywords": [],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{vue,js,ts,tsx,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": ">= 16.17.0"
+  }
+}
