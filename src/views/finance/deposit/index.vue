@@ -28,21 +28,22 @@
               <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <template v-else-if="item.prop === 'uid'">
+            <template v-else-if="item.prop === 'uid' || item.prop === 'order_no'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <template v-else-if="item.prop === 'order_no'">
+            <!-- 订单号展示 -->
+            <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
                 <span v-if="scope.row[item.prop]"> ...{{
                   scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
               </el-tooltip>
-            </template>
+            </template> -->
             <span v-else-if="item.prop == 'currency'" align="center">
              {{   scope.row[item.prop]=='main'?'交易账户':scope.row[item.prop] }}
             </span>
             <span v-else-if="item.prop == 'channel'" align="center">
-             {{   scope.row[item.prop]=='crypto'?'加密货币':'手动'}}
+             {{   scope.row[item.prop]=='crypto'?'加密货币':'手动操作'}}
             </span>
             <span v-else-if="item.prop == 'status'" class="status-bg"
               :class="scope.row[item.prop] == 'unknown' ? 'status-yellow':scope.row[item.prop]">
@@ -53,7 +54,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" align="center">
+        <el-table-column label="操作" width="220" align="center">
           <template #default="scope">
             <el-button link  :type="scope.row.status == 'success'?'info':'primary'"  :disabled="scope.row.status == 'success'"
               @click="showDialog(scope.row, 'showDialog')">充值审核</el-button>
@@ -100,16 +101,16 @@ const currentLastPage = ref(1)
 const currentPage = ref(1)
 const status = ref('')
 const columnBase = reactive([
-  { prop: 'order_no', label: '订单号',width: 100,  align: 'center' },
-  { prop: 'uid', label: 'UID', width: 100, align: 'center' },
-  { prop: 'username', label: '用户名', align: 'center', width: 130 },
-  { prop: 'father_username', label: '代理', align: 'center' },
+  { prop: 'order_no', label: '订单号',width: 200,  align: 'center' },
+  { prop: 'uid', label: 'UID', width: 120, align: 'center' },
+  { prop: 'username', label: '用户名', align: 'center', width: 180 },
+  { prop: 'father_username', label: '代理', width: 180, align: 'center' },
   { prop: 'channel', label: '渠道', width: 80, align: 'center' },
   { prop: 'currency', label: '币种', width: 90, align: 'center' },
-  { prop: 'amount', label: '充值金额', align: 'center' },
-  { prop: 'status', label: '状态', width: 70, align: 'center' },
+  { prop: 'amount', label: '充值金额', width: 120, align: 'center' },
   { prop: 'remarks', label: '失败原因',align: 'center' },
   { prop: 'created', label: '时间', width: 120, align: 'center' },
+  { prop: 'status', label: '状态', width: 70, align: 'center' },
 ])
 const searchValue = ref('')
 const options2 = [

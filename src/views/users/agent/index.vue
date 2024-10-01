@@ -22,7 +22,7 @@
           </div>
           <div>
             <div>
-              <el-tag v-if="treeCurrInfo.remarks" type="primary" closable effect="plain" @close="closeTag" round
+              <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round
                 class="mr-2">
                 {{ treeCurrInfo.username }}
               </el-tag>
@@ -119,12 +119,12 @@ const treeData = ref([])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center', width: 90 },
-  { prop: 'username', width: 130,label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '代理', align: 'center' },
+  { prop: 'uid', label: 'UID', align: 'center', width: 120 },
+  { prop: 'username', width: 150,label: '用户名', align: 'center' },
+  { prop: 'father_username', label: '上级代理',width: 150, align: 'center' },
   { prop: 'sub_net_users', label: '直推/网络', align: 'center', width: 80 },
-  { prop: 'deposit', label: '充值', align: 'center', width: 80 },
-  { prop: 'withdraw', label: '提现', align: 'center', width: 80 },
+  { prop: 'deposit', label: '充值', align: 'center', width: 120 },
+  { prop: 'withdraw', label: '提现', align: 'center', width: 120 },
   { prop: 'enabled', label: '业务权限', align: 'center', width: 85 },
   // { prop: 'locked', label: '登录权限', align: 'center', width: 85 },
   { prop: 'remarks', label: '备注', align: 'center' }])

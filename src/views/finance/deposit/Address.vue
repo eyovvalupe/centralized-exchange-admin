@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="充值地址" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="820" class="reset-el-styte" title="充值地址" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
      <div class="text-center" style="min-height: 100px;" v-loading="loading">
       <template v-if="dataInfo">
@@ -17,7 +17,8 @@
             </div>
             <div class="table-list flex">
               <span>地址</span>
-              <span  class="w-7/12 text-center cursor-pointer"  @click="openLink">
+              <!-- @click="openLink" -->
+              <span  class="w-7/12 text-center cursor-pointer" @click="copy(addressText)">
                   <a class="status success"> {{  networkArr[0]  }}</a>
                   <a class="status close"> {{  networkArr[1]  }}</a>
                   <a class="status blue"> {{  networkArr[2]  }}</a>
@@ -32,6 +33,7 @@
 <script setup>
 import { apiAddress } from '/@/api/modules/business/recharge-order.api'
 import { ref, reactive, onMounted } from 'vue'
+import { copy } from '/@/utils'
 import { ElMessage, ElMessageBox } from 'element-plus'
 // import QrcodeVue from "qrcode.vue"
 
@@ -54,18 +56,20 @@ const dataInfo = ref(null)
 const loading = ref(false)
 const show = ref(true)
 const networkArr=ref('')
+const addressText = ref('')
 const getData=()=>{
   loading.value = true
   apiAddress({order_no:props.data.order_no}).then(res=>{
     console.log(res)
     dataInfo.value = res;
     const adr=res.address;
+    addressText.value = res.address;
     networkArr.value = [adr.substring(0,4),adr.substring(4,adr.length-4),adr.substring(adr.length-4)]
     loading.value = false
   })
 }
 const openLink=()=>{
-  window.open(urls[dataInfo.value.network]+dataInfo.value.address)
+  // window.open(urls[dataInfo.value.network]+dataInfo.value.address)
 }
 const emit = defineEmits(['close', 'success'])
 

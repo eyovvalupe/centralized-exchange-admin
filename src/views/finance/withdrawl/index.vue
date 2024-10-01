@@ -5,7 +5,7 @@
       <div class="flex justify-end p-2 pb-0" style="min-width: 500px;">
         <el-button :type="status == item.value ? 'active-green' : 'default'" v-for="(item) in options" :key="item.value"
           @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        <el-input v-model="searchValue" class="ml-2" size="large" placeholder="订单号/UID/用户名" :suffix-icon="Search" />
+        <el-input v-model="searchValue" class="ml-2" size="large" placeholder="UID/用户名" :suffix-icon="Search" />
         <!-- <el-select v-model="status" clearable placeholder="请选择"  class="ml-2" >
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select> -->
@@ -23,16 +23,20 @@
             <span v-if="item.prop == 'created'" label="时间" align="center">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
+            <template v-else-if="item.prop === 'uid' || item.prop === 'order_no'">
+              <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
+                scope.row[item.prop] }}</span>
+            </template>
             <template v-else-if="item.prop === 'username'">
               <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <template v-else-if="item.prop === 'order_no'">
+            <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
                 <span v-if="scope.row[item.prop]"> ...{{
                   scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
               </el-tooltip>
-            </template>
+            </template> -->
             <span v-else-if="item.prop == 'currency'" align="center">
               {{ scope.row[item.prop] == 'main' ? '交易账户' : scope.row[item.prop] }}
             </span>
@@ -91,17 +95,18 @@ const currentPage = ref(1)
 const currentLastPage = ref(1)
 const status = ref('')
 const columnBase = reactive([
-{ prop: 'uid', label: 'UID', width: 100, align: 'center' },
-  { prop: 'order_no', label: '订单号', width: 100, align: 'center' },
-  { prop: 'username', label: '用户名', width: 130, align: 'center' },
+
+  { prop: 'order_no', label: '订单号', width: 200, align: 'center' },
+  { prop: 'uid', label: 'UID', width: 120, align: 'center' },
+  { prop: 'username', label: '用户名', width: 180, align: 'center' },
   { prop: 'father_username', label: '代理', width: 100, align: 'center' },
   { prop: 'currency', label: '币种', width: 90, align: 'center' },
   { prop: 'amount', label: '提现金额', width: 100, align: 'center' },
   { prop: 'fee', label: '手续费', width: 100, align: 'center' },
   // { prop: 'transfer', label: '到账金额', width: 100, align: 'center' },
-  { prop: 'status', label: '状态', width: 90, align: 'center' },
   { prop: 'remarks', label: '失败原因', align: 'center' },
   { prop: 'created', label: '时间', width: 120, align: 'center' },
+  { prop: 'status', label: '状态', width: 90, align: 'center' },
 ])
 const searchValue = ref('')
 
