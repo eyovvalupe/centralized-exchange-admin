@@ -1,5 +1,5 @@
 <template>
-<el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="绑定谷歌验证器" v-model="googleDialogShow" :append-to-body="true" @close="emit( 'close', false )">
+<el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="绑定谷歌验证器" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
   <el-form ref="ruleForm" label-position="top" :model="formState" v-loading="loadingPage" status-icon
     class="login-ruleForm">
     <div class="form-center" style="margin-bottom: 30px; display: flex; justify-content: center">
@@ -36,7 +36,7 @@
 
 <script setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, defineEmits } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import { getGoogleCode, bindGoogleCode } from '/@/api/modules/login.api'
 import { useRouter } from 'vue-router'
@@ -53,6 +53,11 @@ const props = defineProps({
     default: false,
   },
 })
+
+function open() {
+  console.log(2222222222)
+  show.value = true
+}
 const googleDialogShow = computed({
   get: () => props.dialogShow,
   set: val => emit('close', val),
@@ -213,7 +218,11 @@ function loginHandle() {
       loading.value = false
     })
 }
+defineExpose({
+  open
+})
 const emit = defineEmits( ['close', 'success'] )
+
 </script>
 
 <style lang="scss" scoped>

@@ -152,9 +152,8 @@
     <Suspense>
       <UpdatePassword v-model="dialogShow" :action="dialogType" @close="dialogShow = false" :key="dialogShow" />
     </Suspense>
-    <Suspense>
-      <GoogleValidator v-model="googleDialogShow" @close="googleDialogShow = false" />
-    </Suspense>
+      <GoogleValidator ref="googleDialogShowRef" />
+      <!-- <GoogleValidator ref="googleDialogShowRef" ></GoogleValidator> -->
   </section>
   <div class="service">
     <!-- @close="handleClose" -->
@@ -167,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, getCurrentInstance, Fragment, watch } from 'vue'
+import { ref, computed, onMounted, getCurrentInstance, Fragment, watch,unref } from 'vue'
 import { UserFilled, FullScreen } from '@element-plus/icons-vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import serviceComponents from '../service/index.vue'
@@ -182,7 +181,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshRight } from '@element-plus/icons-vue'
 import { useFullscreen } from '@vueuse/core'
 import { ServiceChat } from '../service/components/common/ServiceChat'
-import GoogleValidator from '/@/views/layout/components/googleValidator/index.vue'
+import GoogleValidator from './components/index.vue'
+const googleDialogShowRef = ref(); // 实例化
 const useService = useServiceStore()
 const userStore = useUserStore()
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -268,12 +268,12 @@ const appStore = useAppStore()
 // 用户名
 const userName = computed(() => userStore.userInfo.username)
 const googlebind = computed(() => userStore.userInfo.googlebind)
-const goGooglePage = () => {
-  if (!googlebind.value) {
-    // router.push('/googleValidator')
-    googleDialogShow.value = true
-  }
-}
+// const goGooglePage = () => {
+//   if (!googlebind.value) {
+//     // router.push('/googleValidator')
+//     googleDialogShow.value = true
+//   }
+// }
 // 当前激活的tabs
 const tabs = computed(() => {
   return flatRoutes.value.filter(item => appStore.tabs.includes(item.name))
@@ -391,6 +391,13 @@ const logout = async () => {
 const closeUserDataDialog = () => {
   useCommon.userDataDialog = false
   useCommon.selectUser = true
+}
+// 在组件挂载时或事件触发时操作这个引用
+
+
+function goGooglePage(){
+  unref(googleDialogShowRef).open()
+  // this.$refs.googleDialogShowRef.openDialog(scope.row.userName)
 }
 </script>
 

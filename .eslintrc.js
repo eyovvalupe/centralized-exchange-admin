@@ -74,7 +74,7 @@ module.exports = {
     // 腾讯地图
     TMap : 'readonly'
   },
-  extends : ['standard', 'plugin:vue/vue3-essential', 'eslint:recommended', 'prettier'],
+  extends : ['standard', 'plugin:vue/vue3-essential', 'eslint:recommended', 'prettier','./.eslintrc-auto-import.json'],
   parser : 'vue-eslint-parser',
   parserOptions : {
     // ecmaVersion: 'latest',
