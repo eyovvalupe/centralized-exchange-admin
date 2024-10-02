@@ -69,7 +69,6 @@ onMounted(() => {
     }
   }
   form.status = '';
-  console.log(form, props.data);
 })
 const trigger = ['blur', 'change']
 

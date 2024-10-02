@@ -18,7 +18,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="emit('close', false)" :loading="isLoading">确定 </el-button>
+        <el-button type="primary" class="default_btn" @click="emit('close', false)">确定 </el-button>
       </span>
     </template>
   </el-dialog>
@@ -39,10 +39,6 @@ const props = defineProps({
   }
 })
 
-const ruleForm = ref(null)
-const formLabelWidth = ref(100)
-const loading = ref(false)
-const isLoading = ref(false)
 const show = ref(true)
 const address = ref('')
 const channel = ref('')
@@ -50,23 +46,10 @@ const account_name = ref('')
 const bank_name = ref('')
 const bank_card_number = ref('')
 
-const form = reactive({
-  order_no: '',
-  status: '',
-  safeword: '',
-  token: '',
-  remarks: ''
-})
 onMounted(() => {
-  for (const key in form) {
-    if (props.data && props.data[key] !== undefined) {
-      form[key] = props.data[key]
-    }
-  }
-  form.status = '';
   init();
 })
-const trigger = ['blur', 'change']
+
 const init=()=>{
   apiWithdrawAccount({order_no:props.order_no}).then(res=>{
     if(res){
@@ -78,10 +61,6 @@ const init=()=>{
     }
     // link.value = res
   })
-}
-const rules = {
-  status: [{ required: true, message: '', trigger }],
-  safeword: [{ required: true, message: '', trigger }]
 }
 
 const emit = defineEmits(['close', 'success'])
