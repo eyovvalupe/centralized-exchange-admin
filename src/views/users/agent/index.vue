@@ -121,7 +121,7 @@ const currentPage = ref(1)
 const columnBase = ref([
   { prop: 'uid', label: 'UID', align: 'center', width: 120 },
   { prop: 'username', width: 150,label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '上级代理',width: 150, align: 'center' },
+  { prop: 'father_username', label: '代理',width: 150, align: 'center' },
   { prop: 'sub_net_users', label: '直推/网络', align: 'center', width: 80 },
   { prop: 'deposit', label: '充值', align: 'center', width: 120 },
   { prop: 'withdraw', label: '提现', align: 'center', width: 120 },

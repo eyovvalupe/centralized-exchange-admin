@@ -159,15 +159,15 @@ function loginHandle() {
           userStore.SET_USERNAME(formState.username)
           userStore.SET_USERINFO(data)
           // 清空登陆信息
-          formState.account = ''
-          formState.password = ''
+          // formState.account = ''
+          // formState.password = ''
           first.value = ''
           second.value = ''
           third.value = ''
           fourth.value = ''
           fifth.value = ''
           sixth.value = ''
-          ruleForm.value.resetFields();
+          // ruleForm.value.resetFields();
           userStore.getAuthMatch().then(() => {
             if (!googlebind) {
               router.push('/googleValidator')

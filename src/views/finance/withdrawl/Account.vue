@@ -2,7 +2,10 @@
    <el-dialog :close-on-click-modal="false" width="540" class="reset-el-styte" title="提现账号" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
     <div class="p-2">
-asdf
+      <div>地址：地址 地址地址</div>
+      <div class="address-code">
+        <qrcode-vue :value="link" :size="188" level="H" />
+      </div>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -18,6 +21,7 @@ import { apiWithdrawAccount } from '/@/api/modules/business/withdrawl-order.api'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getSessionToken } from '/@/api/modules/base.api'
+import QrcodeVue from 'qrcode.vue'
 
 const props = defineProps({
   order_no: { // 行数据
@@ -31,6 +35,7 @@ const formLabelWidth = ref(100)
 const loading = ref(false)
 const isLoading = ref(false)
 const show = ref(true)
+const link = ref('')
 const form = reactive({
   order_no: '',
   status: '',
@@ -51,6 +56,7 @@ const trigger = ['blur', 'change']
 const init=()=>{
   apiWithdrawAccount({order_no:props.order_no}).then(res=>{
     console.log(res);
+    link.value = res
   })
 }
 const rules = {

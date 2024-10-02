@@ -1,22 +1,5 @@
 <template>
-  <el-form ref="ruleForm" :model="formState" :rules="rules" label-width="0" status-icon class="reset-el-styte">
-    <p class="tip_word">请输入登录密码</p>
-    <!-- <el-form-item prop="account">
-      <el-input
-        ref="account"
-        v-model="formState.account"
-        class="h50"
-        name="account"
-        placeholder="请输入用户名"
-        :clearable="true"
-        tabindex="1"
-        type="text"
-        maxlength="100"
-        autocomplete="off"
-        :prefix-icon="User"
-      />
-    </el-form-item> -->
-
+  <el-form ref="ruleForm" :model="formState" :rules="rules" label-width="0" status-icon class="login-ruleForm">
     <el-form-item prop="password">
       <el-input
         ref="password"
@@ -52,43 +35,9 @@
         :prefix-icon="Lock"
       />
     </el-form-item>
-
-    <!-- <p class="tip_word">请输入两步验证密码</p>
-    <el-form-item prop="verifyPassword">
-      <el-input
-        ref="verifyPassword"
-        v-model="formState.verifyPassword"
-        class="h50"
-        show-password
-        name="verifyPassword"
-        placeholder="请输入验证密码"
-        :clearable="true"
-        tabindex="2"
-        maxlength="16"
-        type="password"
-        autocomplete="off"
-        @keyup.enter="loginHandle"
-        :prefix-icon="Lock"
-      />
-    </el-form-item> -->
-
     <div class="form-text">谷歌验证码</div>
 
     <el-form-item class="input-items" prop="">
-      <!-- <el-input
-        ref="password"
-        v-model="formState.captcha"
-        class="h50"
-        show-password
-        name="password"
-        placeholder="请输入谷歌验证码"
-        :clearable="true"
-        tabindex="2"
-        maxlength="16"
-        type="password"
-        autocomplete="off"
-        @keyup.enter="loginHandle"
-      /> -->
       <el-input type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
       <el-input type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
       <el-input type="text" ref="int3" maxlength="1" v-model="third" @input="thirdChange" />
@@ -117,7 +66,6 @@ import { ref, onBeforeMount, reactive, computed } from 'vue'
 import { useUserStore } from '/@/store'
 import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
 import { updatePwd } from '/@/api/modules/login.api'
 import { set } from '@vueuse/core'
 

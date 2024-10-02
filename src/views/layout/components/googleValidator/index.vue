@@ -1,4 +1,5 @@
 <template>
+<el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="绑定谷歌验证器" v-model="googleDialogShow" :append-to-body="true" @close="emit( 'close', false )">
   <el-form ref="ruleForm" label-position="top" :model="formState" v-loading="loadingPage" status-icon
     class="login-ruleForm">
     <div class="form-center" style="margin-bottom: 30px; display: flex; justify-content: center">
@@ -12,10 +13,6 @@
           </div>
         </template>
       </el-input>
-      <!-- <span class="txt-gray text-sm leading-6 mt-2">
-        1、在您的手机上安装「Google Authentication」 <br>
-        2、在「Google Authentication」中创建一个账户，扫码或手动输入秘钥，完成“添加”
-      </span> -->
     </el-form-item>
     <div class="form-center my-5">谷歌验证码</div>
 
@@ -33,12 +30,8 @@
         绑定
       </el-button>
     </el-form-item>
-    <el-form-item style="margin-bottom: 14px">
-      <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="goSkipPage">
-        直接跳过，下次绑定
-      </el-button>
-    </el-form-item>
   </el-form>
+</el-dialog>
 </template>
 
 <script setup>
@@ -46,16 +39,24 @@ import { ElMessage, ElNotification } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import { getGoogleCode, bindGoogleCode } from '/@/api/modules/login.api'
-// import { useUserStore } from '/@/store'
 import { useRouter } from 'vue-router'
-// import { Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '/@/store'
 const router = useRouter()
 const ruleForm = ref()
-// const trigger = ['blur', 'change']
 const formState = reactive({})
 const loadingPage = ref(true)
 const loading = ref(false)
+const show = ref( false ) // 控制弹窗显示隐藏, 一直显示
+const props = defineProps({
+  googleDialogShow: {
+    type: Boolean,
+    default: false,
+  },
+})
+const googleDialogShow = computed({
+  get: () => props.dialogShow,
+  set: val => emit('close', val),
+})
 const disabledLogin = computed(() => {
   return !(
     first.value.length === 1 &&
@@ -69,16 +70,6 @@ const disabledLogin = computed(() => {
 
 const link = ref('')
 const qrcode = ref('')
-getGoogleCode().then(res => {
-  link.value = res.googlesecretqr
-  qrcode.value = res.googlesecret
-  if (res.googlebind) {
-    useUserStore().LOGOUT()
-    router.replace('/login')
-  }
-}).finally(() => {
-  loadingPage.value = false;
-})
 const copy = () => {
   const text = qrcode.value
   if (navigator.clipboard) {
@@ -194,6 +185,16 @@ function sixthChange(e) {
     int5.value.focus()
   }
 }
+getGoogleCode().then(res => {
+  link.value = res.googlesecretqr
+  qrcode.value = res.googlesecret
+  // if (res.googlebind) {
+  //   useUserStore().LOGOUT()
+  //   router.replace('/login')
+  // }
+}).finally(() => {
+  loadingPage.value = false;
+})
 const userStore = useUserStore()
 function loginHandle() {
   loading.value = true
@@ -205,20 +206,14 @@ function loginHandle() {
         message: '绑定成功',
         type: 'success',
       })
-      if (userInfo.expired) {
-        router.replace('/changePassword')
-      } else {
-        router.replace('/dashboard')
-      }
+      show.value = false
+      userStore.SET_googlebind(true)
     })
     .finally(() => {
       loading.value = false
     })
 }
-
-const goSkipPage=()=>{
-  router.replace('/')
-}
+const emit = defineEmits( ['close', 'success'] )
 </script>
 
 <style lang="scss" scoped>

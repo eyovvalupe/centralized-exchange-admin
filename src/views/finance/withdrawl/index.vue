@@ -31,6 +31,10 @@
               <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
+            <template v-else-if="item.prop === 'transfer'">
+              <span class="truncate text-red"> {{
+                scope.row.amount - scope.row.fee }}</span>
+            </template>
             <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
                 <span v-if="scope.row[item.prop]"> ...{{
@@ -94,6 +98,7 @@ const dialogType = reactive({
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 const status = ref('')
+
 const columnBase = reactive([
 
   { prop: 'order_no', label: '订单号', width: 200, align: 'center' },
@@ -103,7 +108,7 @@ const columnBase = reactive([
   { prop: 'currency', label: '币种', width: 90, align: 'center' },
   { prop: 'amount', label: '提现金额', width: 100, align: 'center' },
   { prop: 'fee', label: '手续费', width: 100, align: 'center' },
-  // { prop: 'transfer', label: '到账金额', width: 100, align: 'center' },
+  { prop: 'transfer', label: '到账金额', width: 100, align: 'center' },
   { prop: 'remarks', label: '失败原因', align: 'center' },
   { prop: 'created', label: '时间', width: 120, align: 'center' },
   { prop: 'status', label: '状态', width: 90, align: 'center' },

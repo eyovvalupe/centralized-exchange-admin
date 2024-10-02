@@ -808,4 +808,18 @@ small {
 .el-form-item__error {
   display: none;
 }
+.text-red{
+  color: #f56c6c;
+}
+.address-code{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+.nav-user-icon{
+  width: 30px;
+  height: 30px;
+}
 </style>

@@ -102,7 +102,9 @@
         </div>
         <el-dropdown class="p8 avatar-container right-menu-item hover-effect">
           <div class="flex items-center pr-2">
-            <span class="mr-2">{{ userName }}</span>
+            <!-- <span class="mr-2">{{ userName }}</span> -->
+            <!-- 顶部导航 用户名改成头像 -->
+            <el-image src="/images/menus/nav-user.png" class="nav-user-icon"></el-image>
             <el-icon>
               <ArrowDown />
             </el-icon>
@@ -150,6 +152,9 @@
     <Suspense>
       <UpdatePassword v-model="dialogShow" :action="dialogType" @close="dialogShow = false" :key="dialogShow" />
     </Suspense>
+    <Suspense>
+      <GoogleValidator v-model="googleDialogShow" @close="googleDialogShow = false" />
+    </Suspense>
   </section>
   <div class="service">
     <!-- @close="handleClose" -->
@@ -158,6 +163,7 @@
       <serviceComponents />
     </el-dialog>
   </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -176,6 +182,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { RefreshRight } from '@element-plus/icons-vue'
 import { useFullscreen } from '@vueuse/core'
 import { ServiceChat } from '../service/components/common/ServiceChat'
+import GoogleValidator from '/@/views/layout/components/googleValidator/index.vue'
 const useService = useServiceStore()
 const userStore = useUserStore()
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -194,6 +201,9 @@ const showDialog = type => {
   dialogType.value = type
   dialogShow.value = true
 }
+// 谷歌验证器弹窗
+const googleDialogShow = ref(false)
+
 const dialogVisible = ref(false)
 const sound = ref(useService.playVoice)
 const messageNumObj = computed(() => useService.messageNumObj)
@@ -260,7 +270,8 @@ const userName = computed(() => userStore.userInfo.username)
 const googlebind = computed(() => userStore.userInfo.googlebind)
 const goGooglePage = () => {
   if (!googlebind.value) {
-    router.push('/googleValidator')
+    // router.push('/googleValidator')
+    googleDialogShow.value = true
   }
 }
 // 当前激活的tabs
@@ -396,7 +407,7 @@ const closeUserDataDialog = () => {
   .header-bg,
   .el-menu {
     flex: none;
-    min-width: 460px !important;
+    min-width: 660px !important;
     background: #fff !important;
   }
 
