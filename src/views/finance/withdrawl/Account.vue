@@ -3,16 +3,53 @@
     @close="emit('close', false)"
     >
     <div class="p-2">
-      <div v-if="channel === 'crypto'">
-        <div>钱包地址：{{address}}</div>
-        <div class="address-code">
-          <qrcode-vue :value="link" :size="188" level="H" />
+      <div class="text-center" style="min-height: 100px;" v-loading="loading">
+        <div v-if="dataInfo.channel === 'crypto'">
+          <div class="table-list flex">
+            <span>币种</span>
+            <span  class="w-7/12 text-center">
+              {{ dataInfo.symbol }}
+              </span>
+          </div>
+          <div class="table-list flex">
+            <span>网络</span>
+            <span  class="w-7/12 text-center">
+              {{ dataInfo.network }}
+              </span>
+          </div>
+          <div class="table-list flex">
+            <span>地址</span>
+            <span  class="w-7/12 text-center cursor-pointer text-blue" @click="copy(address)">
+                {{ dataInfo.address }}
+            </span>
+          </div>
+          <div class="table-list flex">
+            <span>二维码</span>
+            <div class="address-code address-qrcode-flex1">
+              <qrcode-vue :value="dataInfo.address" :size="188" level="H" />
+            </div>
+          </div>
         </div>
-      </div>
-      <div v-else-if="channel === 'bank'">
-        <div>姓名：{{account_name}}</div>
-        <div>银行名：{{bank_name}}</div>
-        <div>银行卡号：{{bank_card_number}}</div>
+        <div v-if="dataInfo.channel === 'bank'">
+          <div class="table-list flex">
+            <span>姓名</span>
+            <span  class="w-7/12 text-center">
+              {{ dataInfo.account_name }}
+              </span>
+          </div>
+          <div class="table-list flex">
+            <span>银行名</span>
+            <span  class="w-7/12 text-center">
+              {{ dataInfo.bank_name }}
+              </span>
+          </div>
+          <div class="table-list flex">
+            <span>银行卡号</span>
+            <span  class="w-7/12 text-center cursor-pointer" @click="copy(dataInfo.bank_card_number)">
+                {{ dataInfo.bank_card_number }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <template #footer>
@@ -30,6 +67,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getSessionToken } from '/@/api/modules/base.api'
 import QrcodeVue from 'qrcode.vue'
+import { copy } from '/@/utils'
 // import { tr } from 'element-plus/es/locale'
 
 const props = defineProps({
@@ -45,21 +83,18 @@ const channel = ref('')
 const account_name = ref('')
 const bank_name = ref('')
 const bank_card_number = ref('')
+const loading = ref(false)
+const dataInfo = ref({})
 
 onMounted(() => {
   init();
 })
 
 const init=()=>{
+  loading.value = true
   apiWithdrawAccount({order_no:props.order_no}).then(res=>{
-    if(res){
-      address.value = res.address
-      account_name.value = res.account_name
-      bank_name.value = res.bank_name
-      bank_card_number.value = res.bank_card_number
-      channel.value = res.channel
-    }
-    // link.value = res
+      dataInfo.value = res
+      loading.value = false
   })
 }
 

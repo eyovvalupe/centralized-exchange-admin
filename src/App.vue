@@ -821,4 +821,10 @@ small {
   width: 30px;
   height: 30px;
 }
+.address-qrcode-flex1{
+  flex: 1;
+}
+.text-blue{
+  color: #049eff;
+}
 </style>
