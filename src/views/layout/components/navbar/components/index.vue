@@ -56,6 +56,7 @@ const props = defineProps({
 
 function open() {
   show.value = true
+  getGoogleCode()
 }
 const googleDialogShow = computed({
   get: () => props.dialogShow,
@@ -211,7 +212,7 @@ function loginHandle() {
         type: 'success',
       })
       show.value = false
-      userStore.SET_googlebind(true)
+      userStore.userInfo.googlebind = true
     })
     .finally(() => {
       loading.value = false
