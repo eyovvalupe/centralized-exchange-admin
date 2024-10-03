@@ -2,7 +2,7 @@
   <div class="reset-el-styte">
     <div class="flex justify-between p-2 reset-el-styte">
       <div>
-        <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">增加地址</el-button>
+        <el-button type="primary" @click="showDialog(null, 'showDialog')">增加地址</el-button>
         <el-button type="primary" plain @click="showDialog(null, 'showConfigDialog')">币种配置</el-button>
       </div>
       <div class="flex">

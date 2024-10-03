@@ -2,7 +2,7 @@
   <div class="reset-el-styte p-2">
     <div class="flex justify-between p-2">
       <div>
-        <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button type="primary" @click="showDialog(null, 'showDialog')">新增</el-button>
         <el-button class="ml-2" @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
       </div>
       <div class="flex">
@@ -86,7 +86,7 @@
 <script setup>
 import { getList, apiDel } from '/@/api/modules/contract'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import { Search,Plus } from '@element-plus/icons-vue'
 import { copy } from '/@/utils'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'

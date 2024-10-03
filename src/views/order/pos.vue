@@ -2,7 +2,7 @@
   <div class="player reset-el-styte p-2">
     <div class="flex justify-between p-2">
       <div>
-        <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
+        <el-button type="primary" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
       <div>
         <el-button :type="searchValue == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"

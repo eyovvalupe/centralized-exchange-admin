@@ -1,7 +1,7 @@
 <template>
   <div class="reset-el-styte">
     <div class="flex p-2">
-      <el-button :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+      <el-button :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)" @click="showDialog(null, 'showDialog')">新增</el-button>
     </div>
     <div>
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"

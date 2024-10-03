@@ -1,7 +1,7 @@
 <template>
   <div class=" p-2 pt-0 h-full reset-el-styte">
     <div class="flex justify-between p-2">
-      <div> <el-button type="primary" class="ml-2" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+      <div> <el-button type="primary" class="ml-2" @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
       <div class="flex">
         <el-input v-model="searchValue" class="ml-4" placeholder="用户名" />
@@ -66,7 +66,8 @@
 <script setup>
 import { getList, apiResetPwd } from '/@/api/modules/system/user.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Search, Plus,Edit } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import AddEditUser from './AddEditUser.vue'
 import ResetPwd from './ResetPwd.vue'

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full reset-el-styte">
     <div class="flex justify-end  p-2">
-      <!-- <el-button type="primary" :icon="Plus" @click="addVisible = true">增加新玩家</el-button> -->
+      <!-- <el-button type="primary" @click="addVisible = true">增加新玩家</el-button> -->
       <div class="flex">
         <div class="mr-5">
           <el-button :type="role == item.value ? 'success' : 'default'" v-for="(item) in roleOptions"

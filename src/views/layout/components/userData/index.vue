@@ -81,6 +81,7 @@ import { onMounted, watch, ref, nextTick, onBeforeMount } from 'vue';
 import { useCommonStore } from '/@/store';
 import { PAGE_SIZE } from '/@/const/config'
 import { ElMessage, dayjs } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 const props = defineProps({
   username: {
     type: String,

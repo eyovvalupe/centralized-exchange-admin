@@ -1,7 +1,7 @@
 <template>
   <div class="reset-el-styte">
     <div class="flex justify-between p-2">
-      <div> <el-button type="primary" class="ml-2" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+      <div> <el-button type="primary" class="ml-2" @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
     </div>
     <div>

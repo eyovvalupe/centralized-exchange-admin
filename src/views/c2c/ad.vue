@@ -2,7 +2,7 @@
   <div class="reset-el-styte">
     <div class="flex justify-between p-2">
       <div>
-        <el-button  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
       <div class="flex">
         <el-button :type="searchForm.offset == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"

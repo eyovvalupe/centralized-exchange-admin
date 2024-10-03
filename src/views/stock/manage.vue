@@ -47,7 +47,7 @@
 <script setup>
 import {  getList } from '/@/api/modules/stock/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import { Search,Plus } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import ConfigTime from './components/ConfigTime.vue'

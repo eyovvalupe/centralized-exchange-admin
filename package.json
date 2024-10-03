@@ -17,7 +17,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.0.10",
+    "@element-plus/icons-vue": "^2.3.1",
     "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^9.5.0",
     "@wangeditor/editor-for-vue": "^5.1.12",

@@ -62,6 +62,7 @@ import { getglobalDate, getglobalTotal, getGlobalCurrencyList } from '/@/api/mod
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
+import { Search } from '@element-plus/icons-vue'
 const tableData = ref([]);
 const tableData2 = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt

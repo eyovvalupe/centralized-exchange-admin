@@ -43,6 +43,7 @@
 import { getFutureList } from '/@/api/modules/contract'
 import { ref, reactive, onMounted } from 'vue'
 import Edit from './Edit.vue'
+import { Search } from '@element-plus/icons-vue'
 const emit = defineEmits(['close', 'success'])
 const props = defineProps({
   data: { // 行数据

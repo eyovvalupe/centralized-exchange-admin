@@ -59,6 +59,7 @@ import { getglobalDate,getglobalTotal } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import useUserStore from '/@/store/modules/users'
+import { Search } from '@element-plus/icons-vue'
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:whithdrawDeposit', () => {

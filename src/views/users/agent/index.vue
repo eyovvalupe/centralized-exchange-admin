@@ -17,8 +17,13 @@
       </div>
       <div class="right-table h-full pt-2">
         <div class="flex justify-between">
-          <div> <el-button type="primary" :icon="Plus"
-              @click="showDialog(null, 'showDialog')" :disabled="!checkAuthCode(10101)">新增</el-button>
+          <div> <el-button type="primary"
+              @click="showDialog(null, 'showDialog')" :disabled="!checkAuthCode(10101)">
+               <!-- <el-icon>
+                <Plus />
+              </el-icon> -->
+              新增
+              </el-button>
           </div>
           <div>
             <div>
@@ -89,6 +94,7 @@ import { getList } from '/@/api/modules/business/agents.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { ElTree, ElMessage } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
 import AddEdit from './AddEdit.vue'
 import playerParentDialog from '../playerParentDialog.vue'
 import ResetPwd from './ResetPwd.vue'

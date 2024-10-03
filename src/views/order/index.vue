@@ -93,7 +93,7 @@ import {
 } from '/@/api/modules/market/index.api'
 import { copy } from '/@/utils'
 import detailDialog from '/@/components/detailDialog/index.vue'
-
+import { Search } from '@element-plus/icons-vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 const tableData = ref([]);

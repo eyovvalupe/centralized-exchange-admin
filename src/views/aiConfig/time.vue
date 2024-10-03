@@ -1,7 +1,7 @@
 <template>
   <div class="reset-el-styte p-2">
     <div class="flex p-2">
-      <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+      <el-button type="primary" @click="showDialog(null, 'showDialog')">新增</el-button>
     </div>
     <div>
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"

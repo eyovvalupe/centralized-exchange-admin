@@ -2,7 +2,7 @@
   <div class="reset-el-styte p-2">
     <div class="flex justify-between p-2">
       <div>
-        <el-button  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" class="ml-2" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" class="ml-2" @click="showDialog(null, 'showDialog')">新增</el-button>
         <el-button  :type="checkAuthCode(22101)?'su':'info'" :disabled="!checkAuthCode(22101)" class="ml-2" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button>
       </div>
       <div class="flex">

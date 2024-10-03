@@ -2,7 +2,7 @@
   <div class="reset-el-styte p-2">
     <div class="flex justify-between p-2">
       <div>
-        <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button type="primary" @click="showDialog(null, 'showDialog')">新增</el-button>
         <el-button class="ml-2" @click="showDialog(null, 'showTimeCtrDialog')">时间区间配置</el-button>
       </div>
       <div class="flex">

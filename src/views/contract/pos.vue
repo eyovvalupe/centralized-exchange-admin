@@ -2,7 +2,7 @@
   <div class="player reset-el-styte p-2">
     <div class="flex justify-between p-2">
       <div>
-        <el-button :type="checkAuthCode(232)?'primary':'info'" :disabled="!checkAuthCode(232)" :icon="Plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
+        <el-button :type="checkAuthCode(232)?'primary':'info'" :disabled="!checkAuthCode(232)" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
         <el-button :type="checkAuthCode(232)?'success':'info'" :disabled="!checkAuthCode(232)"  @click="showDialog(null, 'showCtrDialog')">合约场控</el-button>
       </div>
       <div>

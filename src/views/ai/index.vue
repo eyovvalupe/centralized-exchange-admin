@@ -2,7 +2,12 @@
   <div class="reset-el-styte">
     <div class="flex justify-between p-2">
       <div>
-        <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">新建</el-button>
+        <el-button type="primary" @click="showDialog(null, 'showDialog')">
+          <el-icon>
+            <Plus />
+          </el-icon>
+          新建
+        </el-button>
       </div>
       <div class="flex">
         <el-input v-model="searchForm.params" class="mr-2" placeholder="名称/代码" style="width: 250px;" />
