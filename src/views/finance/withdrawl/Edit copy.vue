@@ -56,7 +56,6 @@ onMounted(() => {
     }
   }
   form.status = '';
-  console.log(form, props.data);
 })
 const trigger = ['blur', 'change']
 
@@ -82,7 +81,6 @@ const submit = async () => {
     const token = await getSessionToken()
     const send = { ...form, token };
     const result = await apiDepositCheck(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',

@@ -166,7 +166,6 @@ const getUserData = () => {
   tableData.value = []
   isLoading.value = true
   parameters.value = props.username || input.value
-  console.log(parameters.value);
   if (input.value !== '' || props.username !== '') {
     // props.username = input.value
     // 执行查询逻辑
@@ -179,7 +178,6 @@ const getUserData = () => {
       // endTime: endDate.value
     }).then(res => {
       const { info } = res
-      console.log(res);
       tableData.value = info || []
       isLoading.value = false
       input.value = ''
@@ -196,7 +194,6 @@ const getUserData = () => {
 }
 
 const getSymbolData = (item) => {
-  console.log(item);
   parameters.value = item.nickName
   useCommon.FundData = true
 }
@@ -223,7 +220,6 @@ const getPlayerList = () => {
   if (startDate.value !== '' && endDate.value !== '') {
     startTime.value = startDate.value
     endTime.value = endDate.value
-    console.log(startTime.value, endTime.value);
     isLoading.value = true
     apiCollect({
       pageIndex: currentPage.value,
@@ -232,7 +228,6 @@ const getPlayerList = () => {
       endTime: endDate.value
     }).then(res => {
       const { info } = res
-      console.log(res);
       tableData.value = info || []
       isLoading.value = false
       input.value = ''

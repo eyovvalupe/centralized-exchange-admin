@@ -31,7 +31,6 @@ const handleSubmit = async () => {
   emit('close')
 }
 getIpoPara().then(res=>{
-    console.log(res);
     form.value = res;
     loading.value = false
   })

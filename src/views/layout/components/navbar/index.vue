@@ -222,7 +222,7 @@ const showService = ref(false)
 const onShortCut = item => {
   if (checkAuthCode(601)) {
     if (item.isDialog) {
-      console.log('客服')
+      // console.log('客服')
       showService.value = !showService.value
       dialogVisible.value = true
     } else {
@@ -283,9 +283,7 @@ const activeIndex = computed(() => appStore.curTab || 'Dashboard')
 const useCommon = useCommonStore()
 // 选中菜单
 const handleSelect = (key) => {
-  console.log(tabs.value, key)
   if (key === 'UserData') {
-    console.log('UserData')
     useCommon.userDataDialog = true
     useCommon.selectUser = true
   } else {
@@ -301,7 +299,6 @@ const handleSelect = (key) => {
 }
 
 onMounted(() => {
-  console.log(router.currentRoute.value.name, appStore)
   const { name, meta } = router.currentRoute.value
   if (appStore.curTab !== name) {
     if (name !== '') {
@@ -324,7 +321,6 @@ const handleClickTab = pane => {
   const tab = pane.paneName
   appStore.curTab = tab
   // appStore.refreshTab = tab
-  console.log(router.currentRoute.value.path == '/' + tab)
   if (router.currentRoute.value.path == '/' + tab || router.currentRoute.value.name == tab) {
     Bus.emit(`update:${pane.paneName}`, pane.paneName)
   } else {

@@ -276,7 +276,6 @@ const getDataList = page => {
   }
 
 
-  console.log(send)
   apiQueryList(send)
     .then(res => {
       isLoading.value = false

@@ -34,7 +34,6 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
   useAppStore().SET_REFRESHTAB('') // 关闭刷新
   const { code, data, message } = response.data
-  console.log(response, code, data, request)
   if (code == 200) {
     return Promise.resolve(data)
   } else {
@@ -50,7 +49,6 @@ request.interceptors.response.use(response => {
 
 // 错误处理
 function handleError(error) {
-  console.log(error)
   let message = ''
   if (error && error.response) {
     // message = responseCode[error.response.status] || error.message || ''

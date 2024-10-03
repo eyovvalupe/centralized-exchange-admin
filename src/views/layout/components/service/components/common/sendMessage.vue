@@ -27,7 +27,6 @@ const inputDom = ref(null)
 const sendchat = (type = 'text', msg) => {
   // 发送消息前先移除之前的消息监听器
   ServiceChat.socket.off('supportReceiveMsg')
-  console.log(inputDom.value.textContent)
   ServiceChat.sendMessage('send', { type, chatid: useService.chatid, content: msg || inputDom.value.textContent })
   inputDom.value.textContent = ''
 }

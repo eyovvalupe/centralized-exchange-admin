@@ -99,7 +99,6 @@ const int6 = ref()
 // 第一个文本框 change 事件
 function firstChange( e ) {
   if ( e ) {
-     console.log(e)
     int2.value.focus()
   } else {
     int1.value.focus()
@@ -164,7 +163,6 @@ function loginHandle() {
         return
       }
       emit( 'confirm', first.value + second.value + third.value + fourth.value + fifth.value + sixth.value)
-      console.log( '绑定谷歌验证器' )
     }
   } )
 }

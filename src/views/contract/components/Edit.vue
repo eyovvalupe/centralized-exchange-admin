@@ -112,7 +112,6 @@ const form = reactive({
 })
 const profitMath = (lever) => {
   // 价格的change/最小变价位*点值*杠杆
-  console.log('====', realtimeData.value.change, form.pip, form.pip_value, lever)
   return (realtimeData.value.change / (form.pip || 1) * (form.pip_value || 0) * lever).toFixed(2)
 }
 const priceMath = computed(() => {

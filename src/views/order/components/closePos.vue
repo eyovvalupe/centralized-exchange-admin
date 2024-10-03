@@ -77,7 +77,6 @@ const comfirmSubmit = () => {
 // 显示弹框
 const handleInnerDialog = () => {
   ruleForm.value.validate(valid => {
-    console.log(valid)
     if (valid) {
       comfirmSubmit();
     }

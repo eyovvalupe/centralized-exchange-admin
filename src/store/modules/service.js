@@ -52,7 +52,6 @@ const useServiceStore = defineStore({
         apiUserList({
           time: Date.now()
         }).then(data => {
-          console.log(data);
           let id = 1
           this.userList = {}
           const obj = {};
@@ -70,7 +69,6 @@ const useServiceStore = defineStore({
       apiCreateChatInfo({
         partyId: partyId
       }).then(data => {
-        console.log(data);
       })
     },
     // 消息列表
@@ -91,7 +89,6 @@ const useServiceStore = defineStore({
         parameters: parameters,
         time: Date.now()
       }).then(data => {
-        console.log(data);
         this.userNameList = data
       })
     },
@@ -116,7 +113,6 @@ const useServiceStore = defineStore({
         if (item.fileName) {
           for (let i = index + 1; i < arr_chatid.length; i++) {
             if (arr_chatid[i].content.indexOf(item.fileName) !== -1) {
-              console.log('~~item.fileName',item.fileName)
               tmp_img_idx.push(index)
               break
             }
@@ -129,7 +125,6 @@ const useServiceStore = defineStore({
       return arr_chatid
     },
     setNewMessageList(arr) {
-      console.log(this.newMessageList)
       arr.forEach(item => {
         const { chatid } = item;
         // arr_chatid 变量名冲突修改 arrChatid

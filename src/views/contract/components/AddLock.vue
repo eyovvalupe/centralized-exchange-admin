@@ -105,7 +105,6 @@ const form = reactive({
 const showErrClass = ref(false);
 const stockBalance = ref(0);
 const disabledCheck = computed(() => {
-  console.log('diffBalance' + diffBalance.value, 'stockBalance:' + stockBalance.value, 'marginBalance:' + marginBalance.value)
   return diffBalance.value <= 0 || !stockBalance.value || !marginBalance.value
 })
 const getBalance = () => {
@@ -150,7 +149,6 @@ const diffBalance = computed(() => {
 })
 onMounted(() => {
   nextTick(() => {
-    console.log(ruleForm.value);
   })
 })
 const trigger = ['blur', 'change']
@@ -189,7 +187,6 @@ const submit = async () => {
     const token = await getSessionToken()
     const send = { ...form, token };
     const result = await apifuturesLock(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',
@@ -206,7 +203,6 @@ const remoteMethod = (val) => {
     loadingSelect.value = true
     searchMarket({ symbol: val.toLocaleUpperCase(), mode: 'right' }).then(res => {
       loadingSelect.value = false
-      console.log(res);
       options.value = res;
     })
   } else {

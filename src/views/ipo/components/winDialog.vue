@@ -53,11 +53,9 @@ const form = reactive({
   winning: '',
 })
 const changeRatio = (val) => {
-  console.log(val, winningRatio.value)
   form.winning = parseInt(props.data.volume * (winningRatio.value / 100))
 }
 const changeNumber = (val) => {
-  console.log(val, winningRatio.value)
   winningRatio.value = form.winning / props.data.volume * 100
 }
 const marks = reactive({

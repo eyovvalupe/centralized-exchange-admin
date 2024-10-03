@@ -123,14 +123,12 @@ const closeDialogType = (item) => {
   }
 }
 // const handleDelete = (row) => {
-//   console.log(row.id)
 //   ElMessageBox.confirm(`确定要退出系统吗？`, '提示', {
 //     confirmButtonText: '确定',
 //     cancelButtonText: '取消',
 //     type: 'warning'
 //   }).then(() => {
 //     apiDel({roleid}).then(data => {
-//       console.log(data)
 //       ElMessage.success('删除成功')
 //       getDataList()
 //     })

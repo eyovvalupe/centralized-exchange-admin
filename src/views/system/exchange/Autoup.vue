@@ -83,7 +83,6 @@ const submit = async () => {
   isLoading.value = true
   try {
     const result = await apiAutoUp(form)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',

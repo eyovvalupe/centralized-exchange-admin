@@ -14,7 +14,6 @@ export const wsConnect = (name, callback) => {
         },
     })
     ws.on('connect', () => {
-        console.log('连接成功')
         callback && callback(ws);
     })
     return ws;

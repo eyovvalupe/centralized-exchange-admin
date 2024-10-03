@@ -53,7 +53,6 @@ onMounted(() => {
       form[key] = props.data[key]
     }
   }
-  console.log(form, props.data);
 })
 
 const emit = defineEmits(['close', 'success'])
@@ -81,7 +80,6 @@ const submit = async () => {
   try {
     const send = { ...form };
     const result = await apiEdit(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '修改成功',

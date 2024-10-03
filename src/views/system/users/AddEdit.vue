@@ -95,7 +95,6 @@ onMounted(() => {
       form[key] = props.data[key]
     }
   }
-  console.log(form, props.data);
 })
 const trigger = ['blur', 'change']
 
@@ -111,7 +110,6 @@ const handleGoogle = () => {
     return
   }
   ruleForm.value.validate(async valid => {
-    console.log('valid', valid)
     if (valid) {
       showGoogle.value = true;
     }
@@ -140,7 +138,6 @@ const submit = async () => {
     }
     send.authtree_ids = form.authtree_ids.join(',');
     const result = await api(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: !props.data ? '新增成功' : '修改成功',

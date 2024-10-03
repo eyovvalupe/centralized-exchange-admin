@@ -102,7 +102,6 @@ const allData=(callback)=>{
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    console.log(send)
     getglobalTotal(send).then(res=>{
         const obj={date:'汇总数据',...res}
         allTotal=[obj];
@@ -120,7 +119,6 @@ const getDataList = page => {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    console.log(send)
     getglobalDate(send)
         .then(res => {
             isLoading.value = false

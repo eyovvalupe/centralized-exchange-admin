@@ -88,7 +88,6 @@ const copy = () => {
   })
 }
 const update = (val) => {
-  console.log(val)
   googleVerifCode.value = val;
   showLink.value = true;
 }

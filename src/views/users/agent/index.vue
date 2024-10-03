@@ -211,7 +211,6 @@ const closeTag = () => {
   searchForm.father = "";
   treeCurrInfo.value = {};
   if (treeData.value.length) {
-    console.log(treeData.value,treeRef.value)
     treeRef.value.setCurrentKey()
     const nodes = treeRef.value.store._getAllNodes();
     nodes.forEach(item => {

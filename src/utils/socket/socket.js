@@ -80,7 +80,6 @@ export class SocketHelper extends EventEmitter {
   }
 
   setlistener (callback) {
-    console.log('setlistener')
     this.socket.on('msg', msg => {
       const cmd = msg.cmd
       const data = msg.data

@@ -73,7 +73,6 @@ const getData = () => {
 getData();
 
 onUnmounted(() => {
-  console.log('socketStore', socketStore)
   socketStore.send('realtime', '')
 })
 

@@ -22,7 +22,6 @@ const useUserStore = defineStore({
     getAuthMatch() {
       return new Promise(r => {
         getAllAuth({ codes: '' }).then(res => {
-          console.log(res);
           const tmp = []
           for (const key in res) {
             if (res[key]==0) {

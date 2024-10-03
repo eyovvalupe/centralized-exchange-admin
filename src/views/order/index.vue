@@ -278,7 +278,6 @@ const getDataList = page => {
   }
 
 
-  console.log(send)
   getList(send)
     .then(res => {
       isLoading.value = false

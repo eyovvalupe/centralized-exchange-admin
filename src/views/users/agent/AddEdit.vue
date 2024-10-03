@@ -96,7 +96,6 @@ onMounted(()=>{
      }
   }
   setRandomPwd();
-  console.log(form,props.data);
 })
 const trigger = ['blur', 'change']
 const rules = {
@@ -134,7 +133,6 @@ const submit = async () => {
   isLoading.value = true
   try {
     const result = await api(sendData)
-    console.log( result )
     ElMessage({
       type: 'tips',
       message: !props.data ? '新增成功' : '修改成功' ,

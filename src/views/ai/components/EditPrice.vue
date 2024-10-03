@@ -130,7 +130,6 @@ onMounted(() => {
   }
   getList({ page: 1 }).then(res => {
     loadingSelect.value = false
-    console.log(res);
     options.value = options.value.concat(res);
 
   })

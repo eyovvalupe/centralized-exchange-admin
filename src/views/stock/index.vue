@@ -114,7 +114,6 @@ const getDataList = page => {
     })
 }
 const columnClick = (row) => {
-  console.log(row)
 }
 const changeSearch = (s) => {
   searchForm.market = s;

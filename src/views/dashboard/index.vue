@@ -169,7 +169,6 @@ import { dayjs } from 'element-plus'
 const useService = useServiceStore()
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:dashboard', () => {
-  console.log('dashboard')
 })
 const userStore = useUserStore()
 const isAdmin = computed(() => !userStore.userInfo.role.includes('agent'))
@@ -205,7 +204,6 @@ const init = (time_arr) => {
   }
   // Promise.all([getglobalDate({ page: 1 }), getglobalTotal({ page: 1 }), getagentList({ page: 1 })]).then(res => {
   getglobalTotal(send).then(res => {
-    console.log(res)
     totalInfo.value = res;
   })
 }

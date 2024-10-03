@@ -143,7 +143,6 @@ const isLoading = ref(false)
 const filterText = ref('')
 const toogleExpand = (row, index) => {
   isExpansion[index] = !isExpansion[index];
-  console.log(isExpansion[index]);
   table.value && table.value.toggleRowExpansion(row, isExpansion[index]);
 
 }
@@ -202,7 +201,6 @@ const getTreeList = () => {
 const treeCurrInfo = ref({});
 const treeNodeClick = (item) => {
   currentPage.value = 1;
-  console.log(item);
   searchForm.params = "";
   searchForm.father = item.id;
   treeCurrInfo.value = item;
@@ -213,7 +211,6 @@ const closeTag = () => {
   searchForm.father = "";
   treeCurrInfo.value = {};
   if (treeData.value.length) {
-    console.log(treeData.value, treeRef.value)
     treeRef.value.setCurrentKey()
     const nodes = treeRef.value.store._getAllNodes();
     nodes.forEach(item => {

@@ -126,8 +126,6 @@ const scrollToBottom = () => {
 const handleScroll = () => {
   const container = scrollContainer.value;
   if (container.scrollTop + container.clientHeight === container.scrollHeight) {
-    console.log('已滚动到底部');
-    console.log(useService.userList);
     apiMsgRead({ chatid: useService.chatid }).then(() => {
       useService.getUserList()
     })

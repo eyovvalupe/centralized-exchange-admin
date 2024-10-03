@@ -24,7 +24,6 @@ export const useTableList = ( request ) => {
       state.tableData = info || []
       state.isLoading = false
     } ).catch( err => {
-      console.log( err, 333 )
       state.isLoading = false
     } )
   }

@@ -241,7 +241,6 @@ const tableData = ref([])
 const maxHeight = ref(420)
 onMounted(() => {
   maxHeight.value = document.body.offsetHeight - 290
-  console.log(document.body.offsetHeight)
 })
 const func = { wallet: apiUserFunds, withdraw: apiUserWithdraw, deposit: apiUserDeposit }
 const showDialog = (data, key, title) => {

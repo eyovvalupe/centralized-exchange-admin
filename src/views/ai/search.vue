@@ -174,7 +174,6 @@ const closeDialogType = (item) => {
     dialogType[key] = false
   }
   if (item && item.reload) {
-    console.log('reload', reload)
   }
 }
 
@@ -200,7 +199,6 @@ const getDataList = page => {
   }
 
 
-  console.log(send)
   apiQueryList(send)
     .then(res => {
       isLoading.value = false

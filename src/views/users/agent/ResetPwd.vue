@@ -55,7 +55,6 @@ onMounted(()=>{
       form[key] = props.data[key]
      }
   }
-  console.log(form,props.data);
 })
 const trigger = ['blur', 'change']
 
@@ -92,7 +91,6 @@ const submit = async () => {
   try {
     const send = {partyid : props.data.partyid ,...form}
     const result = await apiResetPwd(send)
-    console.log( result )
     ElMessage({
       type: 'tips',
       message: '重置成功',

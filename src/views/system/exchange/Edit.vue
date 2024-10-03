@@ -65,7 +65,6 @@ const submit = async () => {
   isLoading.value = true
   try {
     const result = await apiEdit(form)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',

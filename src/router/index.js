@@ -57,7 +57,6 @@ router.beforeEach((to, from, next) => {
       next('/login');
     }
   } else {
-    console.log(to.path,checkAuthCode(to.meta.auth))
     if(checkAuthCode(to.meta.auth)){
       next();
     }else{
@@ -68,7 +67,6 @@ router.beforeEach((to, from, next) => {
 export function resetRouter () {
   const WHITE_NAME_LIST = ['Login']
   router.getRoutes().forEach(route => {
-    console.log(route, 'route')
     const { name } = route
     if (name && !WHITE_NAME_LIST.includes(name)) {
       router.hasRoute(name) && router.removeRoute(name)

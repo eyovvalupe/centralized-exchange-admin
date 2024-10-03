@@ -67,7 +67,6 @@ onMounted(() => {
       form[key] = props.data[key]
     }
   }
-  console.log(form, props.data);
 })
 const emit = defineEmits(['close', 'success'])
 const optionsAll = ref([])
@@ -78,7 +77,6 @@ const getConfig = () => {
   apicoinList().then((res) => {
     options.value = Object.keys(res);
     optionsAll.value = res;
-    console.log(res);
     loading.value = false;
   })
 }
@@ -112,7 +110,6 @@ const submit = async () => {
   try {
     const send = { ...form };
     const result = await apiAdd(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '新增成功',

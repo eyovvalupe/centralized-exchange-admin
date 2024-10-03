@@ -98,7 +98,6 @@ const symbol_socket = computed(() => {
   return form.value.symbol ? socketStore.findOne(form.value.symbol) : {}
 })
 const percentMath = computed(() => {
-  console.log(formRight, symbol_socket.value.price);
   return (formRight.unadjusted / (symbol_socket.value.price || 0) * 100).toFixed(2)
 })
 const getData = () => {
@@ -113,7 +112,6 @@ const getData = () => {
 getData();
 
 onUnmounted(() => {
-  console.log('socketStore', socketStore)
   socketStore.send('realtime', '')
 })
 

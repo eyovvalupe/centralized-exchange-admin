@@ -60,7 +60,6 @@ const addressText = ref('')
 const getData=()=>{
   loading.value = true
   apiAddress({order_no:props.data.order_no}).then(res=>{
-    console.log(res)
     dataInfo.value = res;
     const adr=res.address;
     addressText.value = res.address;

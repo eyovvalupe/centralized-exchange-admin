@@ -122,7 +122,6 @@ const closeDialogType = (item) => {
   }
   dialogLoading.value = false;
   if(item && item.reload){
-    console.log('reload',reload)
   }
 }
 </script>

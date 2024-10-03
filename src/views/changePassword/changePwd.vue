@@ -204,7 +204,6 @@ function loginHandle() {
           router.replace('/')
         }, 500)
       } catch (e) {
-        console.log(e)
       } finally {
         loading.value = false
       }

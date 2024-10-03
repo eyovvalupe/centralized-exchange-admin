@@ -92,7 +92,6 @@ const submit = async () => {
   try {
     const send = { ...form.value };
     const result = await apiFuncName(send)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',

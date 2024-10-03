@@ -50,7 +50,6 @@ editorConfig.MENU_CONF['uploadImage'] = {
   maxNumberOfFiles: 1,
   withCredentials: true,
   async customUpload(file, insertFn) {
-    console.log(file)
     let fileName = file.name  // 'test.png'
     fileName = [fileName.split('.')[0] + Date.now(), fileName.split('.')[1]].join('.')
     const apiUrl = `${import.meta.env.VITE_UPLOAD_ADDRESS}${fileName}`
@@ -89,7 +88,6 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
-  console.log('asdf', editor.getConfig())
   toolbarConfig.excludeKeys = [
     'header1',
     'header2',

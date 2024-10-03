@@ -134,13 +134,11 @@ const column1 = reactive([
 // 翻页
 const currentPage = ref(1)
 onMounted(() => {
-  console.log(props.parameters);
   tableData.value = []
   tableData1.value = []
   isLoading.value = true
   nextTick(() => {
     if (props.parameters !== '') {
-      console.log('11');
       apiSymbolCategory({
         pageIndex: currentPage.value,
         parameters: props.parameters,
@@ -149,7 +147,6 @@ onMounted(() => {
         // endTime: ''
       }).then(res => {
         const { info } = res
-        console.log(info);
         tableData.value = info || []
       }).finally(() => {
       })
@@ -162,7 +159,6 @@ onMounted(() => {
         // endTime: ''
       }).then(res => {
         const { info } = res
-        console.log(res);
 
         tableData1.value = info || []
       }).finally(() => {
@@ -175,20 +171,17 @@ onMounted(() => {
 })
 watch(() => props.parameters, newValue => {
   if (newValue !== '') {
-    console.log('11');
     tableData.value = []
     tableData1.value = []
     isLoading.value = true
     nextTick(() => {
       if (props.parameters !== '') {
-        console.log('11');
         apiSymbolCategory({
           pageIndex: currentPage.value,
           parameters: props.parameters,
           symbol: props.symblo
         }).then(res => {
           const { info } = res
-          console.log(info);
           tableData.value = info || []
         }).finally(() => {
         })
@@ -199,7 +192,6 @@ watch(() => props.parameters, newValue => {
           provider: props.provider,
         }).then(res => {
           const { info } = res
-          console.log(res);
 
           tableData1.value = info || []
         }).finally(() => {
@@ -224,7 +216,6 @@ watch(() => props.provider, newValue => {
           symbol: props.symblo
         }).then(res => {
           const { info } = res
-          console.log(info);
           tableData.value = info || []
         }).finally(() => {
         })
@@ -235,7 +226,6 @@ watch(() => props.provider, newValue => {
           provider: props.provider,
         }).then(res => {
           const { info } = res
-          console.log(res);
 
           tableData1.value = info || []
         }).finally(() => {
@@ -260,7 +250,6 @@ watch(() => props.gameCode, newValue => {
           symbol: props.symblo
         }).then(res => {
           const { info } = res
-          console.log(info);
           tableData.value = info || []
         }).finally(() => {
         })
@@ -271,7 +260,6 @@ watch(() => props.gameCode, newValue => {
           provider: '',
         }).then(res => {
           const { info } = res
-          console.log(res);
 
           tableData1.value = info || []
         }).finally(() => {
@@ -284,15 +272,12 @@ watch(() => props.gameCode, newValue => {
   }
 })
 watch([() => props.startTime, () => props.endTime], ([newStartTime, newEndTime]) => {
-  console.log(newStartTime, newEndTime);
   if (newStartTime || newEndTime) {
-    console.log(newStartTime, newEndTime);
     tableData.value = []
     tableData1.value = []
     isLoading.value = true
     nextTick(() => {
       if (props.parameters !== '') {
-        console.log('11');
         apiSymbolCategory({
           pageIndex: currentPage.value,
           parameters: props.parameters,
@@ -301,7 +286,6 @@ watch([() => props.startTime, () => props.endTime], ([newStartTime, newEndTime])
           endTime: newEndTime
         }).then(res => {
           const { info } = res
-          console.log(info);
           tableData.value = info || []
         }).finally(() => {
         })
@@ -314,7 +298,6 @@ watch([() => props.startTime, () => props.endTime], ([newStartTime, newEndTime])
           endTime: newEndTime
         }).then(res => {
           const { info } = res
-          console.log(res);
 
           tableData1.value = info || []
         }).finally(() => {

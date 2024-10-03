@@ -240,12 +240,10 @@ function loginHandle() {
            
           }
           // getAuth( { codes : '' } ).then( data => {
-          //   console.log( data )
           //   router.push( '/' )
           // } )
         }
       } catch ( e ) {
-        console.log( e )
       } finally {
         loading.value = false
       }

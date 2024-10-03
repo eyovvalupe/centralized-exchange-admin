@@ -31,7 +31,6 @@ class ServiceC2C {
         usec2cService.setConnected(this.isConnected)
       })
       this.socket.on('receive', message => {
-        console.log(message);
         const arr = message.data;
         if (usec2cService.messageList.length) {
           const index = usec2cService.messageList.findIndex(fitem => fitem.isTmp);
@@ -49,7 +48,6 @@ class ServiceC2C {
   }
   // 发送消息
   sendMessage(type, message) {
-    console.log(message);
     if (!this.socket) {
       ElMessage({
         type: 'tips',

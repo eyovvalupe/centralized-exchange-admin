@@ -55,7 +55,6 @@ const props = defineProps({
 })
 
 function open() {
-  console.log(2222222222)
   show.value = true
 }
 const googleDialogShow = computed({

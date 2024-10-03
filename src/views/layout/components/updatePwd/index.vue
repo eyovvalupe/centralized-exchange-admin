@@ -127,7 +127,6 @@ const update = googlecode => {
           send.safeword = form.newPwd;
         }
         const result = await api(send);
-        console.log(result)
         ElMessage({
           type: 'tips',
           message: props.action === 'add' ? '新增成功' : '修改成功',
@@ -163,7 +162,6 @@ const update = googlecode => {
 //   isLoading.value = true
 //   try {
 //     const result = await api( form )
-//     console.log( result )
 //     ElMessage.success( props.action === 'add' ? '新增成功' : '修改成功' )
 //     isLoading.value = false
 //     emit( 'success', false )

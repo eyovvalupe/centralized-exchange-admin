@@ -114,7 +114,6 @@ onMounted(() => {
       }
     }
   }
-  console.log(form, props.data);
 })
 const trigger = ['blur', 'change']
 // const intRangeValidator = (rule, value, callback) => {
@@ -142,7 +141,6 @@ const rules = {
 const emit = defineEmits(['close', 'success'])
 // 新增
 const handleSubmit = async () => {
-  console.log(form)
   ruleForm.value.validate(async valid => {
     if (valid) {
       // 发送请求

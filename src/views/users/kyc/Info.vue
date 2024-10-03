@@ -127,7 +127,6 @@ const showDialog = () => {
   getDetail({ id: props.info.id }).then(res => {
     detailData.value = Object.assign(res, props.info);
     srcList.value = [res.idimg_1, res.idimg_2, res.idimg_3];
-    console.log(' detailData.value =', detailData.value)
   }).finally(() => {
     dialogLoading.value = false;
   })

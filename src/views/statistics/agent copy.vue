@@ -126,7 +126,6 @@ const closeDialogType = (isReload) => {
   }
 }
 const tableRowClassName = ({ row }) => {
-  console.log(partyid.value, row['partyid'])
   return partyid.value == row['partyid'] ? 'active' : ''
 }
 const getDataList = (page) => {

@@ -66,7 +66,6 @@ onMounted(() => {
       form[key] = props.info[key]
     }
   }
-  console.log(form, props.info);
 })
 const trigger = ['blur', 'change']
 const rules = {
@@ -87,7 +86,6 @@ const submit = async () => {
   isLoading.value = true
   try {
     const result = await apiEdit(form)
-    console.log(result)
     ElMessage({
       type: 'tips',
       message: '操作成功',

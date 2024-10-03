@@ -13,7 +13,6 @@ import { defineComponent, computed } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import { useAppStore } from '/@/store'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-
 export default defineComponent({
   name: 'App',
   components: {

@@ -104,7 +104,6 @@ onMounted(()=>{
       form[key] = props.data[key]
      }
   }
-  console.log(form,props.data);
 })
 
 const emit = defineEmits( ['close', 'success'] )
@@ -136,7 +135,6 @@ const submit = async () => {
       send.partyid=props.data.partyid;
     }
     const result = await api(send)
-    console.log( result )
     ElMessage({
       type: 'tips',
       message:  !props.data ? '新增成功' : '修改成功' ,

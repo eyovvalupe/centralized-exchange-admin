@@ -132,7 +132,6 @@ const getAllList = (params) => {
       params,
     }).then(data => {
       loading.value = false
-      console.log(data)
       msgUserList.value = data
     })
   }, 300);
