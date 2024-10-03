@@ -4,7 +4,7 @@
       <div> <el-button type="primary" :icon="Refresh" @click="getDataList(1)"
         :loading="isLoading">同步数据</el-button></div>
       <div>
-        <el-button :type="searchForm.market == item.value ? 'active-green' : 'default'" v-for="(item) in options" :key="item.value"
+        <el-button :type="searchForm.market == item.value ? 'success' : 'default'" v-for="(item) in options" :key="item.value"
       @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-input v-model="searchForm.symbol" class="mx-2" placeholder="交易代码搜索" style="width: 200px;"/>
         <el-button type="primary" :icon="Search" @click="getDataList(1)"
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length?'':'noborder'" v-loading="isLoading">
+      <el-table :data="tableData" border :class="tableData.length?'':'noborder'" v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align" @click="columnClick">
           <template #default="scope">

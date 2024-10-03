@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="mt-2">
-          <el-table :data="tableData" :border="tableData.length" :class="tableData.length?'':'noborder'" v-loading="isLoading">
+          <el-table :data="tableData" border :class="tableData.length?'':'noborder'" v-loading="isLoading">
             <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
               :align="item.align">
               <template #default="scope">

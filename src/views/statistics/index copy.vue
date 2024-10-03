@@ -3,8 +3,8 @@
         <div class="flex justify-end p-2">
             <div></div>
             <div>
-                <el-button :type="currLast == 0 ? 'active-green' : 'default'" @click="changeSearch(0)">本月</el-button>
-                <el-button class="mr-5" :type="currLast == 1 ? 'active-green' : 'default'"
+                <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
+                <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
                     @click="changeSearch(1)">上月</el-button>
                 <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
                     end-placeholder="请选择结束时间" style="width: 280px;" />
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="p-2 pt-0 h-full">
-            <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+            <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
                 v-loading="isLoading">
                 <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width"
                     :label="item.label" :align="item.align">

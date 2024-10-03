@@ -22,7 +22,7 @@
     </div>
     <div class="p-4 pt-0 mb-22">
       <span class="text-lg">汇总</span>
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length?'':'noborder'" :height="height" v-loading="isLoading" class="mt-3">
+      <el-table :data="tableData" border :class="tableData.length?'':'noborder'" :height="height" v-loading="isLoading" class="mt-3">
         <el-table-column v-for="item in column" :key="item.prop" :prop="item.prop" :label="item.label" :width="item.width"
           :align="item.align">
           <template #default="scope">

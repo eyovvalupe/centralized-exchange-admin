@@ -24,8 +24,8 @@
                 class="mr-2">
                 {{ treeCurrInfo?.username }}
               </el-tag>
-              <el-button :type="currLast == 0 ? 'active-green' : 'default'" @click="changeSearch(0)">本月</el-button>
-              <el-button class="mr-5" :type="currLast == 1 ? 'active-green' : 'default'"
+              <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
+              <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
                 @click="changeSearch(1)">上月</el-button>
               <el-input v-model="searchForm.searchValue" class="mr-2" placeholder="UID/用户名/备注" style="width: 200px;" />
               <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="mt-2">
-          <el-table :data="tableData" ref="table" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+          <el-table :data="tableData" ref="table" border :class="tableData.length ? '' : 'noborder'"
             v-loading="isLoading">
             <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
               :class-name="item.class || ''" :align="item.align">

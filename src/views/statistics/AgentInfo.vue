@@ -3,7 +3,7 @@
     @close="emit('close', false)">
     <div v-loading="dialogLoading" style="min-height: 400px;">
       <template v-if="!dialogLoading">
-        <el-table :data="tableData" row-class-name="bg-one-row" :border="tableData.length"
+        <el-table :data="tableData" row-class-name="bg-one-row" border
           :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
           <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
             :align="item.align">

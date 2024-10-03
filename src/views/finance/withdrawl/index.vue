@@ -3,7 +3,7 @@
     <div class="flex justify-between p-2">
       <div> </div>
       <div class="flex justify-end p-2 pb-0" style="min-width: 500px;">
-        <el-button :type="status == item.value ? 'active-green' : 'default'" v-for="(item) in options" :key="item.value"
+        <el-button :type="status == item.value ? 'success' : 'default'" v-for="(item) in options" :key="item.value"
           @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-input v-model="searchValue" class="ml-2" size="large" placeholder="UID/用户名" :suffix-icon="Search" />
         <!-- <el-select v-model="status" clearable placeholder="请选择"  class="ml-2" >
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="p-2 pt-0 h-full">
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">

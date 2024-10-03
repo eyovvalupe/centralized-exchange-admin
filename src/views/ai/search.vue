@@ -2,7 +2,7 @@
   <div class="reset-el-styte">
     <div class="flex justify-end p-2">
       <div>
-        <el-button :type="searchForm.role == item.value ? 'active-green' : 'default'" v-for="(item) in option"
+        <el-button :type="searchForm.role == item.value ? 'success' : 'default'" v-for="(item) in option"
           :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/用户备注" style="width: 200px;" />
         <!-- <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="">
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">

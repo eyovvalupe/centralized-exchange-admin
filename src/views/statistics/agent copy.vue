@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="right-box h-full">
-        <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+        <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
           v-loading="isLoading">
           <el-table-column v-for="(item, index) in rightColumn" :key="index" :width="item.width" :label="item.label"
             :align="item.align">

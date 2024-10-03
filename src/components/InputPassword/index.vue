@@ -31,6 +31,7 @@ import { ref, computed, defineProps, defineEmits } from 'vue'
 const emit = defineEmits(["update:modelValue", 'change']);
 const props = defineProps({
   modelValue: String,
+  default : '',
 });
 // 输入内容自动切换下一个输入框
 const first = ref('')

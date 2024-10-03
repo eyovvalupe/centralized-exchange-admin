@@ -5,7 +5,7 @@
         <el-button  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
       <div class="flex">
-        <el-button :type="searchForm.offset == item.value ? 'active-green' : 'default'" v-for="(item) in optionStatus"
+        <el-button :type="searchForm.offset == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
           :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-select v-model="searchForm.crypto" style="width: 150px;" class="mx-2">
           <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" />
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">

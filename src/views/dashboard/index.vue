@@ -3,8 +3,8 @@
     <div class="flex justify-end p-2">
       <div></div>
       <div>
-        <el-button :type="currLast == 0 ? 'active-green' : 'default'" @click="changeSearch(0)">本月</el-button>
-        <el-button class="mr-5" :type="currLast == 1 ? 'active-green' : 'default'"
+        <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
+        <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
           @click="changeSearch(1)">上月</el-button>
         <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
           end-placeholder="请选择结束时间" style="width: 280px;" @change="changeSearch(2)" />

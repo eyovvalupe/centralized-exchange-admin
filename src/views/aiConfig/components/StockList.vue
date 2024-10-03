@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="soll-list">
-      <el-table :data="tableData" :border="tableData.length" v-loading="isLoading">
+      <el-table :data="tableData" border v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">

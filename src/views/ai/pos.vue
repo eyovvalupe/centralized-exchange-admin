@@ -5,7 +5,7 @@
         <el-button type="primary" @click="showDialog(null, 'showCtrDialog')">添加场控</el-button>
       </div>
       <div>
-        <el-button :type="searchValue == item.value ? 'active-green' : 'default'" v-for="(item) in optionStatus"
+        <el-button :type="searchValue == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
           :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-input v-model="searchStrbtn" class="mx-2" placeholder="UID/用户名" style="width: 200px;" />
         <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"

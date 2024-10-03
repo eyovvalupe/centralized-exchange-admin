@@ -497,7 +497,7 @@ th.el-table__cell {
   color: #fff;
 }
 
-.el-button--active-green,
+.el-button--success,
 .status-bg.issuing,
 .status-bg.success,
 .status-bg.long,

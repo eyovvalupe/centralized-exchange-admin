@@ -4,7 +4,7 @@
       <el-button type="primary" :icon="Plus" @click="showDialog(null, 'showDialog')">新增</el-button>
     </div>
     <div>
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">

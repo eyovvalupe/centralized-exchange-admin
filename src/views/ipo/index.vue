@@ -4,7 +4,7 @@
       <div></div>
       <div class="flex">
         <div class="mr-5">
-          <el-button :type="searchForm.status == item.value ? 'active-green' : 'default'" v-for="(item) in optionStatus"
+          <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
             :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         </div>
         <el-input v-model="searchForm.params" placeholder="公司名称/交易代码/UID/用户名" style="width: 300px;" />
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div>
-      <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">

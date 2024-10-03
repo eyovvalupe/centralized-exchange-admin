@@ -6,9 +6,9 @@
         :collapse-transition="false" class="h-[40px] flex-1" mode="horizontal" @select="handleSelect"
         v-show="routesList.length">
         <template v-for="(item, index) in routesList" :key="index">
-          <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name"
+          <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''"
             v-if="!item.children || item.hiddenChild">{{ item.meta.title }}</el-menu-item>
-          <el-sub-menu :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name" v-else
+          <el-sub-menu :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''" v-else
             class="top-sub-menu">
             <template #title>
               <span>{{ item.meta.title }}</span>
@@ -16,7 +16,7 @@
             <template v-for="(_item, _index) in item.children" :key="_index">
               <template v-if="!_item.subMenu && !_item.meta.hidden">
                 <p class="menu-border border-t" v-if="_item.meta.border"></p>
-                <el-menu-item :hide-timeout="100" :show-timeout="0" :index="_item.name"
+                <el-menu-item :hide-timeout="100" :show-timeout="0" :index="_item.name || ''"
                   :class="{ 'no-menu-auth': _item.meta.notopen || !checkAuthCode(_item.meta.auth) }"
                   v-if="_item.hidden === undefined">
                   <el-image :src="`/images/menus/${_item.icon}.svg`" class="w-4 h-4 mr-2">
@@ -34,7 +34,7 @@
               <template v-else-if="!_item.meta.hidden">
                 <p class="menu-border border-t" v-if="_item.meta.border"></p>
                 <el-sub-menu :class="{ 'no-menu-auth': _item.meta.notopen || !checkAuthCode(_item.meta.auth) }"
-                  :hide-timeout="100" :show-timeout="0" :index="_item.name" :collapse-transition="false">
+                  :hide-timeout="100" :show-timeout="0" :index="_item.name || ''" :collapse-transition="false">
                   <template #title>
                     <el-image :src="`/images/menus/${_item.icon}.svg`" class="w-4 h-4 mr-2">
                       <template #error>
@@ -51,7 +51,7 @@
 
                   <el-menu-item :hide-timeout="100"
                     :class="{ 'no-menu-auth': __item.meta.notopen || !checkAuthCode(__item.meta.auth) }"
-                    :show-timeout="0" :collapse-transition="false" :index="__item.name"
+                    :show-timeout="0" :collapse-transition="false" :index="__item.name || ''"
                     v-for="(__item, __index) in _item.children" :key="__index">
                     <el-image :src="`/images/menus/${__item.icon}.svg`" class="w-4 h-4 mr-2">
                       <template #error>

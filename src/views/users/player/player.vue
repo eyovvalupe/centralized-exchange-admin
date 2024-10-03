@@ -4,7 +4,7 @@
       <!-- <el-button type="primary" :icon="Plus" @click="addVisible = true">增加新玩家</el-button> -->
       <div class="flex">
         <div class="mr-5">
-          <el-button :type="role == item.value ? 'active-green' : 'default'" v-for="(item) in roleOptions"
+          <el-button :type="role == item.value ? 'success' : 'default'" v-for="(item) in roleOptions"
             :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         </div>
         <div class="mr-2">
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <el-table :data="tableData" :border="tableData.length" :class="tableData.length ? '' : 'noborder'"
+    <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
       v-loading="isLoading">
       <el-table-column v-for="item in column" :key="item.prop" :prop="item.prop" :label="item.label" :align="item.align"
         :width="item.width">
