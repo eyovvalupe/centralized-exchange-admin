@@ -20,9 +20,9 @@
           <div class="table-list flex">
             <span>提现地址</span>
             <span  class="w-7/12 text-center cursor-pointer text-blue" @click="copy(address)">
-                <label class="status success"> {{  networkArr[0]  }}</label>
-                <label class="status close"> {{  networkArr[1]  }}</label>
-                <label class="status blue"> {{  networkArr[2]  }}</label>
+              <label class="status success"> {{  networkArr[0]  }}</label>
+              <label class="status close"> {{  networkArr[1]  }}</label>
+              <label class="status blue"> {{  networkArr[2]  }}</label>
             </span>
           </div>
           <div class="table-list flex">
