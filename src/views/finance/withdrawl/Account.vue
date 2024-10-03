@@ -18,13 +18,15 @@
               </span>
           </div>
           <div class="table-list flex">
-            <span>地址</span>
+            <span>提现地址</span>
             <span  class="w-7/12 text-center cursor-pointer text-blue" @click="copy(address)">
-                {{ dataInfo.address }}
+                <label class="status success"> {{  networkArr[0]  }}</label>
+                <label class="status close"> {{  networkArr[1]  }}</label>
+                <label class="status blue"> {{  networkArr[2]  }}</label>
             </span>
           </div>
           <div class="table-list flex">
-            <span>二维码</span>
+            <span>提现二维码</span>
             <div class="address-code address-qrcode-flex1">
               <qrcode-vue :value="dataInfo.address" :size="188" level="H" />
             </div>
@@ -78,13 +80,9 @@ const props = defineProps({
 })
 
 const show = ref(true)
-const address = ref('')
-const channel = ref('')
-const account_name = ref('')
-const bank_name = ref('')
-const bank_card_number = ref('')
 const loading = ref(false)
 const dataInfo = ref({})
+const networkArr=ref('')
 
 onMounted(() => {
   init();
@@ -93,7 +91,9 @@ onMounted(() => {
 const init=()=>{
   loading.value = true
   apiWithdrawAccount({order_no:props.order_no}).then(res=>{
+      let adr=res.address;
       dataInfo.value = res
+      networkArr.value = [adr.substring(0,4),adr.substring(4,adr.length-4),adr.substring(adr.length-4)]
       loading.value = false
   })
 }
