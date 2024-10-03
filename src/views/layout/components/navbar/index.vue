@@ -111,8 +111,8 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu :size="'large'">
-              <el-dropdown-item>
-                <User style="width: 1em; height: 1em; margin-right: 8px" />{{ userName }}
+              <el-dropdown-item disabled>
+                  <User style="width: 1em; height: 1em; margin-right: 8px;font-size: 20px;" />{{ userName }}
               </el-dropdown-item>
               <el-dropdown-item @click="goGooglePage">
                 <span class="flex justify-center align-middle" :class="{ 'no-menu-auth': googlebind }">
@@ -268,12 +268,6 @@ const appStore = useAppStore()
 // 用户名
 const userName = computed(() => userStore.userInfo.username)
 const googlebind = computed(() => userStore.userInfo.googlebind)
-// const goGooglePage = () => {
-//   if (!googlebind.value) {
-//     // router.push('/googleValidator')
-//     googleDialogShow.value = true
-//   }
-// }
 // 当前激活的tabs
 const tabs = computed(() => {
   return flatRoutes.value.filter(item => appStore.tabs.includes(item.name))
@@ -392,7 +386,9 @@ const closeUserDataDialog = () => {
 
 
 function goGooglePage(){
-  unref(googleDialogShowRef).open()
+  if(!googlebind.value){
+    unref(googleDialogShowRef).open()
+  }
   // this.$refs.googleDialogShowRef.openDialog(scope.row.userName)
 }
 </script>

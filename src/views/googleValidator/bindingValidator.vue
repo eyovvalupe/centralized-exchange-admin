@@ -33,11 +33,6 @@
         绑定
       </el-button>
     </el-form-item>
-    <el-form-item style="margin-bottom: 14px">
-      <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="goSkipPage">
-        直接跳过，下次绑定
-      </el-button>
-    </el-form-item>
   </el-form>
 </template>
 
@@ -216,9 +211,6 @@ function loginHandle() {
     })
 }
 
-const goSkipPage=()=>{
-  router.replace('/')
-}
 </script>
 
 <style lang="scss" scoped>

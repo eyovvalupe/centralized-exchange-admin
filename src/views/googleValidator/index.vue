@@ -3,6 +3,7 @@
     <div class="body fix-width">
       <div class="top flex align-middle content-center justify-between">
         <span class="top-title">绑定谷歌验证器</span>
+        <span @click="goSkipPage" class="skip cursor-pointer ">跳过</span>
       </div>
       <div class="main">
         <binding-validator />
@@ -29,7 +30,9 @@ onMounted( () => {
 onUnmounted( () => {
   window.removeEventListener( 'resize', resizeCb )
 } )
-
+const goSkipPage=()=>{
+  router.replace('/')
+}
 </script>
 
 <style lang="scss" scoped>

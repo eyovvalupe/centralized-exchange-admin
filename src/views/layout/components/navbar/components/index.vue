@@ -1,6 +1,7 @@
 <template>
-<el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="绑定谷歌验证器" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
-  <el-form ref="ruleForm" label-position="top" :model="formState" v-loading="loadingPage" status-icon
+<el-dialog :close-on-click-modal="false" width="360" class="reset-el-styte" title="绑定谷歌验证器" v-model="show" :append-to-body="true" @close="emit( 'close', false )"
+>
+  <el-form ref="ruleForm" :rules="rules" label-position="top" :model="formState" v-loading="loadingPage" status-icon
     class="login-ruleForm">
     <div class="form-center" style="margin-bottom: 30px; display: flex; justify-content: center">
       <qrcode-vue :value="link" :size="138" level="H" />
@@ -24,8 +25,7 @@
       <el-input type="text" ref="int5" maxlength="1" v-model="fifth" @input="fifthChange" />
       <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
-
-    <el-form-item style="margin-bottom: 14px">
+    <el-form-item style="margin-bottom: 40px;margin-top:40px;">
       <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="loginHandle">
         绑定
       </el-button>
@@ -58,6 +58,27 @@ function open() {
   show.value = true
   getGoogleCode()
 }
+const rules = ref({
+  // first: [
+  //   {
+  //     required: true,
+  //     message: '不为空',
+  //     trigger: 'blur',
+  //   }
+  // ],
+  // loginPwd: [
+  //   {
+  //     required: true,
+  //     message: '请输入密码'
+  //   }
+  // ],
+  // captcha: [
+  //   {
+  //     required: true,
+  //     message: '请输入验证码'
+  //   }
+  // ]
+})
 const googleDialogShow = computed({
   get: () => props.dialogShow,
   set: val => emit('close', val),
@@ -202,6 +223,21 @@ getGoogleCode().then(res => {
 })
 const userStore = useUserStore()
 function loginHandle() {
+  // ruleForm.value.validate((valid, fields) => {
+  //   if (valid) {
+  //     console.log('submit!')
+  //   } else {
+  //     console.log('error submit!', fields)
+  //   }
+  // })
+  // return
+  if(!first.value || !second.value || !third.value || !fourth.value || !fifth.value || !sixth.value){
+    ElMessage({
+      message: '请输入完整谷歌验证码',
+      type: 'error',
+    })
+    return
+  }
   loading.value = true
   const { userInfo } = userStore;
   const googlecode = first.value + second.value + third.value + fourth.value + fifth.value + sixth.value
