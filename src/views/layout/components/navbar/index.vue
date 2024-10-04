@@ -105,6 +105,7 @@
             <!-- <span class="mr-2">{{ userName }}</span> -->
             <!-- 顶部导航 用户名改成头像 -->
             <el-image src="/images/menus/nav-user.png" class="nav-user-icon"></el-image>
+            <span style="margin: 0 5px;">用户</span>
             <el-icon>
               <ArrowDown />
             </el-icon>

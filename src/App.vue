@@ -818,8 +818,8 @@ small {
   padding: 20px 0;
 }
 .nav-user-icon{
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 .address-qrcode-flex1{
   flex: 1;
