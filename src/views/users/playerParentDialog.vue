@@ -3,7 +3,7 @@
      <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" v-model="show" title="修改代理" :append-to-body="true">
       <el-form :model="form" ref="ruleForm" label-position="top" :rules="rules">
         <el-form-item label="代理UID" prop="father_uid" :label-width="formLabelWidth">
-          <el-input v-model="form.father_uid" placeholder="不填写则默认为根代理商" />
+          <el-input v-model="form.father_uid" placeholder="请输入代理商UID" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -93,7 +93,7 @@ const handleSubmit = (googlecode) => {
   ruleForm.value.validate( async valid => {
     if ( valid ) {
       try {
-        const func= props.type==='agent'?apiUpfather:apiUpfather;
+        const func= props.type==='agent'?apiUpfatherAgent:apiUpfather;
         await func({
           partyid : partyid.value,
           ...form,
@@ -102,10 +102,10 @@ const handleSubmit = (googlecode) => {
         isLoading.value = false
         show.value = false
           ElMessage({
-    type: 'tips',
-    message: '操作成功',
-    offset: 200
-  })
+            type: 'tips',
+            message: '操作成功',
+            offset: 200
+          })
         emit( 'success' )
       } catch ( err ) {
         isLoading.value = false
