@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { getList } from '/@/api/modules/business/agents.api'
+import { getList,getAgentMenu } from '/@/api/modules/business/agents.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { ElTree, ElMessage } from 'element-plus'
@@ -185,7 +185,7 @@ const getDataList = (page) => {
     })
 }
 const getTreeList = () => {
-  getList({ page: 1 })
+  getAgentMenu({})
     .then(res => {
       const tree = resDatatoTree(res);
       treeData.value = tree

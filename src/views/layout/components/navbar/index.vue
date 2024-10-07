@@ -210,7 +210,7 @@ const sound = ref(useService.playVoice)
 const messageNumObj = computed(() => useService.messageNumObj)
 const shortCut = ref([
   { name: 'RechargeOrder', icon: "RechargeOrder", badge: 'deposit', text: '充值', type: 'badge' },
-  { name: 'DepositOrder', icon: "tx", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false },
+  { name: 'withdrawlOrder', icon: "tx", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false },
   { name: 'kycList', icon: "smrz", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false },
   { name: 'notice', icon: "kf", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false },
   // { name: 'service', text: '客服', type: 'arrow', isDialog: true },
