@@ -155,7 +155,11 @@
   </div>
 </template>
 
+<<<<<<< HEAD
 <script lang="ts">
+=======
+<script>
+>>>>>>> origin/dev1.0
 export default { name: 'Dashboard' };
 </script>
 <script setup lang="ts">
