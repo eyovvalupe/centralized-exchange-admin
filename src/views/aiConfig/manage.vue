@@ -75,6 +75,9 @@
   </el-dialog>
 </template>
 
+<script>
+export default { name: 'aiConfig' };
+</script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/ai'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

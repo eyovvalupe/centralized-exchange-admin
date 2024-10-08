@@ -2,55 +2,59 @@
   <router-view v-slot="{ Component }">
     <el-scrollbar :height="height">
       <!-- 页面表格加载方式 -->
-      <!-- <keep-alive>
+      <keep-alive :include="tabs">
         <component :is="Component" />
-      </keep-alive> -->
-      <component :is="Component" />
+      </keep-alive>
+      <!-- <component :is="Component" /> -->
     </el-scrollbar>
   </router-view>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import {wsConnect} from '/@/utils/socket'
-import { useSocketStore } from '/@/store'
+import { wsConnect } from '/@/utils/socket'
+import { useSocketStore, useAppStore } from '/@/store'
+
 const socketStore = useSocketStore()
-const ws =wsConnect('/admin',() => {
-  socketStore.setWS(ws);
-});
+const appStore = useAppStore()
+const tabs = computed(() => appStore.tabs)
+
+const ws = wsConnect('/admin', () => {
+  socketStore.setWS(ws)
+})
 ws.on('realtime', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('contractList', data);
+    socketStore.setDataList('contractList', data)
   }
 })
 ws.on('stockorder', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('stockOrderList', data);
+    socketStore.setDataList('stockOrderList', data)
   }
 })
 ws.on('futuresorder', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('futureOrderList', data);
+    socketStore.setDataList('futureOrderList', data)
   }
 })
 ws.on('aiquantorder', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('aiOrderList', data);
+    socketStore.setDataList('aiOrderList', data)
   }
 })
 ws.on('c2corder', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('c2cOrderList', data);
+    socketStore.setDataList('c2cOrderList', data)
   }
 })
 ws.on('futures_control_list', ({ data, code }) => {
   if (code == 200) {
-    socketStore.setDataList('futureList', data);
+    socketStore.setDataList('futureList', data)
   }
 })
 const height = ref('calc( 100vh - 90px)')
 defineOptions({
-  name: 'AppMain'
+  name: 'AppMain',
 })
 </script>
 

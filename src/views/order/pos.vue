@@ -113,6 +113,9 @@
 
 </template>
 
+<script>
+export default { name: 'orderPositions' };
+</script>
 <script setup>
 import closePos from './components/closePos.vue'
 import detailDialog from '/@/components/detailDialog/index.vue'

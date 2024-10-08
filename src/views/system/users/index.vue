@@ -63,6 +63,9 @@
 
 </template>
 
+<script>
+export default { name: 'SysUsers' };
+</script>
 <script setup>
 import { getList, apiResetPwd } from '/@/api/modules/system/user.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

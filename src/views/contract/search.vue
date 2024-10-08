@@ -87,6 +87,9 @@
   <detailDialog v-if="dialogType.showDialog" :contract="true" :orderNo="orderNo" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'contractSearch' };
+</script>
 <script setup>
 import { apiQueryList } from '/@/api/modules/contract'
 import { copy } from '/@/utils'

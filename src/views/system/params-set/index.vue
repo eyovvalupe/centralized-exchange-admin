@@ -34,6 +34,9 @@
    
 </template>
 
+<script>
+export default { name: 'ParamsSet' };
+</script>
 <script setup>
 import { getList } from '/@/api/modules/system/info.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

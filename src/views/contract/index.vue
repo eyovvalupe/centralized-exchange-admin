@@ -53,6 +53,9 @@
   <Volume :data="dialogType.info" v-if="dialogType.showVolumeDialog" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'contractIndex' };
+</script>
 <script setup>
 import { apiClear } from '/@/api/modules/contract'
 import { ref, reactive, onMounted, computed, onUnmounted, watch } from 'vue'

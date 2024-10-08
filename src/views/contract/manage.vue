@@ -83,6 +83,9 @@
   </el-dialog>
 </template>
 
+<script>
+export default { name: 'contract' };
+</script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/contract'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

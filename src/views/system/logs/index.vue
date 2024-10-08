@@ -43,6 +43,9 @@
   </div>
 </template>
 
+<script>
+export default { name: 'OperationLog' };
+</script>
 <script setup>
 import { getList } from '/@/api/modules/system/log.api'
 import { ref, toRaw } from 'vue'

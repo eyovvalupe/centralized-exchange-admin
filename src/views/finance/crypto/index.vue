@@ -62,6 +62,9 @@
   </el-dialog>
 </template>
 
+<script>
+export default { name: 'cryptoList' };
+</script>
 <script setup>
 // import { getList } from '/@/api/modules/business/kyc.api'
 import { getList, apiDel } from '/@/api/modules/crypto'

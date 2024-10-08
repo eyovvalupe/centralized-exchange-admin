@@ -117,6 +117,9 @@
 
 </template>
 
+<script>
+export default { name: 'contractPos' };
+</script>
 <script setup>
 import AddLock from './components/AddLock.vue'
 import closePos from './components/closePos.vue'

@@ -89,6 +89,9 @@
 
 </template>
 
+<script>
+export default { name: 'AgentList' };
+</script>
 <script setup>
 import { getList,getAgentMenu } from '/@/api/modules/business/agents.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
