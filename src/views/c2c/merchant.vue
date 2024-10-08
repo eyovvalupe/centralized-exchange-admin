@@ -34,6 +34,9 @@
   <merEdit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'c2cMerchant' };
+</script>
 <script setup>
 import { getList } from '/@/api/modules/c2cMer'
 // import { getList } from '/@/api/modules/c2cOrder'

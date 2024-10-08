@@ -80,6 +80,9 @@
   </el-dialog> -->
 </template>
 
+<script>
+export default { name: 'aiIndex' };
+</script>
 <script setup>
 import { getCtrList, apiCtrDel } from '/@/api/modules/ai'
 import { ref, reactive } from 'vue'

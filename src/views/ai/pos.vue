@@ -90,6 +90,9 @@
 
 </template>
 
+<script>
+export default { name: 'aiPos' };
+</script>
 <script setup>
 import EditPrice from './components/EditPrice.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

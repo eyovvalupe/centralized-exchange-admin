@@ -71,6 +71,9 @@
   <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'withdrawlOrder' };
+</script>
 <script setup>
 import { apiWithdrawRecord } from '/@/api/modules/business/withdrawl-order.api'
 import { copy } from '/@/utils'

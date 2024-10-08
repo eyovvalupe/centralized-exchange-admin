@@ -97,6 +97,9 @@
 
 </template>
 
+<script>
+export default { name: 'ipoCfg' };
+</script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/ipo/config.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

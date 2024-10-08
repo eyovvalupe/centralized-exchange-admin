@@ -71,6 +71,9 @@
   </div>
 </template>
 
+<script>
+export default { name: 'statisticsAgent' };
+</script>
 <script setup>
 import { getAgentList, getAgentMenu } from '/@/api/modules/business/agents.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

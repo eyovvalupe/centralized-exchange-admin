@@ -155,6 +155,9 @@
   </div>
 </template>
 
+<script lang="ts">
+export default { name: 'Dashboard' };
+</script>
 <script setup lang="ts">
 import { getglobalTotal } from '/@/api/modules/base.api'
 import whithdrawl from './components/whithdrawl.vue'

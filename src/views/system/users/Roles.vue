@@ -55,6 +55,9 @@
   </el-dialog>
 </template>
 
+<script>
+export default { name: 'Roles' };
+</script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/system/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

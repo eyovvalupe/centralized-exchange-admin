@@ -284,6 +284,7 @@ const handleSelect = (key) => {
   } else {
     if (!appStore.tabs.includes(key)) {
       appStore.tabs.push(key)
+      appStore.SET_TABS([...appStore.tabs])
     }
     appStore.curTab = key
     router.push({ name: key })

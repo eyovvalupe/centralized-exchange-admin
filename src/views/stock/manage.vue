@@ -44,6 +44,9 @@
   <ConfigTime v-if="dialogType.showTimeDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'stockManage' };
+</script>
 <script setup>
 import {  getList } from '/@/api/modules/stock/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

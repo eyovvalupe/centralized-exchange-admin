@@ -58,6 +58,9 @@
   <OrderInfo v-if="dialogType.showOrderInfo" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'c2cOrderWs' };
+</script>
 <script setup>
 import { getList } from '/@/api/modules/c2cOrder'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

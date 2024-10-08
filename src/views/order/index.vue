@@ -87,6 +87,9 @@
   <detailDialog v-if="dialogType.showDialog" :orderNo="orderNo" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'orderIndex' };
+</script>
 <script setup>
 import {
   getList
