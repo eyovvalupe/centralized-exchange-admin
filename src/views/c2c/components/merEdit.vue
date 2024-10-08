@@ -87,10 +87,10 @@ const handleSubmit = async () => {
     if (form.starttime) {
       send.starttime = dayjs(form.starttime).format('YYYY-MM-DD')
     }
-    const result = await api(send)
+    await api(send)
     ElMessage({
       type: 'tips',
-      message: !props.data.id ? '新增成功' : '修改成功',
+      message: !props.data || !props.data.id ? '新增成功' : '修改成功',
       offset: 200
     })
     isLoading.value = false

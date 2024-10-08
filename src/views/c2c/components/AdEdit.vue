@@ -98,7 +98,7 @@ const getData = () => {
     const currency_arr = [];
     const mer_arr = [];
     res.forEach(item => {
-      if (item.type === 'drypto') {
+      if (item.type === 'crypto') {
         mer_arr.push(item)
       } else {
         currency_arr.push(item)
