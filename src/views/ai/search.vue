@@ -60,6 +60,9 @@
   <!-- <detailDialog v-if="dialogType.showDialog" :contract="true" :orderNo="orderNo" @close="closeDialogType" /> -->
 </template>
 
+<script>
+export default { name: 'aiSearch' };
+</script>
 <script setup>
 import { apiQueryList } from '/@/api/modules/ai'
 import { copy } from '/@/utils'

@@ -155,6 +155,9 @@
   </div>
 </template>
 
+<script lang="ts">
+export default { name: 'Dashboard' };
+</script>
 <script setup lang="ts">
 import { getglobalTotal } from '/@/api/modules/base.api'
 import whithdrawl from './components/whithdrawl.vue'
@@ -171,7 +174,7 @@ const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:dashboard', () => {
 })
 const userStore = useUserStore()
-const isAdmin = computed(() => !userStore.userInfo.role.includes('agent'))
+const isAdmin = computed(() => !userStore.userInfo.role?.includes('agent'))
 const userInfo = computed(() => userStore.userInfo)
 const messageNumObj = computed(() => useService.messageNumObj)
 const activeName = ref('RechargeOrder')

@@ -46,6 +46,9 @@
   </div>
 </template>
 
+<script>
+export default { name: 'Amount' };
+</script>
 <script setup>
 import userDetail from '/@/components/userDetail/index.vue'
 import { getList } from '/@/api/modules/system/amount.api'

@@ -73,6 +73,9 @@
   <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'RechargeOrder' };
+</script>
 <script setup>
 import { apiDepositRecord } from '/@/api/modules/business/recharge-order.api'
 import { copy } from '/@/utils'

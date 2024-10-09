@@ -65,6 +65,9 @@
   <AdEdit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'c2cAd' };
+</script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/c2cAd'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

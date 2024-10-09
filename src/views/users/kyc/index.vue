@@ -63,6 +63,10 @@
   <Info v-if="dialogType.showDialog" :info="dialogType.info" @close="closeDialogType" />
   <Edit v-if="dialogType.showEditDialog" :info="dialogType.info" @close="closeDialogType" />
 </template>
+
+<script>
+export default { name: 'kycList' };
+</script>
 <script setup>
 import { getList } from '/@/api/modules/business/kyc.api'
 import { ref, reactive } from 'vue'

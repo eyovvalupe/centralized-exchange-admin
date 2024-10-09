@@ -57,6 +57,9 @@
     </div>
 </template>
 
+<script>
+export default { name: 'whithdrawDeposit' };
+</script>
 <script setup>
 import { getglobalDate, getglobalTotal, getGlobalCurrencyList } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

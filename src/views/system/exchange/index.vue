@@ -39,6 +39,9 @@
   <Edit v-if="dialogType.showEditDialog" :info="dialogType.info" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'exchange' };
+</script>
 <script setup>
 import Autoup from './Autoup.vue'
 import Edit from './Edit.vue'

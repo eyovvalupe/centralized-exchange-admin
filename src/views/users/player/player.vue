@@ -151,6 +151,9 @@
 
 </template>
 
+<script>
+export default { name: 'Player' };
+</script>
 <script setup>
 import {
   apiUserList,

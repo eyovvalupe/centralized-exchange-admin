@@ -1,12 +1,12 @@
 import {
   createRouter,
   // createWebHistory,
-  createWebHashHistory
+  createWebHashHistory,
 } from 'vue-router'
-import { useUserStore } from '/@/store'
+import { useUserStore, useAppStore } from '/@/store'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import menus from './modules/menus'
- 
+
 // 配置路由信息
 export const constantRoutes = [
   {
@@ -15,8 +15,8 @@ export const constantRoutes = [
     component: () => import('/@/views/login/index.vue'),
     meta: {
       hidden: true,
-      title: '登录'
-    }
+      title: '登录',
+    },
   },
   {
     path: '/changePassword',
@@ -24,8 +24,8 @@ export const constantRoutes = [
     component: () => import('/@/views/changePassword/index.vue'),
     meta: {
       hidden: true,
-      title: '修改密码'
-    }
+      title: '修改密码',
+    },
   },
   {
     path: '/googleValidator',
@@ -33,38 +33,37 @@ export const constantRoutes = [
     component: () => import('/@/views/googleValidator/index.vue'),
     meta: {
       hidden: true,
-      title: '绑定谷歌验证器'
-    }
-  }
+      title: '绑定谷歌验证器',
+    },
+  },
 ]
 
-export const asyncRoutes = [
-  ...menus
-]
+export const asyncRoutes = [...menus]
 const router = createRouter({
   history: createWebHashHistory('./'),
   routes: constantRoutes.concat(asyncRoutes),
-  scrollBehavior: () => ({ left: 0, top: 0 })
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  const  userStore = useUserStore()
-  const token = localStorage.getItem('token') || userStore.token;
+  const appStore = useAppStore()
+  const userStore = useUserStore()
+  const token = localStorage.getItem('token') || userStore.token
   if (to.path === '/') {
     if (token) {
-      next('/dashboard');
+      appStore.curTab !== 'Dashboard' ? next(`/${appStore.curTab}`) : next('/dashboard')
     } else {
-      next('/login');
+      next('/login')
     }
   } else {
-    if(checkAuthCode(to.meta.auth)){
-      next();
-    }else{
-      next('/login');
+    if (checkAuthCode(to.meta.auth)) {
+      next()
+    } else {
+      next('/login')
     }
   }
-});
-export function resetRouter () {
+})
+export function resetRouter() {
   const WHITE_NAME_LIST = ['Login']
   router.getRoutes().forEach(route => {
     const { name } = route

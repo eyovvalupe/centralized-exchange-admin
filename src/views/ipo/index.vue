@@ -74,6 +74,9 @@
   <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
 </template>
 
+<script>
+export default { name: 'ipoIndex' };
+</script>
 <script setup>
 import { getList, getIpoWin } from '/@/api/modules/ipo/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'

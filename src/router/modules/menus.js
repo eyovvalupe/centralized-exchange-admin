@@ -46,21 +46,21 @@ export default [
         component: () => import('/@/views/users/kyc/index.vue'),
         name: 'kycList',
         icon: 'smrz',
-        meta: { title: 'L2实名认证审核', auth: '103', border: true }
+        meta: { title: '实名审核', auth: '103', border: true }
       },
       {
         path: '/RechargeOrder',
         component: () => import('/@/views/finance/deposit/index.vue'),
         name: 'RechargeOrder',
         icon: 'RechargeOrder',
-        meta: { title: '充值管理', auth: '111', noCache: true }
+        meta: { title: '充值订单', auth: '111', noCache: true }
       },
       {
         path: '/withdrawlOrder',
         component: () => import('/@/views/finance/withdrawl/index.vue'),
         name: 'withdrawlOrder',
         icon: 'tx',
-        meta: { title: '提现审核', auth: '112', noCache: true }
+        meta: { title: '提现订单', auth: '112', noCache: true }
       },
       // {
       //   path: '/xxx',
@@ -80,7 +80,7 @@ export default [
         component: () => import('/@/views/c2c/order.vue'),
         name: 'c2cOrder',
         icon: 'VIP',
-        meta: { title: 'C2C订单查询', auth: '121', border: true,hidden: true }
+        meta: { title: '买币订单', auth: '121', border: true,hidden: true }
       },
       {
         path: '/c2cOrderWs',
@@ -124,7 +124,7 @@ export default [
         component: () => import('/@/views/order/index.vue'),
         name: 'orderIndex',
         icon: 'FundsFlow',
-        meta: { title: '股票订单查询', auth: '201', noCache: true }
+        meta: { title: '股票历史订单', auth: '201', noCache: true }
       },
       // {
       //   path: '/test1',
@@ -152,14 +152,14 @@ export default [
         component: () => import('/@/views/contract/search.vue'),
         name: 'contractSearch',
         icon: 'FundsFlow',
-        meta: { title: '合约订单查询', auth: '231', noCache: true }
+        meta: { title: '合约历史订单', auth: '231', noCache: true }
       },
       {
         path: '/contractIndex',
         component: () => import('/@/views/contract/index.vue'),
         name: 'contractIndex',
         icon: 'Console',
-        meta: { title: '合约场控', auth: '231', noCache: true, }
+        meta: { title: '合约场控', auth: '232', noCache: true, }
       },
       {
         path: '/aiPos',
@@ -225,13 +225,13 @@ export default [
       //   path: '/statisticsAgent2',
       //   name: 'statisticsAgent2',
       //   icon: 'AgentData',
-      //   meta: { title: '用户数据统计', notopen: true, }
+      //   meta: { title: '用户数据', auth: '303', notopen: true, }
       // },
       // {
       //   path: '/statisticsAgent3',
       //   name: 'statisticsAgent3',
       //   icon: 'AgentData',
-      //   meta: { title: '代理商业绩', notopen: true, border: true }
+      //   meta: { title: '代理商(我的)业绩', notopen: true, border: true }
       // },
     ]
   },
@@ -265,7 +265,7 @@ export default [
       //   path: '/Agent4',
       //   name: 'Agent4',
       //   icon: 'skzh',
-      //   meta: { title: '提现手续费配置', noCache: true, notopen: true }
+      //   meta: { title: '提现手续费', noCache: true, notopen: true }
       // },
       {
         path: '/exchange',
@@ -286,7 +286,7 @@ export default [
         name: 'stockManage',
         icon: 'gpk',
         component: () => import('/@/views/stock/manage.vue'),
-        meta: { title: '股票管理', auth: '401', border: true }
+        meta: { title: '股票', auth: '401', border: true }
       },
       {
         path: '/contract',
@@ -294,7 +294,7 @@ export default [
         component: () => import('/@/views/contract/manage.vue'),
         name: 'contract',
         icon: 'heyue2',
-        meta: { title: '合约管理', auth: '403' },
+        meta: { title: '合约', auth: '403' },
       },
       {
         path: '/aiConfig',
@@ -302,7 +302,7 @@ export default [
         component: () => import('/@/views/aiConfig/manage.vue'),
         name: 'aiConfig',
         icon: 'ParamsSet',
-        meta: { title: 'Ai量化', auth: '404' },
+        meta: { title: '交易机器人', auth: '404' },
       },
       // {
       //   path: '/aiTimeConfig',
@@ -341,7 +341,7 @@ export default [
         component: () => import('/@/views/system/users/index.vue'),
         name: 'SysUsers',
         icon: 'Player',
-        meta: { title: '系统用户管理', auth: '511', noCache: true, border: true, subTitle: '系统用户' }
+        meta: { title: '系统用户', auth: '511', noCache: true, border: true, subTitle: '系统用户' }
       },
       {
         path: '/Roles',

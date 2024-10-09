@@ -80,7 +80,7 @@ export default defineConfig(({ command, mode }) => {
     },
 
     build: {
-      path: './',
+      outDir: './dist/admin/',
       sourcemap: false,
       brotliSize: false,
       chunkSizeWarningLimit: 2500,

@@ -21,7 +21,7 @@
              {{   scope.row[item.prop]=='main'?'交易账户':scope.row[item.prop] }}
             </span>
             <span v-else-if="item.prop == 'status'" :label="item.prop" :class="scope.row[item.prop]" align="center">
-              {{ options.find(f => f.value == scope.row[item.prop]).label }}
+              {{ options.find(f => f.value == scope.row[item.prop])?.label }}
             </span>
             <span v-else>
               {{ scope.row[item.prop] }}
