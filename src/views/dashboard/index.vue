@@ -155,11 +155,7 @@
   </div>
 </template>
 
-<<<<<<< HEAD
 <script lang="ts">
-=======
-<script>
->>>>>>> origin/dev1.0
 export default { name: 'Dashboard' };
 </script>
 <script setup lang="ts">
@@ -178,7 +174,7 @@ const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:dashboard', () => {
 })
 const userStore = useUserStore()
-const isAdmin = computed(() => !userStore.userInfo.role.includes('agent'))
+const isAdmin = computed(() => !userStore.userInfo.role?.includes('agent'))
 const userInfo = computed(() => userStore.userInfo)
 const messageNumObj = computed(() => useService.messageNumObj)
 const activeName = ref('RechargeOrder')
