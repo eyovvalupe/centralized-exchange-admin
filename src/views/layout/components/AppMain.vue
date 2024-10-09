@@ -2,10 +2,10 @@
   <router-view v-slot="{ Component }">
     <el-scrollbar :height="height">
       <!-- 页面表格加载方式 -->
-      <keep-alive :include="tabs">
+      <!-- <keep-alive :include="tabs">
         <component :is="Component" />
-      </keep-alive>
-      <!-- <component :is="Component" /> -->
+      </keep-alive> -->
+      <component :is="Component" />
     </el-scrollbar>
   </router-view>
 </template>
