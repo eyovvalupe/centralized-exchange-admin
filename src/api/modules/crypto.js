@@ -40,7 +40,7 @@ export function apiAdd( data ) {
 export function apicoinList( data ) {
   return  request( {
     method : 'post',
-    url : '/roles/v1/crypto/coin',
+    url : '/authc/v1/wallet/currency',
     data : data
   })
 }

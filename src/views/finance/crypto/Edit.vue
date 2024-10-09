@@ -1,22 +1,23 @@
 <template>
-   <el-dialog :close-on-click-modal="false" class="reset-el-styte" width="480" title="增加地址" v-model="show" :append-to-body="true"
-    @close="emit('close', false)">
+  <el-dialog :close-on-click-modal="false" class="reset-el-styte" width="480" title="增加地址" v-model="show"
+    :append-to-body="true" @close="emit('close', false)">
     <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm">
-        <el-form-item label="币种" required prop="currency">
-          <!-- <el-input v-model="form.currency" disabled /> -->
-          <el-select v-model="form.currency"  class="w-full"  @change="currencyChange">
-            <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="网络" required prop="network">
-          <el-select v-model="form.network" class="w-full">
-            <el-option v-for="(item, index) in optionsAll[form.currency]" :key="item + '-' + index" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="地址" required prop="address">
-          <el-input v-model="form.address" />
-        </el-form-item>
-      </el-form>
+      <el-form-item label="币种" required prop="currency">
+        <!-- <el-input v-model="form.currency" disabled /> -->
+        <el-select v-model="form.currency" class="w-full" @change="currencyChange">
+          <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="网络" required prop="network">
+        <el-select v-model="form.network" class="w-full">
+          <el-option v-for="(item, index) in optionsAll[form.currency]" :key="item + '-' + index" :label="item"
+            :value="item" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="地址" required prop="address">
+        <el-input v-model="form.address" />
+      </el-form-item>
+    </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="emit('close', false)">取消</el-button>
@@ -24,7 +25,7 @@
       </span>
     </template>
   </el-dialog>
-   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
+  <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
     <GoogleVerify class="agentGoogle" @confirm="handleSubmit" @close="emit('close', false)" v-if="showGoogle" />
   </el-dialog>
 </template>
@@ -58,8 +59,8 @@ const rules = {
   network: [{ required: true, message: '', trigger }],
   address: [{ required: true, message: '', trigger }]
 }
-const currencyChange = ()=>{
-  form.network ="";
+const currencyChange = () => {
+  form.network = "";
 }
 onMounted(() => {
   for (const key in form) {
@@ -74,9 +75,17 @@ const options = ref([])
 
 const getConfig = () => {
   loading.value = true;
-  apicoinList().then((res) => {
-    options.value = Object.keys(res);
-    optionsAll.value = res;
+  apicoinList({
+    type: 'crypto',
+    dedup: false
+  }).then((res) => {
+    const data = res.map(item => item.name)
+    const allData = res.reduce((accumulator, item) => {
+      accumulator[item.name] = item.network;
+      return accumulator;
+    }, {});
+    options.value = data;
+    optionsAll.value = allData;
     loading.value = false;
   })
 }
