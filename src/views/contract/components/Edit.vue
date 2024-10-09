@@ -124,8 +124,17 @@ const volumeMath = computed(() => {
 })
 
 onMounted(() => {
+  console.log(JSON.stringify(props.data.pip.toString()))
   for (const key in form) {
     if (props.data && props.data[key] !== undefined) {
+      if(key == 'pip'){
+        let val = props.data[key].toString()
+        if(val.indexOf('-') > -1){
+          val = props.data[key].toFixed(val.split('-')[1])
+          form[key] = val
+          continue
+        }
+      }
       form[key] = props.data[key]
     }
   }
