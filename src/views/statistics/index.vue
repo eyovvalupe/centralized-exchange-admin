@@ -13,47 +13,32 @@
             </div>
         </div>
         <div class="h-full w-full flex">
-            <div class="w-6/12 mr-2 mb-1">
-                <p class="title ml-1">充提统计</p>
+            <div class="w-full">
+                <!-- <p class="title ml-1">充提统计</p> -->
                 <el-table :data="tableData" row-class-name="bg-one-row" border
                     :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
                     <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width"
                         :label="item.label" :align="item.align">
                         <template #default="scope">
-                            {{ scope.row[item.prop] ? scope.row[item.prop] : 'N/A' }}
+                            {{ scope.row[item.prop] ? scope.row[item.prop] : '0' }}
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column label="操作" width="160" align="center">
+                    <el-table-column label="操作" width="160" align="center">
                         <template #default="scope">
+                                
                             <el-button class="data" link type="primary"
-                                @click="showDialog(scope.row, 0)">充值详情</el-button>
-                            <el-button class="data" link type="primary"
-                                @click="showDialog(scope.row, 1)">提现详情</el-button>
+                                @click="showDialog(scope.row)">
+                                充提货币详情</el-button>
                         </template>
-                    </el-table-column> -->
+                    </el-table-column>
                     <template v-slot:empty>
                         <el-empty class="nodata" description="暂无数据" />
                     </template>
                 </el-table>
                 <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
             </div>
-            <div class="w-6/12">
-                <p class="title mb-1">充提统计详情</p>
-                <el-table :data="tableData2" row-class-name="bg-one-row" :border="tableData2.length"
-                    :class="tableData2.length ? '' : 'noborder'" v-loading="isLoading2">
-                    <el-table-column v-for="(item, index) in columnBase2" :key="index" :width="item.width"
-                        :label="item.label" :align="item.align">
-                        <template #default="scope">
-                            {{ scope.row[item.prop] ? scope.row[item.prop] : 'N/A' }}
-                        </template>
-                    </el-table-column>
-                    <template v-slot:empty>
-                        <el-empty class="nodata" description="暂无数据" />
-                    </template>
-                </el-table>
-            </div>
         </div>
-        <dialogInfo v-if="dialogType.showDialog" :title="title" :data="dialogType.info" @close="closeDialogType" />
+        <dialogInfo ref="dialogInfoRef" />
     </div>
 </template>
 
@@ -62,12 +47,11 @@ export default { name: 'whithdrawDeposit' };
 </script>
 <script setup>
 import { getglobalDate, getglobalTotal, getGlobalCurrencyList } from '/@/api/modules/base.api'
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
 import { Search } from '@element-plus/icons-vue'
 const tableData = ref([]);
-const tableData2 = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:whithdrawDeposit', () => {
     getDataList()
@@ -76,6 +60,7 @@ const timeRanges = ref([])
 const currLast = ref(0)
 const currentLastPage = ref(1)
 const currentPage = ref(1)
+const dialogInfoRef = ref()
 
 const columnBase = ref([
     { prop: 'date', label: '日期', align: 'center' },
@@ -84,14 +69,7 @@ const columnBase = ref([
     { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
     { prop: 'balance', label: '充提差(USDT)', align: 'center' },
 ])
-const columnBase2 = ref([
-    { prop: 'currency', label: '币种', align: 'center' },
-    { prop: 'deposit', label: '充值(USDT)', align: 'center' },
-    { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
-    { prop: 'balance', label: '充提差(USDT)', align: 'center' },
-])
 const isLoading = ref(false)
-const isLoading2 = ref(false)
 let allTotal = []
 const allData = (callback) => {
     isLoading.value = true
@@ -106,20 +84,6 @@ const allData = (callback) => {
         callback()
     })
 }
-const getRightData = () => {
-    isLoading2.value = true
-    const send = {};
-    if (timeRanges.value && timeRanges.value.length) {
-        send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
-        send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
-    }
-    getGlobalCurrencyList(send).then(res => {
-        tableData2.value = res;
-    }).finally(() => {
-        isLoading2.value = false
-    })
-}
-getRightData();
 const getDataList = page => {
     if (page) {
         currentLastPage.value = page
@@ -172,31 +136,19 @@ const changeSearch = (num) => {
     allData(() => {
         getDataList(1);
     });
-    getRightData();
 }
 changeSearch(0)
-const dialogType = reactive({
-    type: 0,
-    showDialog: false,
-    info: null
-})
-const title = computed(() => {
-    return dialogType.type ? '提现' : '充值'
-})
-const showDialog = (data, type) => {
-    if (data) {
-        dialogType.info = Object.assign({}, data);
-    } else {
-        dialogType.info = null
+const showDialog = (data) => {
+    let start = ''
+    let end = ''
+    if(data.date == '汇总数据'){
+        start = timeRanges.value[0]
+        end = timeRanges.value[1]
+    }else{
+       start = data.date 
+       end = data.date 
     }
-    dialogType.showDialog = true;
-    dialogType.type = type;
-}
-const closeDialogType = ({ isReload }) => {
-    dialogType.showDialog = false
-    if (isReload) {
-        changeSearch(currLast.value)
-    }
+    unref(dialogInfoRef).open(start,end)
 }
 </script>
 <style scoped>
