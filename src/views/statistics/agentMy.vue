@@ -46,7 +46,7 @@
 export default { name: 'statisticsAgentMy' };
 </script>
 <script setup>
-import { getglobalDate, getglobalTotalMy, getGlobalCurrencyList } from '/@/api/modules/base.api'
+import { getglobalMyDate, getglobalTotalMy, getGlobalCurrencyList } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
@@ -64,8 +64,8 @@ const dialogInfoRef = ref()
 
 const columnBase = ref([
     { prop: 'date', label: '日期', align: 'center' },
-    { prop: 'users', label: '直推', align: 'center' },
-    { prop: 'users', label: '网络', align: 'center' },
+    { prop: 'sub_users', label: '直推', align: 'center' },
+    { prop: 'net_users', label: '网络', align: 'center' },
     { prop: 'deposit', label: '充值(USDT)', align: 'center' },
     { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
     { prop: 'balance', label: '充提差(USDT)', align: 'center' },
@@ -95,7 +95,7 @@ const getDataList = page => {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    getglobalDate(send)
+    getglobalMyDate(send)
         .then(res => {
             isLoading.value = false
             if (!res || !res.length && currentLastPage.value > 1) {
@@ -142,6 +142,7 @@ changeSearch(0)
 const showDialog = (data) => {
     let start = ''
     let end = ''
+    console.log(start,end)
     if(data.date == '汇总数据'){
         start = timeRanges.value[0]
         end = timeRanges.value[1]
@@ -149,7 +150,8 @@ const showDialog = (data) => {
        start = data.date 
        end = data.date 
     }
-    unref(dialogInfoRef).open(start,end)
+    console.log(start,end)
+    unref(dialogInfoRef).open(start,end,'my','')
 }
 </script>
 <style scoped>

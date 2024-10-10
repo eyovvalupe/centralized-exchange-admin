@@ -91,6 +91,23 @@ export function getglobalTotalMy(data) {
   })
 }
 
+// 代理商我的业绩 日期数据
+export function getglobalMyDate(data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/data/my/list',
+    data
+  })
+}
+// 代理商我的业绩 充提货币详情
+export function getGlobalCurrencyMy(data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/data/my/currency',
+    data
+  })
+}
+
 // 用户数据汇总数据
 export function getglobalTotalUser(data) {
   return request({

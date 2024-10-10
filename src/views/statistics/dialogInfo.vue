@@ -25,7 +25,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { dayjs } from 'element-plus'
-import { getGlobalCurrencyList, getGlobalCurrencyUser } from '/@/api/modules/base.api'
+import { getGlobalCurrencyList, getGlobalCurrencyUser,getGlobalCurrencyMy } from '/@/api/modules/base.api'
 const detailData = ref([])
 const show = ref(false)
 const dialogLoading = ref(false)
@@ -59,6 +59,8 @@ function open(start_time,end_time,type,partyid) {
         send.partyid = partyid
     }else if(type === 'platform'){
         api = getGlobalCurrencyList
+    }else if(type === 'my'){
+        api = getGlobalCurrencyMy
     }
     dialogLoading.value = true
         api(send).then(res => {
