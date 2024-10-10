@@ -225,7 +225,7 @@ export default [
         component: () => import('/@/views/statistics/agentMy.vue'),
         name: 'statisticsAgentMy',
         icon: 'AgentData',
-        meta: { title: '代理商(我的)业绩', auth: '304', noCache: true, }
+        meta: { title: '代理商(我的)业绩', auth: '304', noCache: true,border: true  }
       },
       {
         path: '/statisticsAgentUser',
@@ -239,7 +239,7 @@ export default [
         component: () => import('/@/views/system/amount/index.vue'),
         name: 'Amount',
         icon: 'zhangbian',
-        meta: { title: '账变记录', auth: '311', border: true }
+        meta: { title: '账变记录', auth: '311'}
       },
     ]
   },
