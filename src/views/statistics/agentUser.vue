@@ -6,6 +6,7 @@
                 <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
                 <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
                     @click="changeSearch(1)">上月</el-button>
+                <el-input v-model="searchForm.query" class="mr-2" placeholder="UID/用户名" style="width: 200px;" />
                 <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
                     end-placeholder="请选择结束时间" style="width: 280px;" />
                 <el-button type="primary" class="ml-2" :icon="Search" @click="changeSearch(3)"
@@ -14,6 +15,7 @@
         </div>
         <div class="h-full w-full flex">
             <div class="w-full">
+                {{allTotal}}
                 <!-- <p class="title ml-1">充提统计</p> -->
                 <el-table :data="tableData" row-class-name="bg-one-row" border
                     :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
@@ -43,10 +45,10 @@
 </template>
 
 <script>
-export default { name: 'whithdrawDeposit' };
+export default { name: 'statisticsAgentUser' };
 </script>
 <script setup>
-import { getglobalDate, getglobalTotal, getGlobalCurrencyList } from '/@/api/modules/base.api'
+import { getglobalDate, getglobalTotalUser, getGlobalCurrencyList } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
@@ -63,38 +65,36 @@ const currentPage = ref(1)
 const dialogInfoRef = ref()
 
 const columnBase = ref([
-    { prop: 'date', label: '日期', align: 'center' },
-    { prop: 'users', label: '新增用户', align: 'center' },
+    { prop: 'username', label: '用户名', align: 'center' },
+    { prop: 'uid', label: 'UID', align: 'center' },
+    { prop: 'amount', label: '流水(USDT)', align: 'center' },
+    { prop: 'earn', label: '流水(盈利)', align: 'center' },
     { prop: 'deposit', label: '充值(USDT)', align: 'center' },
     { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
     { prop: 'balance', label: '充提差(USDT)', align: 'center' },
 ])
 const isLoading = ref(false)
-let allTotal = []
-const allData = (callback) => {
-    isLoading.value = true
-    const send = {};
-    if (timeRanges.value && timeRanges.value.length) {
-        send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
-        send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
-    }
-    getglobalTotal(send).then(res => {
-        const obj = { date: '汇总数据', ...res }
-        allTotal = [obj];
-        callback()
-    })
-}
+
+const searchForm = reactive({
+  query: '',
+  father: '',
+})
 const getDataList = page => {
     if (page) {
         currentLastPage.value = page
     }
     isLoading.value = true
     const send = { page: currentLastPage.value };
+     for (const key in searchForm) {
+        if (searchForm[key]) {
+        send[key] = searchForm[key]
+        }
+    }
     if (timeRanges.value && timeRanges.value.length) {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    getglobalDate(send)
+    getglobalTotalUser(send)
         .then(res => {
             isLoading.value = false
             if (!res || !res.length && currentLastPage.value > 1) {
@@ -107,7 +107,7 @@ const getDataList = page => {
                 return;
             }
             currentPage.value = currentLastPage.value;
-            tableData.value = allTotal.concat(res);
+            tableData.value = res;
 
         })
         .finally(() => {
@@ -133,22 +133,15 @@ const changeSearch = (num) => {
         arr = timeRanges.value;
     }
     timeRanges.value = arr;
-    allData(() => {
-        getDataList(1);
-    });
+    getDataList(1);
 }
 changeSearch(0)
 const showDialog = (data) => {
     let start = ''
     let end = ''
-    if(data.date == '汇总数据'){
-        start = timeRanges.value[0]
-        end = timeRanges.value[1]
-    }else{
-       start = data.date 
-       end = data.date 
-    }
-    unref(dialogInfoRef).open(start,end,'platform','')
+    start = timeRanges.value[0]
+    end = timeRanges.value[1]
+    unref(dialogInfoRef).open(start,end,'agentUser',data.partyid)
 }
 </script>
 <style scoped>

@@ -82,3 +82,30 @@ export function getGlobalWalletList(data) {
   })
 }
 
+// 代理商我的业绩汇总数据
+export function getglobalTotalMy(data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/data/my/total',
+    data
+  })
+}
+
+// 用户数据汇总数据
+export function getglobalTotalUser(data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/data/user/list',
+    data
+  })
+}
+
+// 用户提现货币详情
+export function getGlobalCurrencyUser(data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/data/user/currency',
+    data
+  })
+}
+

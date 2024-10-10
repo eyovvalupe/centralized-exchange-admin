@@ -209,6 +209,13 @@ export default [
         icon: 'AgentData',
         meta: { title: '代理商充提统计', auth: '302', noCache: true, }
       },
+      {
+        path: '/statisticsAgentMy',
+        component: () => import('/@/views/statistics/agentMy.vue'),
+        name: 'statisticsAgentMy',
+        icon: 'AgentData',
+        meta: { title: '代理商充提统计', auth: '302', noCache: true, }
+      },
     ]
   },
   {

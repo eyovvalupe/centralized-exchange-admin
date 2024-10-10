@@ -25,7 +25,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { dayjs } from 'element-plus'
-import { getGlobalCurrencyList } from '/@/api/modules/base.api'
+import { getGlobalCurrencyList, getGlobalCurrencyUser } from '/@/api/modules/base.api'
 const detailData = ref([])
 const show = ref(false)
 const dialogLoading = ref(false)
@@ -48,13 +48,20 @@ const columnBase = ref([
 //     { prop: 'BTC', label: 'BTC', width: 100, align: 'center' },
 //     { prop: 'ETH', label: 'ETH', width: 100, align: 'center' },
 // ])
-function open(start_time,end_time) {
+function open(start_time,end_time,type,partyid) {
     show.value = true
+    let api
+    const send = {};
+    send.start_time = dayjs(start_time).format('YYYY-MM-DD')
+    send.end_time = dayjs(end_time).format('YYYY-MM-DD')
+    if(type === 'agentUser'){
+        api = getGlobalCurrencyUser
+        send.partyid = partyid
+    }else if(type === 'platform'){
+        api = getGlobalCurrencyList
+    }
     dialogLoading.value = true
-        const send = {};
-        send.start_time = dayjs(start_time).format('YYYY-MM-DD')
-        send.end_time = dayjs(end_time).format('YYYY-MM-DD')
-        getGlobalCurrencyList(send).then(res => {
+        api(send).then(res => {
             detailData.value = res;
         }).finally(() => {
             dialogLoading.value = false

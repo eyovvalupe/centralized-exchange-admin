@@ -69,13 +69,6 @@ export default [
       //   meta: { title: '市场活动配置', notopen: true, border: true, auth: '' }
       // },
       {
-        path: '/amount',
-        component: () => import('/@/views/system/amount/index.vue'),
-        name: 'Amount',
-        icon: 'zhangbian',
-        meta: { title: '账变记录', auth: '311', border: true }
-      },
-      {
         path: '/c2cOrder',
         component: () => import('/@/views/c2c/order.vue'),
         name: 'c2cOrder',
@@ -227,12 +220,27 @@ export default [
       //   icon: 'AgentData',
       //   meta: { title: '用户数据', auth: '303', notopen: true, }
       // },
-      // {
-      //   path: '/statisticsAgent3',
-      //   name: 'statisticsAgent3',
-      //   icon: 'AgentData',
-      //   meta: { title: '代理商(我的)业绩', notopen: true, border: true }
-      // },
+      {
+        path: '/statisticsAgentMy',
+        component: () => import('/@/views/statistics/agentMy.vue'),
+        name: 'statisticsAgentMy',
+        icon: 'AgentData',
+        meta: { title: '代理商(我的)业绩', auth: '304', noCache: true, }
+      },
+      {
+        path: '/statisticsAgentUser',
+        component: () => import('/@/views/statistics/agentUser.vue'),
+        name: 'statisticsAgentUser',
+        icon: 'AgentData',
+        meta: { title: '用户数据', auth: '303', noCache: true, }
+      },
+      {
+        path: '/amount',
+        component: () => import('/@/views/system/amount/index.vue'),
+        name: 'Amount',
+        icon: 'zhangbian',
+        meta: { title: '账变记录', auth: '311', border: true }
+      },
     ]
   },
   // {

@@ -43,10 +43,10 @@
 </template>
 
 <script>
-export default { name: 'whithdrawDeposit' };
+export default { name: 'statisticsAgentMy' };
 </script>
 <script setup>
-import { getglobalDate, getglobalTotal, getGlobalCurrencyList } from '/@/api/modules/base.api'
+import { getglobalDate, getglobalTotalMy, getGlobalCurrencyList } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
@@ -64,7 +64,8 @@ const dialogInfoRef = ref()
 
 const columnBase = ref([
     { prop: 'date', label: '日期', align: 'center' },
-    { prop: 'users', label: '新增用户', align: 'center' },
+    { prop: 'users', label: '直推', align: 'center' },
+    { prop: 'users', label: '网络', align: 'center' },
     { prop: 'deposit', label: '充值(USDT)', align: 'center' },
     { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
     { prop: 'balance', label: '充提差(USDT)', align: 'center' },
@@ -78,7 +79,7 @@ const allData = (callback) => {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    getglobalTotal(send).then(res => {
+    getglobalTotalMy(send).then(res => {
         const obj = { date: '汇总数据', ...res }
         allTotal = [obj];
         callback()
@@ -148,7 +149,7 @@ const showDialog = (data) => {
        start = data.date 
        end = data.date 
     }
-    unref(dialogInfoRef).open(start,end,'platform','')
+    unref(dialogInfoRef).open(start,end)
 }
 </script>
 <style scoped>
