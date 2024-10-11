@@ -31,7 +31,7 @@
       </div>
       <!-- 找到匹配的用户 -->
       <p class="is-search" v-if="isSearch">找到{{ Object.keys(dataList).length }}个对话消息</p>
-      <div class="item-box flex-1 h-[52px] flex items-center px-2 cursor-pointer" v-for="item in dataList"
+      <div class="item-box flex-1 h-[52px] flex items-center px-2 cursor-pointer" v-for="item in useService.userList"
         :key="item.chatid" :class="useService.chatid === item.chatid ? 'active' : ''" @click="selectAllMessage(item)">
         <div class="flex-1">
           <span class="flex items-center justify-between">

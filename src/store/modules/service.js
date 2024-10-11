@@ -9,7 +9,6 @@ const useServiceStore = defineStore({
     return {
       checkImgTime:0,
       userList: [],
-      userList: [],
       chatid: '',
       partyid: '',
       playVoice: true,
@@ -103,6 +102,13 @@ const useServiceStore = defineStore({
           this.userList[chatid] = obj
         }
       })
+      // 时间戳排序
+      let userArr = {}
+      userArr = this.userList
+      let entries = Object.entries(userArr);
+      entries.sort(([, aValue], [, bValue]) => bValue.lasttime - aValue.lasttime)
+      let sortedObj = Object.fromEntries(entries);
+      this.userList = sortedObj
     },
     pushNewMessageList(obj) {
       this.newMessageList[this.chatid].push(obj)

@@ -33,7 +33,6 @@ class Service {
         useService.setConnected(this.isConnected)
       })
       this.socket.on('receive', message => {
-        console.log(message);
         const arr = message.data;
         useService.setNewMessageList(arr)
       })

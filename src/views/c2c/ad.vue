@@ -126,7 +126,7 @@ getGlobalWalletList({}).then((res) => {
   const currency_arr = [ { name: '全部计价法币', currency: 'all' }];
   const mer_arr = [ { name: '全部加密货币', currency: 'all' }];
   res.forEach(item => {
-    if (item.type === 'drypto') {
+    if (item.type === 'crypto') {
       mer_arr.push(item)
     } else {
       currency_arr.push(item)

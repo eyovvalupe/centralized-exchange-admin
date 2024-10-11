@@ -393,6 +393,7 @@ function goGooglePage(){
   }
   // this.$refs.googleDialogShowRef.openDialog(scope.row.userName)
 }
+
 </script>
 
 <style lang="scss">
