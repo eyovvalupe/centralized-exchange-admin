@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { apiUserList, apiHistoryMsg, apiCreateChatInfo } from '/@/api/modules/service/index.api'
+import { apiUserList, apiHistoryMsg, apiCreateChatInfo,apiUserSearch } from '/@/api/modules/service/index.api'
 const useServiceStore = defineStore({
   persist: {
     paths: ['userList', 'newMessageList', 'chatid', 'partyid', 'playVoice', 'messageNumObj']
@@ -9,6 +9,10 @@ const useServiceStore = defineStore({
     return {
       checkImgTime:0,
       userList: [],
+      // 搜索用户
+      searchUserList: [],
+      // 客服左侧用户列表
+      serviceList:[],
       chatid: '',
       partyid: '',
       playVoice: true,
@@ -84,11 +88,11 @@ const useServiceStore = defineStore({
     },
     // user
     getUserNameList(parameters) {
-      apiUserList({
-        parameters: parameters,
-        time: Date.now()
+      apiUserSearch({
+        params: parameters,
       }).then(data => {
-        this.userNameList = data
+        this.userNameList = data.user
+        // this.serviceList = this.searchUserList
       })
     },
     setUserList(arr) {
@@ -109,6 +113,7 @@ const useServiceStore = defineStore({
       entries.sort(([, aValue], [, bValue]) => bValue.lasttime - aValue.lasttime)
       let sortedObj = Object.fromEntries(entries);
       this.userList = sortedObj
+      this.serviceList = this.userList
     },
     pushNewMessageList(obj) {
       this.newMessageList[this.chatid].push(obj)

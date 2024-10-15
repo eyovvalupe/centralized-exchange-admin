@@ -115,3 +115,16 @@ export function apiSetRemark (data) {
     data
   })
 }
+
+/**
+ * 用户搜索
+ * @param {*} data
+ * @returns
+ */
+export function apiUserSearch (data) {
+  return request({
+    method: 'post',
+    url: '/roles/v1/support/user/search',
+    data
+  })
+}

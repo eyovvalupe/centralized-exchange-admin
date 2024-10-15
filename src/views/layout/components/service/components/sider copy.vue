@@ -4,10 +4,12 @@
     <header
       class="left-header h-[64px] py-[11px] pl-[10px] pr-[21px] border-b-[1px] border-solid border-[#E6E6E6] flex items-center justify-between">
       <div class="w-full relative flex items-center justify-between">
-        <el-input v-model="state.userName" clearable @clear="clearUserList" @input="getAllList"
-          placeholder="玩家名称/登录UID/用户名" class="w-full">
+        <el-input v-model="params" clearable @clear="clearUserList"
+          placeholder="玩家名称/登录UID/用户名" class="w-full"
+          @blur="blurInputUser"
+          >
           <template #append>
-            <el-button :icon="Search" :loading="loading" />
+            <el-button :icon="Search" @click="getAllList" :loading="loading" />
           </template>
         </el-input>
       </div>
@@ -18,69 +20,54 @@
           <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
         </svg><!----></div>
     </div>
-    <section class="scroll-boxs-left" >
+    <section class="scroll-boxs-left">
       <!-- 找到匹配的用户 -->
-      <template  v-if="isSearch">
-        <p class="is-search" v-if="loading">正在搜索...</p>
-        <p class="is-search" v-else-if="isSearch && !loading">找到{{ msgUserList.length }}个对话消息</p>
-        <div class="item-box flex-1 h-[52px] flex items-center px-2 cursor-pointer" v-for="item in msgUserList"
-          :key="item.partyid" @click="selectSearchUser(item)">
-          <div class="flex-1">
-            <span class="flex items-center justify-between">
-              <p class="username">
-                {{ item.username || item.remark }}
-              </p>
-            </span>
-          </div>
-        </div>
-      </template>
-      <template v-else>
-        <div class="item-box flex-1 h-[52px] flex items-center px-2 cursor-pointer" v-for="item in useService.userList"
-          :key="item.chatid" :class="useService.chatid === item.chatid ? 'active' : ''" @click="selectAllMessage(item)">
-          <div class="flex-1">
-            <span class="flex items-center justify-between">
-              <p class="username">
-                <!-- + item.nologinid.substring(0,6) -->
-                <span v-html="item.remarks || item.username || '匿名用户'"></span>
-              </p>
-              <p class="time text-sm" v-if="item.lasttime">
-                {{ transferTime(item.lasttime) }}
-              </p>
-              <div class="last-icon flex justify-start align-top h-full" @click.stop="">
-                <el-dropdown class="ml-5">
-                  <el-icon>
-                    <MoreFilled />
-                  </el-icon>
-                  <template #dropdown>
-                    <el-dropdown-menu>
-                      <el-dropdown-item @click="setBlack(item)">{{ item.blacklist ? '取消黑名单' : '设置黑名单' }}
-                      </el-dropdown-item>
-                      <el-dropdown-item @click="setRemark(item)">设置备注</el-dropdown-item>
-                      <el-dropdown-item @click="setDelel(item.chatid)" v-if="useService.isSelectMessage">{{
-                        !useService.isSelectMessage
-                          ? '操作消息' : '取消操作' }}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-              </div>
-            </span>
-            <span class="flex items-center justify-between">
-              <p class="msg-con">
-                <span v-html="item.lastmsg"></span>
-              </p>
-              <p class="flex">
-                <span class="w-6 h-6 rounded-full bg-[#ff8e16] text-[#FFFFFF] flex items-center justify-center mr-2"
-                  v-if="item.unread && item.unread !== 0">{{ item.unread }}</span>
-                <span v-if="item.blacklist">
-                  <el-tag type="danger" size="small" effect="dark" round>黑名单</el-tag>
-                </span>
-              </p>
+      <p class="is-search" v-if="isSearch">找到{{ Object.keys(useService.serviceList).length }}个对话消息</p>
+      <div class="item-box flex-1 h-[52px] flex items-center px-2 cursor-pointer" v-for="item in useService.serviceList"
+        :key="item.chatid" :class="useService.chatid === item.chatid ? 'active' : ''" @click="selectAllMessage(item)">
+        <div class="flex-1">
+          <span class="flex items-center justify-between">
+            <p class="username">
+              <!-- + item.nologinid.substring(0,6) -->
+              <span v-html="item.username || item.remark || '匿名用户'"></span>
+            </p>
+            <p class="time text-sm" v-if="item.lasttime">
+              {{ transferTime(item.lasttime) }}
+            </p>
+            <div class="last-icon flex justify-start align-top h-full" @click.stop="">
+              <el-dropdown class="ml-5">
+                <el-icon>
+                  <MoreFilled />
+                </el-icon>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="setBlack(item)">{{ item.blacklist ? '取消黑名单' : '设置黑名单' }}
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="setRemark(item)">设置备注</el-dropdown-item>
+                    <el-dropdown-item @click="setDelel(item.chatid)" v-if="useService.isSelectMessage">{{
+                      !useService.isSelectMessage
+                        ? '操作消息' : '取消操作' }}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+          </span>
+          <span class="flex items-center justify-between">
+            <p class="msg-con">
+              <span v-html="item.lastmsg"></span>
+            </p>
+            <p class="flex">
+              <span class="w-6 h-6 rounded-full bg-[#ff8e16] text-[#FFFFFF] flex items-center justify-center mr-2"
+                v-if="item.unread && item.unread !== 0">{{ item.unread }}</span>
+              <span v-if="item.blacklist">
+                <el-tag type="danger" size="small" effect="dark" round>黑名单</el-tag>
+              </span>
+            </p>
 
-            </span>
+          </span>
 
-          </div>
         </div>
-      </template>
+      </div>
     </section>
      <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" :title="`设置${state.info.username}备注`" v-model="state.showBlackDialog"
       @close="state.showBlackDialog = false">
@@ -96,7 +83,7 @@
 import { ref, reactive } from 'vue'
 import { useServiceStore } from '/@/store'
 import { Search } from '@element-plus/icons-vue'
-import { getAllUsers, apiRemoveBlacklist,apiUserSearch, apiBlacklist, apiMsgRead, apiSetRemark, apiCreateChatInfo } from '/@/api/modules/service/index.api'
+import { getAllUsers,apiUserList, apiRemoveBlacklist, apiBlacklist, apiMsgRead, apiSetRemark, apiCreateChatInfo } from '/@/api/modules/service/index.api'
 const useService = useServiceStore()
 const state = reactive({
   showBlackDialog: false,
@@ -105,10 +92,10 @@ const state = reactive({
   userName: ''
 })
 // const dataList = ref(useService.userList);
-const msgUserList = ref([])
 const isSearch = ref(false)
 const isLoading = ref(false)
 const loading = ref(false)
+const params = ref()
 
 let timer;
 const getUserListData = () => {
@@ -121,38 +108,45 @@ const getUserListData = () => {
   })
 }
 getUserListData();
-const getAllList = (params) => {
-  if (!params || !params.length) {
+const getAllList = () => {
+  if (!params.value || !params.value.length) {
     clearUserList()
     return
   }
-  isSearch.value = true;
   loading.value = true
+  isSearch.value = true;
   if (timer) {
     clearTimeout(timer);
     timer = null;
   }
   timer = setTimeout(() => {
-    // loading.value = true
-    apiUserSearch({
-      params,
-    }).then(data => {
-      loading.value = false
-      msgUserList.value = data.user
-    })
+    if(!params.value){
+      useService.serviceList = useService.userList
+    }else{
+      useService.getUserNameList(params.value)
+    }
+    loading.value = false
+    // apiUserList({
+    //   params,
+    // }).then(data => {
+    //   loading.value = false
+    // })
   }, 300);
 }
 const clearUserList = () => {
-  msgUserList.value = [];
-  state.userName = ''
-  // dataList.value = useService.userList;
-  isSearch.value = false;
+  isSearch.value = false
+  useService.serviceList = useService.userList
 }
-const selectSearchUser = async (item) => {
-  useService.setSelectMessageStatus(false);
-  await createChat(item.partyid)
-  clearUserList()
+function blurInputUser(){
+  if(!params.value){
+    useService.serviceList = useService.userList
+  }
 }
+// const selectSearchUser = async (item) => {
+//   useService.setSelectMessageStatus(false);
+//   await createChat(item.partyid)
+//   clearUserList()
+// }
 const selectAllMessage = async (item) => {
   isLoading.value = true;
   useService.setSelectMessageStatus(false);
@@ -160,7 +154,7 @@ const selectAllMessage = async (item) => {
   useService.setPartyid(item.partyid || '')
   useService.getMessageList(item.chatid).then(() => {
     isLoading.value = false;
-    clearUserList()
+    // clearUserList()
   });
   apiMsgRead({ chatid: item.chatid }).then(() => {
     getUserListData();
@@ -201,13 +195,14 @@ const setRemarkHanle = () => {
 }
 const createChat = partyid => {
   isLoading.value = true;
-  apiCreateChatInfo(
-      partyid
-    ).then(data => {
-      useService.chatid = data.chatid
-      getUserListData();
+  return new Promise(r => {
+    apiCreateChatInfo(partyid).then(async () => {
+      await getUserListData();
       isLoading.value = false;
+      r()
     })
+  })
+
 }
 const setBlack = (item) => {
   const func = item.blacklist ? apiRemoveBlacklist : apiBlacklist
