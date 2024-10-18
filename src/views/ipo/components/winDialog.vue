@@ -31,7 +31,7 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref, reactive, watch, computed, defineEmits, defineProps, h } from 'vue'
+import { ref, reactive, watch, computed, defineEmits, h } from 'vue'
 import { getIpoWin } from '/@/api/modules/ipo/index.api'
 import { getSessionToken } from '/@/api/modules/base.api'
 const props = defineProps({

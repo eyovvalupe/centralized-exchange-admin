@@ -31,7 +31,7 @@
 
 <script setup>
 import { getList } from '/@/api/modules/system/log.api'
-import { ref, defineProps,toRaw } from 'vue'
+import { ref,toRaw } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 import { copy } from '/@/utils'

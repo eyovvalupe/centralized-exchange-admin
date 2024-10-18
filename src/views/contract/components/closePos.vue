@@ -16,7 +16,7 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref, reactive, watch, computed, defineEmits, defineProps, h } from 'vue'
+import { ref, reactive, watch, computed, defineEmits, h } from 'vue'
 import { futureSell } from '/@/api/modules/contract'
 import { getSessionToken } from '/@/api/modules/base.api'
 

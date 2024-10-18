@@ -240,7 +240,12 @@ const setBlack = (item) => {
 }
 
 .msg-con {
+  max-width: 335px;
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .left-header {
