@@ -3,21 +3,21 @@ import request from '/@/api/request'
 export function getList(data) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/query/list',
+    url : '/roles/v1/ipo/q/list',
     data
   } )
 }
 export function getDetail(data) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/query/get',
+    url : '/roles/v1/ipo/q/get',
     data
   } )
 }
 export function getIpoPara(data) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/query/para',
+    url : '/roles/v1/ipo/q/para',
     data
   } )
 }
@@ -25,7 +25,7 @@ export function getIpoPara(data) {
 export function apiAdd( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/manage/add',
+    url : '/roles/v1/ipo/m/add',
     data
   } )
 }
@@ -33,14 +33,14 @@ export function apiAdd( data ) {
 export function apiEdit( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/manage/update',
+    url : '/roles/v1/ipo/m/update',
     data
   } )
 }
 export function apiDel( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/ipo/manage/del',
+    url : '/roles/v1/ipo/m/del',
     data
   } )
 }
