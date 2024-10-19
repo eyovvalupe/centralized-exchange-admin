@@ -7,7 +7,7 @@ import request from '/@/api/request'
 export function apiDepositRecord( data ) {
   return  request( {
     method : 'post',
-    url : '/roles/v1/deposit/list',
+    url : '/roles/v1/deposit/q/list',
     data : data
   })
 }

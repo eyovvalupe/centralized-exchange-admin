@@ -54,10 +54,11 @@
             <div class="border-right text-center w-4/12">
               <label>价格</label>
               <span>{{ form.price }}</span>
+              <span>{{ form.crypto }}</span>
             </div>
             <div class="text-center w-4/12">
               <label>数量</label>
-              <span>{{ form.volume }}{{ form.crypto }}</span>
+              <span>{{form.volume}}</span>
             </div>
           </div>
           <div class="text-center cursor-pointer mt-0 mb-5 p-2 bg-slate-100 border border-dashed"
@@ -194,11 +195,9 @@ const getDataList = (callback) => {
 }
 let timerIntval = null;
 const timerFunc = () => {
-  timerIntval = setTimeout(() => {
-    getDataList(() => {
-      timerFunc();
-    });
-  }, 1000);
+  timerIntval = setInterval(() => {
+    getDataList()
+  }, 5000);
 }
 onUnmounted(() => {
   timerIntval && clearTimeout(timerIntval)
@@ -210,11 +209,13 @@ onMounted(() => {
     }
   }
   if (props.data && props.data.order_no) {
-    if (form.status.indexOf('wait') !== -1) {
-      timerFunc();
-    } else {
-      getDataList();
-    }
+    // if (form.status.indexOf('wait') !== -1) {
+    //   timerFunc();
+    // } else {
+    //   getDataList();
+    // }
+    getDataList();
+    timerFunc()
     usec2cService.setMessageList([]);
     usec2cService.setOrderNo(props.data.order_no)
     ServiceChatC2C.init()
@@ -227,7 +228,7 @@ const dialogType = reactive({
 let timer;
 const cutTimer = () => {
   timer = setInterval(() => {
-    console.log(timerNumber.value);
+    // console.log(timerNumber.value);
     if (timerNumber.value <= 0) {
       timer && clearInterval(timer)
     } else {

@@ -2,10 +2,10 @@
   <div class="reset-el-styte">
     <div class="flex justify-end p-2">
       <div>
-        <el-button type="success">未处理</el-button>
-        <el-button  @click="handleSelect('c2cOrder')">已完成</el-button>
+        <!-- <el-button type="success">未处理</el-button>
+        <el-button  @click="handleSelect('c2cOrder')">已完成</el-button> -->
         <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名 " style="width: 250px;" />
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
+        <el-button type="primary" class="ml-4" @click="getDataList(1)"
           :loading="isLoading">搜索</el-button>
       </div>
     </div>
@@ -51,6 +51,7 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
@@ -103,6 +104,7 @@ const searchForm = reactive({
 })
 const columnBase = ref([
   { prop: 'uid', label: 'UID', align: 'center' },
+  { prop: 'order_no', label: '订单号', align: 'center', width: 180 },
   { prop: 'username', label: '用户名', align: 'center', width: 130 },
   { prop: 'offset', label: '方向', align: 'center' },
   { prop: 'crypto', label: '加密货币', align: 'center' },
@@ -114,6 +116,8 @@ const columnBase = ref([
   { prop: 'date', label: '时间', align: 'center' },
 ])
 const isLoading = ref(false)
+const currentPage = ref(1)
+const currentLastPage = ref(1)
 const showDialog = (data, type) => {
   if (data) {
     dialogType.info = Object.assign({ id: 1 }, data);
@@ -127,6 +131,34 @@ const closeDialogType = (item) => {
     dialogType[key] = false
   }
 }
+const getDataList = (page) => {
+  if (page) {
+    currentLastPage.value = page
+  }
+  isLoading.value = true
+  const send = { page: currentLastPage.value };
+  if (searchForm.params) {
+    send.params = searchForm.params;
+  }
+  getList(send)
+    .then(res => {
+      isLoading.value = false
+      if (!res || !res.length && currentLastPage.value > 1) {
+        currentLastPage.value = currentPage.value;
+        ElMessage({
+          offset: 200,
+          message: '已是最后一页',
+          type: 'tips'
+        })
+        return;
+      }
+      currentPage.value = currentLastPage.value;
+      tableData.value = res || []
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
+}
 let filterData = []
 watch(() => socketStore.sokcetWS, (ws) => {
   if (ws) {
@@ -134,17 +166,19 @@ watch(() => socketStore.sokcetWS, (ws) => {
   }
 }, { immediate: true })
 
-watch(() => socketStore.c2cOrderList, (c2cOrderList) => {
-  if (c2cOrderList) {
-    filterData = c2cOrderList;
-    if (searchForm.params) {
-      filterData = c2cOrderList.filter(f => {
-        return f.username.indexOf(searchForm.params) !== -1 || f.uid.indexOf(searchForm.params) !== -1
-      })
-    }
-    tableData.value = filterData;
-  }
-}, { immediate: true })
+// 关掉ws监听
+// watch(() => socketStore.c2cOrderList, (c2cOrderList) => {
+//   if (c2cOrderList) {
+//     filterData = c2cOrderList;
+//     if (searchForm.params) {
+//       filterData = c2cOrderList.filter(f => {
+//         return f.username.indexOf(searchForm.params) !== -1 || f.uid.indexOf(searchForm.params) !== -1
+//       })
+//     }
+//     // tableData.value = filterData;
+//     // getDataList()
+//   }
+// }, { immediate: true })
 const handleSelect = (key) => {
   if (!appStore.tabs.includes(key)) {
     appStore.tabs.push(key)
@@ -155,4 +189,5 @@ const handleSelect = (key) => {
     useAppStore().SET_REFRESHTAB('') // 关闭刷新
   }, 2000);
 }
+getDataList();
 </script>

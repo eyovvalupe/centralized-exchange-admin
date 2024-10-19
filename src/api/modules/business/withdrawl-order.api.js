@@ -21,7 +21,7 @@ export function apiDepositCheck( data ) {
 export function apiWithdrawRecord( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/withdraw/list',
+    url : '/roles/v1/withdraw/q/list',
     data
   })
 }
