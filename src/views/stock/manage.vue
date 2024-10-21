@@ -3,7 +3,10 @@
     <div class="flex justify-between p-2">
       <div>
         <el-button type="primary"  @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
-        <el-button type="success"  class="ml-2" @click="showDialog(null, 'showTimeDialog')">交易时间配置</el-button>
+        <el-button class="ml-2" @click="openTimeDialog('us')">{{marketTitleMap.us}}</el-button>
+        <el-button class="ml-2" @click="openTimeDialog('japan')">{{marketTitleMap.japan}}</el-button>
+        <el-button class="ml-2" @click="openTimeDialog('india')">{{marketTitleMap.india}}</el-button>
+        <el-button class="ml-2" @click="openTimeDialog('korea')">{{marketTitleMap.korea}}</el-button>
       </div>
       <div class="flex">
         <el-input v-model="searchForm.symbol" class="mr-2" placeholder="股票代码" style="width: 250px;" />
@@ -12,6 +15,7 @@
       </div>
     </div>
     <div>
+
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
@@ -41,7 +45,7 @@
   </div>
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
   <Config v-if="dialogType.showCfgDialog" :data="dialogType.info" @close="closeDialogType" />
-  <ConfigTime v-if="dialogType.showTimeDialog" :data="dialogType.info" @close="closeDialogType" />
+  <ConfigTime :market="market" :title="marketTitleMap[market]" v-if="dialogType.showTimeDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
 <script>
@@ -55,6 +59,9 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import ConfigTime from './components/ConfigTime.vue'
 import Edit from './components/Edit.vue'
+
+
+const market = ref("us")
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -70,6 +77,12 @@ const dialogType = reactive({
 const searchForm = reactive({
   params: '',
   symbol: ''
+})
+const marketTitleMap = ref({
+  us:"美国交易时间配置",
+  japan:"日本交易时间配置",
+  india:"印度交易时间配置",
+  korea:"韩国交易时间配置"
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -87,6 +100,11 @@ const showDialog = (data, type) => {
     dialogType.info = null
   }
   dialogType[type] = true;
+}
+
+const openTimeDialog = (_market)=>{
+  market.value = _market
+  showDialog(null,'showTimeDialog')
 }
 const getDataList = (page) => {
   if (page) {

@@ -1,6 +1,7 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="交易时间配置" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="title" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
+    
     <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
       <el-form-item label="时区" required  prop="timezone">
           <el-input v-model="form.timezone"  autocomplete="off" />
@@ -35,6 +36,14 @@ const props = defineProps({
   data: { // 行数据
     type: Object,
     default: () => ({})
+  },
+  title:{
+    type:String,
+    default:"交易时间配置"
+  },
+  market:{
+    type:String,
+    default:'us'
   }
 })
 const ruleForm = ref(null)
@@ -60,7 +69,9 @@ const rules = {
 const emit = defineEmits(['close', 'success'])
 const getData=()=>{
   loading.value = true;
-  apiTimeConfig().then(res=>{
+  apiTimeConfig({
+    market:props.market
+  }).then(res=>{
     form.value = res;
     loading.value = false;
   })
@@ -75,6 +86,7 @@ const handleSubmit = async (googlecode) => {
     if (props.data && props.data.id) {
       send.id = props.data.id;
     }
+    send.market = props.market
     const result = await apiUpdateTimeConfig(send)
     ElMessage({
       type: 'tips',

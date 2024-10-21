@@ -31,14 +31,14 @@ export function apiUpdateConfig(data) {
 export function apiTimeConfig(data) {
   return request( {
     method : 'post',
-    url : '/roles/v1/stock/config/tradingtime/get',
+    url : '/roles/v1/stock/config/market/get',
     data
   } )
 }
 export function apiUpdateTimeConfig(data) {
   return request( {
     method : 'post',
-    url : '/roles/v1/stock/config/tradingtime/update',
+    url : '/roles/v1/stock/config/market/update',
     data
   } )
 }
