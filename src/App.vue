@@ -48,7 +48,6 @@ html {
 }
 #app {
   font-size: 13px;
-
   .noborder {
     .el-table__inner-wrapper::before {
       display: none !important;
