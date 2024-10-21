@@ -14,6 +14,7 @@
 import { ref } from 'vue'
 import { wsConnect } from '/@/utils/socket'
 import { useSocketStore, useAppStore } from '/@/store'
+import { containsProp } from '@vueuse/core'
 
 const socketStore = useSocketStore()
 const appStore = useAppStore()
@@ -46,7 +47,8 @@ ws.on('c2corder', ({ data, code }) => {
   if (code == 200) {
     // console.log(data)
     // 暂时关闭ws监听
-    // socketStore.setDataList('c2cOrderList', data)
+    console.log(data)
+    socketStore.setDataList('c2cOrderList', data)
   }
 })
 ws.on('futures_control_list', ({ data, code }) => {

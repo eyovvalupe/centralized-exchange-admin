@@ -8,7 +8,7 @@
       <el-form-item label="卡号" prop="bank_card_number">
         <el-input v-model="form.bank_card_number" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="账号" prop="account_name">
+      <el-form-item label="姓名/账号" prop="account_name">
         <el-input v-model="form.account_name" autocomplete="off" />
       </el-form-item>
     </el-form>

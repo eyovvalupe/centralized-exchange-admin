@@ -73,14 +73,14 @@ export default [
         component: () => import('/@/views/c2c/order.vue'),
         name: 'c2cOrder',
         icon: 'VIP',
-        meta: { title: '买币订单', auth: '121', border: true,hidden: true }
+        meta: { title: '买币历史订单', auth: '121', border: true }
       },
       {
         path: '/c2cOrderWs',
         component: () => import('/@/views/c2c/orderWs.vue'),
         name: 'c2cOrderWs',
         icon: 'VIP',
-        meta: { title: 'C2C订单', auth: '121', border: true }
+        meta: { title: '买币未处理订单', auth: '121', border: true }
       },
       {
         path: '/c2cAd',
