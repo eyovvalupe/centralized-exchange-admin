@@ -8,10 +8,20 @@
         <el-button :type="searchForm.offset == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
           :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         <el-select v-model="searchForm.crypto" style="width: 150px;" class="mx-2">
-          <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" />
+          <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" >
+            <div class="select-money">
+              <img v-if="item.name != '全部加密货币'" :src="`/src/assets/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+              <span>{{ item.name }}</span>
+            </div>
+          </el-option>
         </el-select>
         <el-select v-model="searchForm.currency" style="width: 150px;">
-          <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" />
+          <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" >
+            <div class="select-money">
+              <img v-if="item.name != '全部计价法币'" :src="`/src/assets/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+              <span>{{ item.name }}</span>
+            </div>
+          </el-option>
         </el-select>
         <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
           :loading="isLoading">搜索</el-button>

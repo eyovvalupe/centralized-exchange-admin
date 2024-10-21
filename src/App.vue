@@ -836,4 +836,13 @@ small {
     margin-right: 10px;
   }
 }
+.select-money{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  img{
+    width: 20px;
+    height: 20px;
+  }
+}
 </style>
