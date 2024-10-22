@@ -46,14 +46,14 @@ export default [
         component: () => import('/@/views/users/kyc/index.vue'),
         name: 'kycList',
         icon: 'smrz',
-        meta: { title: '实名审核', auth: '103', border: true }
+        meta: { title: '实名审核', auth: '103'}
       },
       {
         path: '/RechargeOrder',
         component: () => import('/@/views/finance/deposit/index.vue'),
         name: 'RechargeOrder',
         icon: 'RechargeOrder',
-        meta: { title: '充值订单', auth: '111', noCache: true }
+        meta: { title: '充值订单', auth: '111', noCache: true , border: true }
       },
       {
         path: '/withdrawlOrder',
@@ -73,29 +73,16 @@ export default [
         component: () => import('/@/views/c2c/order.vue'),
         name: 'c2cOrder',
         icon: 'VIP',
-        meta: { title: '买币历史订单', auth: '121', border: true }
+        meta: { title: '买币历史订单', auth: '121'}
       },
       {
         path: '/c2cOrderWs',
         component: () => import('/@/views/c2c/orderWs.vue'),
         name: 'c2cOrderWs',
         icon: 'VIP',
-        meta: { title: '买币未处理订单', auth: '121', border: true }
+        meta: { title: '买币未处理订单', auth: '121'}
       },
-      {
-        path: '/c2cAd',
-        component: () => import('/@/views/c2c/ad.vue'),
-        name: 'c2cAd',
-        icon: 'RewardRecord',
-        meta: { title: 'C2C广告', auth: '121' }
-      },
-      {
-        path: '/c2cMerchant',
-        component: () => import('/@/views/c2c/merchant.vue'),
-        name: 'c2cMerchant',
-        icon: 'UserData',
-        meta: { title: 'C2C商户', auth: '121' }
-      },
+      
     ]
   },
   {
@@ -159,28 +146,37 @@ export default [
         component: () => import('/@/views/ai/pos.vue'),
         name: 'aiPos',
         icon: 'Robots',
-        meta: { title: 'Ai量化持仓单', auth: '231', noCache: true, border: true }
+        meta: { title: '交易机器人持仓单', auth: '231', noCache: true, border: true }
       },
       {
         path: '/aiSearch',
         component: () => import('/@/views/ai/search.vue'),
         name: 'aiSearch',
         icon: 'oder2',
-        meta: { title: 'Ai量化订单查询', auth: '231', noCache: true }
+        meta: { title: '交易机器人订单查询', auth: '231', noCache: true }
       },
       {
         path: '/aiIndex',
         component: () => import('/@/views/ai/index.vue'),
         name: 'aiIndex',
         icon: 'PlayerData',
-        meta: { title: 'Ai量化场控', auth: '231', noCache: true, }
+        meta: { title: '交易机器人场控', auth: '231', noCache: true, }
       },
+    ]
+  },
+  {
+    path: '/ipo',
+    component: Layout,
+    name: 'ipo',
+    icon: 'FundsFlow',
+    meta: { title: '理财', icon: 'devices' },
+    children: [
       {
         path: '/ipoIndex',
         component: () => import('/@/views/ipo/index.vue'),
         name: 'ipoIndex',
         icon: 'ipo',
-        meta: { title: 'IPO订单管理', auth: '221', border: true }
+        meta: { title: 'IPO订单管理', auth: '221' }
       },
       {
         path: '/ipoCfg',
@@ -192,7 +188,6 @@ export default [
       }
     ]
   },
-
   {
     path: '/statistics',
     component: Layout,
@@ -225,7 +220,7 @@ export default [
         component: () => import('/@/views/statistics/agentMy.vue'),
         name: 'statisticsAgentMy',
         icon: 'AgentData',
-        meta: { title: '代理商(我的)业绩', auth: '304', noCache: true,border: true  }
+        meta: { title: '代理商(我的)业绩', auth: '304', noCache: true, }
       },
       {
         path: '/statisticsAgentUser',
@@ -239,7 +234,7 @@ export default [
         component: () => import('/@/views/system/amount/index.vue'),
         name: 'Amount',
         icon: 'zhangbian',
-        meta: { title: '账变记录', auth: '311'}
+        meta: { title: '账变记录', auth: '311',border: true }
       },
     ]
   },
@@ -267,7 +262,7 @@ export default [
         component: () => import('/@/views/finance/crypto/index.vue'),
         name: 'cryptoList',
         icon: 'BetRecord',
-        meta: { title: '平台加密货币充值地址', auth: '113' }
+        meta: { title: '平台充值地址', auth: '402' }
       },
       // {
       //   path: '/Agent4',
@@ -280,7 +275,7 @@ export default [
         component: () => import('/@/views/system/exchange/index.vue'),
         name: 'exchange',
         icon: 'lianghua',
-        meta: { title: '货币兑换汇率', auth: '402' }
+        meta: { title: '法币汇率', auth: '403' }
       },
       // {
       //   path: '/Stock',
@@ -320,6 +315,20 @@ export default [
       //   icon: 'ParamsSet',
       //   meta: { title: '时间区间配置',auth: '402' },
       // },
+      {
+        path: '/c2cMerchant',
+        component: () => import('/@/views/c2c/merchant.vue'),
+        name: 'c2cMerchant',
+        icon: 'UserData',
+        meta: { title: '买币商户', auth: '121',border: true  }
+      },
+      {
+        path: '/c2cAd',
+        component: () => import('/@/views/c2c/ad.vue'),
+        name: 'c2cAd',
+        icon: 'RewardRecord',
+        meta: { title: '买币广告', auth: '121'}
+      },
     ]
   },
   {

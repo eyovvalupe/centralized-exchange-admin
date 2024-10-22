@@ -8,7 +8,7 @@ import request from '/@/api/request'
 export function apiDepositCheck( data ) {
   return  request( {
     method : 'post',
-    url : '/roles/v1/withdraw/check',
+    url : '/roles/v1/withdraw/m/check',
     data : data
   })
 }
@@ -29,7 +29,7 @@ export function apiWithdrawRecord( data ) {
 export function apiWithdrawAccount( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/withdraw/account',
+    url : '/roles/v1/withdraw/q/account',
     data
   })
 }

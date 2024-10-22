@@ -21,7 +21,7 @@ export function apiDepositCheck( data ) {
 export function apiAddress( data ) {
   return  request( {
     method : 'post',
-    url : '/roles/v1/deposit/fields',
+    url : '/roles/v1/deposit/q/fields',
     data : data
   })
 }

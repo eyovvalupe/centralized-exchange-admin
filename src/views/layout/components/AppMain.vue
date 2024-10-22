@@ -45,9 +45,6 @@ ws.on('aiquantorder', ({ data, code }) => {
 })
 ws.on('c2corder', ({ data, code }) => {
   if (code == 200) {
-    // console.log(data)
-    // 暂时关闭ws监听
-    console.log(data)
     socketStore.setDataList('c2cOrderList', data)
   }
 })
