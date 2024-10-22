@@ -10,7 +10,7 @@
         <el-select v-model="searchForm.crypto" style="width: 150px;" class="mx-2">
           <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" >
             <div class="select-money">
-              <img v-if="item.name != '全部加密货币'" :src="`/src/assets/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+              <img v-if="item.name != '全部加密货币'" :src="`/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
               <span>{{ item.name }}</span>
             </div>
           </el-option>
@@ -18,7 +18,7 @@
         <el-select v-model="searchForm.currency" style="width: 150px;">
           <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" >
             <div class="select-money">
-              <img v-if="item.name != '全部计价法币'" :src="`/src/assets/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+              <img v-if="item.name != '全部计价法币'" :src="`/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
               <span>{{ item.name }}</span>
             </div>
           </el-option>

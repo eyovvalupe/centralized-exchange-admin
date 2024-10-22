@@ -24,13 +24,13 @@
             </template>
             <template v-else-if="item.prop === 'crypto'">
               <div class="money-class">
-                <img :src="`/src/assets/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
                 <span>{{ scope.row[item.prop] }}</span>
               </div>
             </template>
             <template v-else-if="item.prop === 'currency'">
               <div class="money-class">
-                <img :src="`/src/assets/images/crypto/FIAT_${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <img :src="`/images/crypto/FIAT_${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
                 <span>{{ scope.row[item.prop] }}</span>
               </div>
             </template>
