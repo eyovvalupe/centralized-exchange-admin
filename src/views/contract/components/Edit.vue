@@ -29,6 +29,10 @@
                 @focus="setFocus('volume')" @blur="celarFocus" autocomplete="off" />
             </el-form-item>
           </div>
+          <el-form-item label="杠杠" required prop="lever">
+            <el-input v-model="form.lever"  placeholder="支持多个，英文逗号隔开" 
+              @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" />
+          </el-form-item>
         </el-form>
       </div>
       <div class="w-6/12 ml-5">
@@ -108,6 +112,7 @@ const form = reactive({
   pip_value: 1,
   price_multiple: 1,
   volume_multiple: 1,
+  lever:'',
   googlecode: '',
 })
 const profitMath = (lever) => {
@@ -116,11 +121,11 @@ const profitMath = (lever) => {
 }
 const priceMath = computed(() => {
   // 最新价格（HTTP）* 价格系统
-  return realtimeData.value.price * (form.price_multiple || 0)
+  return (realtimeData.value.price || 0) * (form.price_multiple || 0)
 })
 const volumeMath = computed(() => {
   // 最新成交额*成交量系数
-  return (realtimeData.value.volume * (form.volume_multiple || 0)).toFixed(2)
+  return ((realtimeData.value.volume || 0) * (form.volume_multiple || 0)).toFixed(2)
 })
 
 onMounted(() => {
