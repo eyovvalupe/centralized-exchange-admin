@@ -26,8 +26,8 @@
               {{ scope.row[item.prop] ? '禁用' : '启用' }}
             </span>
             <span v-else-if="item.prop === 'vip'">
-              <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : ''">
-                {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
+              <span class="status-bg ml-[2px] mr-[2px]" v-for="v in scope.row['lever']" :key="v" :class="v > 1 ? 'status-yellow' : ''">
+                {{ v > 1 ? v + 'X' : '无' }}
               </span>
             </span>
             <span v-else-if="item.prop === 'issue_price_min'">
@@ -117,6 +117,7 @@ const currentLastPage = ref(1)
 const columnBase = ref([
   { prop: 'name', label: '合约名称', align: 'center' },
   { prop: 'symbol', label: '合约代码', align: 'center' },
+  { prop: 'vip', label: '杠杆', align: 'center' },
   { prop: 'pip', label: '最小变化价位', align: 'center' },
   { prop: 'pip_value', label: '最小变化价位的点值', align: 'center' },
   { prop: 'price_multiple', label: '价格系数', align: 'center' },
@@ -156,6 +157,10 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
+      res = res || []
+      res.map(item=>{
+        item.lever = item.lever ? item.lever.split(',') : []
+      })
       tableData.value = res || []
     })
     .finally(() => {
