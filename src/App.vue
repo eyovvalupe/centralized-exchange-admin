@@ -826,4 +826,23 @@ small {
 .text-blue{
   color: #049eff;
 }
+.money-class{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img{
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+}
+.select-money{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  img{
+    width: 20px;
+    height: 20px;
+  }
+}
 </style>

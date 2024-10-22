@@ -2,8 +2,6 @@
   <div class="reset-el-styte">
     <div class="flex justify-end p-2">
       <div>
-        <el-button  @click="handleSelect('c2cOrderWs')">未处理</el-button>
-        <el-button type="success">已完成</el-button>
         <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/备注 " style="width: 250px;" />
       <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
       </div>
@@ -21,6 +19,23 @@
             <template v-else-if="item.prop === 'offset'">
               <span class="status-bg" :class="scope.row[item.prop]">
                 {{ offsetObj[scope.row[item.prop]] }}
+              </span>
+            </template>
+            <template v-else-if="item.prop === 'crypto'">
+              <div class="money-class">
+                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <span>{{ scope.row[item.prop] }}</span>
+              </div>
+            </template>
+            <template v-else-if="item.prop === 'currency'">
+              <div class="money-class">
+                <img :src="`/images/crypto/FIAT_${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <span>{{ scope.row[item.prop] }}</span>
+              </div>
+            </template>
+            <template v-else-if="item.prop === 'totalprice'">
+              <span class="text-red">
+                {{ scope.row[item.prop] }}
               </span>
             </template>
             <span v-else-if="item.prop === 'username'">
@@ -102,6 +117,7 @@ const currentLastPage = ref(1)
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID', align: 'center' },
+  { prop: 'order_no', label: '订单号', align: 'center', width: 180 },
   { prop: 'username', label: '用户名', align: 'center', width: 130 },
   { prop: 'offset', label: '方向', align: 'center' },
   { prop: 'crypto', label: '加密货币', align: 'center' },
@@ -158,14 +174,4 @@ const getDataList = (page) => {
     })
 }
 getDataList()
-const handleSelect = (key) => {
-  if (!appStore.tabs.includes(key)) {
-      appStore.tabs.push(key)
-    }
-    appStore.curTab = key
-    router.push({ name: key })
-  setTimeout(() => {
-    useAppStore().SET_REFRESHTAB('') // 关闭刷新
-  }, 2000);
-}
 </script>

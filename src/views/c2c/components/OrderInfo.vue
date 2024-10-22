@@ -64,7 +64,7 @@
           <div class="text-center cursor-pointer mt-0 mb-5 p-2 bg-slate-100 border border-dashed"
             style="border-radius: 10px;" @click="showDialog(form, 'showBankDialog')"
             v-if="form.bank_status == 'undone' && form.status.indexOf('wait') !== -1">
-            <div class="text-center"> <img src="/@/assets/imgs/account.png" style="display: inline-block;opacity: .8;">
+            <div class="text-center"> <img :src="addBank" style="display: inline-block;opacity: .8;">
             </div>
             <p style="line-height: 28px; margin-left: 10px;">设置银行卡</p>
           </div>
@@ -86,7 +86,7 @@
               </span>
             </div>
             <div class="table-list flex flex-nowrap justify-between">
-              <span>账号</span>
+              <span>姓名/账号</span>
               <span class="w-8/12 text-left pl-5 cursor-pointer" @click="copy(form.account_name)">
                 {{ form.account_name }} <el-icon>
                   <CopyDocument />
@@ -97,8 +97,9 @@
           <div class="bg-slate-50 p-2 border">
             <div v-if="form.status.indexOf('wait') !== -1">
             <div class="flex">
-              <span style="line-height: 35px;"> {{ statusObj[form.status] }}</span> <b class="timer ml-2">{{
-                formatSeconds(timerNumber) }}</b>
+              <span style="line-height: 35px;"> {{ statusObj[form.status] }}</span> <b class="timer ml-2">
+                {{formatSeconds(timerNumber) }}
+                </b>
             </div>
             <p class="text-left">请根据总价，向用户提供的银行卡转账</p>
           </div>
@@ -140,6 +141,7 @@ import BankSet from './BankSet.vue'
 import { ServiceChatC2C } from './common/ServiceChatC2C'
 import { formatSeconds, copy } from '/@/utils'
 import { useServiceStoreC2C } from '/@/store'
+import addBank from '/@/assets/imgs/account.png'
 const usec2cService = useServiceStoreC2C()
 
 const props = defineProps({
