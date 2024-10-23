@@ -41,8 +41,17 @@
                   scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
               </el-tooltip>
             </template> -->
-            <span v-else-if="item.prop == 'currency'" align="center">
+            <template v-else-if="item.prop === 'currency'">
+              <div class="money-class">
+                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <span>{{ scope.row[item.prop] }}</span>
+              </div>
+            </template>
+            <!-- <span v-else-if="item.prop == 'currency'" align="center">
               {{ scope.row[item.prop] == 'main' ? '交易账户' : scope.row[item.prop] }}
+            </span> -->
+            <span v-else-if="item.prop == 'channel'" align="center">
+              {{ scope.row[item.prop] == 'auto' ? '客户提现' : '后台下分' }}
             </span>
             <span v-else-if="item.prop == 'status'" class="status-bg"  :class="scope.row[item.prop] == 'unknown' ? 'status-yellow':scope.row[item.prop]">
               {{ options.find(f => f.value == scope.row[item.prop]).label }}
@@ -54,7 +63,9 @@
         </el-table-column>
         <el-table-column label="操作" width="170" align="center">
           <template #default="scope">
-            <el-button link :type="checkAuthCode(11101)?'primary':'info'" :disabled="!checkAuthCode(11101)" @click="showDialog(scope.row, 'showAccountDialog')">提现账号</el-button>
+            <el-button link :type="checkAuthCode(11101)?'primary':'info'"
+              v-if="scope.row['channel']=='auto'"
+             :disabled="!checkAuthCode(11101)" @click="showDialog(scope.row, 'showAccountDialog')">提现账号</el-button>
             <el-button link :type="checkAuthCode(11101) && scope.row.status == 'unknown' ?'primary':'info'" :disabled="!checkAuthCode(11101) || scope.row.status !== 'unknown'"
               @click="showDialog(scope.row, 'showDialog')">订单处理</el-button>
           </template>
@@ -112,6 +123,7 @@ const columnBase = reactive([
   { prop: 'amount', label: '提现金额', width: 100, align: 'center' },
   { prop: 'fee', label: '手续费', width: 100, align: 'center' },
   { prop: 'transfer', label: '到账金额', width: 100, align: 'center' },
+  { prop: 'channel', label: '提现类型', width: 100, align: 'center' },
   { prop: 'remarks', label: '失败原因', align: 'center' },
   { prop: 'created', label: '时间', width: 120, align: 'center' },
   { prop: 'status', label: '状态', width: 90, align: 'center' },

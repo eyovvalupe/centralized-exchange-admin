@@ -31,7 +31,7 @@ onUnmounted( () => {
   window.removeEventListener( 'resize', resizeCb )
 } )
 const goSkipPage=()=>{
-  router.replace('/')
+  router.push('/dashboard')
 }
 </script>
 

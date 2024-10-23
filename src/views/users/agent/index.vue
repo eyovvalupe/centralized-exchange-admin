@@ -67,9 +67,15 @@
             </el-table-column>
             <el-table-column label="操作" width="205" align="center">
               <template #default="scope">
-                <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-                <el-button link type="primary" @click="showDialog(scope.row, 'showParentDialog')">修改代理</el-button>
-                <el-button link type="primary" @click="showDialog(scope.row, 'setPwdDialog')">重置密码</el-button>
+                <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')"
+                  :disabled="!checkAuthCode(10101)"
+                >修改</el-button>
+                <el-button link type="primary" @click="showDialog(scope.row, 'showParentDialog')"
+                  :disabled="!checkAuthCode(10101)"
+                >修改代理</el-button>
+                <el-button link type="primary" @click="showDialog(scope.row, 'setPwdDialog')"
+                  :disabled="!checkAuthCode(10101)"
+                >重置密码</el-button>
               </template>
             </el-table-column>
             <template v-slot:empty>

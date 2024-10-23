@@ -32,6 +32,12 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
+            <template v-else-if="item.prop === 'currency'">
+              <div class="money-class">
+                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <span>{{ scope.row[item.prop] }}</span>
+              </div>
+            </template>
             <!-- 订单号展示 -->
             <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
@@ -39,9 +45,9 @@
                   scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
               </el-tooltip>
             </template> -->
-            <span v-else-if="item.prop == 'currency'" align="center">
+            <!-- <span v-else-if="item.prop == 'currency'" align="center">
              {{   scope.row[item.prop]=='main'?'交易账户':scope.row[item.prop] }}
-            </span>
+            </span> -->
             <span v-else-if="item.prop == 'channel'" align="center">
              {{   scope.row[item.prop]=='crypto'?'加密货币':'手动操作'}}
             </span>
