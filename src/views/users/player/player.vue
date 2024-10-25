@@ -229,11 +229,11 @@ const options = {
 
 const column = reactive([
   { prop: 'uid', label: 'UID', width: 100, align: 'center' },
-  { prop: 'username',width: 140, label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center' },
-  { prop: 'father_username', label: '代理', align: 'center' },
+  { prop: 'username',width: 200, label: '用户名', align: 'center' },
+  { prop: 'role', label: '角色', align: 'center',width: 100, },
+  { prop: 'father_username', label: '代理', align: 'center',width: 150, },
   { prop: 'kyc', label: '实名认证', width: 90, align: 'center' },
-  { prop: 'wallet', label: '账户余额', align: 'center' },
+  { prop: 'wallet', label: '账户余额', align: 'center',width: 120, },
   { prop: 'limit', label: '流水限制', width: 100, align: 'center' },
   { prop: 'lastlogin', label: '最后登录', width: 140, align: 'center' },
   { prop: 'remarks', label: '备注', align: 'center' },

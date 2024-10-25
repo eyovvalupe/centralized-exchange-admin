@@ -62,12 +62,23 @@ class Service {
       })
       this.socketNum.on('receive', message => {
         const { channel, type, num } = message.data;
+        let msg = ''
+        if(channel === 'deposit'){
+          msg = '您有1条新的充值消息'
+        }else if(channel === 'support'){
+          msg = '您有1条新的客服消息'
+        }else if(channel === 'withdraw'){
+          msg = '您有1条新的提现消息'
+        }else if(channel === 'kyc'){
+          msg = '您有1条新的实名审核消息'
+        }
         if (type === 'new' && useService.playVoice) {
           audio.play();
           ElNotification({
             title: '新消息提醒！',
-            message: "您有1条新的客服消息",
+            message: msg,
             position: 'bottom-right',
+            duration: 0,
           })
         }
         useService.setMessageNumObj(channel, num)

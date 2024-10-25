@@ -14,7 +14,7 @@ export function apiDepositRecord( data ) {
 export function apiDepositCheck( data ) {
   return  request( {
     method : 'post',
-    url : '/roles/v1/deposit/check',
+    url : '/roles/v1/deposit/m/check',
     data : data
   })
 }

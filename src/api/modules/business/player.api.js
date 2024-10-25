@@ -48,7 +48,7 @@ export function apiUserDeposit (data) {
 export function apiUserKYC (data) {
   return  request({
     method: 'post',
-    url: '/roles/v1/user/kyc',
+    url: '/roles/v1/user/m/kyc',
     data
   })
 }
