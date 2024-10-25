@@ -48,6 +48,7 @@ const showGoogle = ref( false )
 const form = reactive( {
   password :  generateRandomPassword(),
   googlecode : '', 
+  partyid: ''
 })
 onMounted(()=>{
   for(const key in form){

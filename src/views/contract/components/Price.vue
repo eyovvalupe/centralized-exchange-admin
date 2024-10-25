@@ -147,7 +147,7 @@ const handleSubmit = async () => {
 
 const mathBtnPrice = (num) => {
   const n = formRight.price * (num / 100);
-  form.value.adjust = Number(n).toFixed(4);
+  form.value.adjust = Number(n).toFixed(12);
 }
 
 watch(() => socketStore.sokcetWS, (ws) => {

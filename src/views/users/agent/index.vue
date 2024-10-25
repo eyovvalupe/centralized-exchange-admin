@@ -89,7 +89,7 @@
   </div>
   <playerParentDialog v-if="dialogType.showParentDialog" type="agent" :visible="dialogType.showParentDialog"
     :editInfo="dialogType.info" @close="closeDialogType" @success="closeDialogType({ reload: true })" />
-  <ResetPwd v-if="dialogType.setPwdDialog" :visible="dialogType.setPwdDialog" :editInfo="dialogType.info"
+  <ResetPwd v-if="dialogType.setPwdDialog" :visible="dialogType.setPwdDialog" :data="dialogType.info"
     @close="closeDialogType" @success="closeDialogType({ reload: true })" />
   <AddEdit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
 
