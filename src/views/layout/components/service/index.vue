@@ -13,13 +13,6 @@ import { useUserStore } from '/@/store'
 const userStore = useUserStore()
 const hasToken = userStore.token
 import { watch } from 'vue';
-watch(() => hasToken, (token) => {
-  if (token) {
-    ServiceChat.init();
-  } else {
-    ServiceChat.destroy();
-  }
-}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

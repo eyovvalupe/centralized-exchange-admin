@@ -168,6 +168,7 @@ import deposit from './components/deposit.vue'
 import { useUserStore, useServiceStore } from '/@/store'
 import userDetail from '/@/components/userDetail/index.vue'
 import { computed, ref, getCurrentInstance, watch } from "vue";
+import { ServiceChat } from '../layout/components/service/components/common/ServiceChat'
 import { dayjs } from 'element-plus'
 const useService = useServiceStore()
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -209,6 +210,8 @@ const init = (time_arr) => {
   getglobalTotal(send).then(res => {
     totalInfo.value = res;
   })
+  console.log('重新链接ws')
+  ServiceChat.initNum()
 }
 const onShortCut = (item) => {
   activeName.value = item.name;

@@ -308,7 +308,6 @@ onMounted(() => {
     // appStore.tabs = [];
     appStore.curTab = 'Dashboard'
   }
-  ServiceChat.initNum()
 })
 // changeScale(scale);
 // 点击第三排tab
@@ -374,6 +373,7 @@ const logout = async () => {
         })
       })
       userStore.LOGOUT()
+      ServiceChat.destroy()
       setTimeout(() => {
         router.push('/login')
       }, 500)
@@ -393,7 +393,6 @@ function goGooglePage(){
   }
   // this.$refs.googleDialogShowRef.openDialog(scope.row.userName)
 }
-
 </script>
 
 <style lang="scss">

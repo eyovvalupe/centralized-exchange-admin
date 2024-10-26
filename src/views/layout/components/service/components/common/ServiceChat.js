@@ -5,42 +5,8 @@ import { ElNotification } from 'element-plus'
 const audio = new Audio('/tips.mp3');
 class Service {
   constructor() {
-    this.socket = null;
     this.socketNum = null;
     this.isConnected = false
-  }
-  init() {
-    if (!this.socket) {
-      const useService = useServiceStore()
-      const token = localStorage.getItem('token') || useUserStore().token;
-      const URL = import.meta.env.VITE_PROXY_WEBSOCKET2 + '/liveSupport'
-      this.socket = io.connect(URL, {
-        transports: ['websocket'],
-        reconnectionDelayMax: 10000,
-        query: {
-          auth: token
-        }
-      })
-      this.socket.on('connect', () => {
-        this.isConnected = true;
-        useService.setConnected(this.isConnected)
-        console.log('连接成功')
-      })
-
-      this.socket.on('disconnect', () => {
-        console.log('连接断开')
-        this.isConnected = false
-        useService.setConnected(this.isConnected)
-      })
-      this.socket.on('receive', message => {
-        const arr = message.data;
-        useService.setNewMessageList(arr)
-      })
-      this.socket.on('user', message => {
-        const arr = message.data;
-        useService.setUserList(arr)
-      })
-    }
   }
   initNum() {
     if (!this.socketNum) {
@@ -55,7 +21,7 @@ class Service {
         }
       })
       this.socketNum.on('connect', () => {
-        console.log('连接成功')
+        console.log('连接成功socketNum')
       })
       this.socketNum.on('disconnect', () => {
         console.log('连接断开')
@@ -84,6 +50,7 @@ class Service {
         useService.setMessageNumObj(channel, num)
       })
     }
+    return this.socketNum
   }
   // 发送消息
   sendMessage(type, message) {
@@ -103,10 +70,10 @@ class Service {
   // 断开
   destroy() {
     this.isConnected = false;
-    if (this.socket) {
-      this.socket.off(); // 移除所有监听器
-      this.socket.disconnect();
-      this.socket = null;
+    if (this.socketNum) {
+      this.socketNum.off(); // 移除所有监听器
+      this.socketNum.disconnect();
+      this.socketNum = null;
     }
   }
 }

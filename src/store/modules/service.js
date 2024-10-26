@@ -149,6 +149,9 @@ const useServiceStore = defineStore({
         this.newMessageList[chatid] = del_img_arr;
 
       })
+    },
+    clearMsg(){
+      this.messageNumObj = {}
     }
   }
 })
