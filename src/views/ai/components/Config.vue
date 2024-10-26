@@ -2,7 +2,7 @@
    <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="交易参数配置" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
     <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
-      <el-form-item label="杠杠" required  prop="lever">
+      <el-form-item label="杠杆" required  prop="lever">
           <el-input v-model="form.lever"  autocomplete="off" placeholder="支持多个，英文逗号隔开" />
         </el-form-item>
       <el-form-item label="开仓手续费(%)" required prop="open_fee">

@@ -2,9 +2,6 @@
    <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="交易参数配置" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
     <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
-      <el-form-item label="杠杠" required  prop="lever">
-          <el-input v-model="form.lever"  autocomplete="off" placeholder="支持多个，英文逗号隔开" />
-        </el-form-item>
       <el-form-item label="开仓手续费(%)" required prop="open_fee">
           <el-input v-model="form.open_fee" autocomplete="off" />
         </el-form-item>
@@ -43,7 +40,6 @@ const show = ref(true)
 const showGoogle = ref(false)
 
 const form = ref({
-  lever: '',
   open_fee: '',
   holding_fee: '',
 })
@@ -51,7 +47,6 @@ const form = ref({
 
 const trigger = ['blur', 'change']
 const rules = {
-  lever: [{ required: true, message: '', trigger }],
   symbol: [{ required: true, message: '', trigger }],
   open_fee: [{ required: true, message: '', trigger }],
   holding_fee_cycle: [{ required: true, message: '', trigger }],

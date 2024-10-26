@@ -209,9 +209,8 @@ const transKeyName = (val, key) => {
 const columnBase = ref([
   // { prop: 'order_no', label: '订单号',width: 80, align: 'center' },
   { prop: 'uid', label: 'UID', width: 80, align: 'center' },
-  { prop: 'username', label: '用户名', width: 130, align: 'center' },
+  { prop: 'username', label: '用户名', width: 150, align: 'center' },
   { prop: 'role', label: '角色', width: 100, align: 'center' },
-  { prop: 'father_username', label: '代理',width: 110,  align: 'center' },
   { prop: 'name', label: '名称', align: 'center' },
   { prop: 'offset', label: '开仓',  align: 'center' },
   // { prop: 'price_type', label: '限价方式', align: 'center' },

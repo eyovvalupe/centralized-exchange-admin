@@ -29,7 +29,7 @@
                 @focus="setFocus('volume')" @blur="celarFocus" autocomplete="off" />
             </el-form-item>
           </div>
-          <el-form-item label="杠杠" required prop="lever">
+          <el-form-item label="杠杆" required prop="lever">
             <el-input v-model="form.lever"  placeholder="支持多个，英文逗号隔开" 
               @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" />
           </el-form-item>
@@ -162,6 +162,7 @@ const handleSubmit = async (googlecode) => {
   const api = (!props.data || !props.data.id) ? apiAdd : apiEdit
   isLoading.value = true
   showGoogle.value = false
+  form.lever = form.lever.toString()
   try {
     const send = { ...form, googlecode };
     if (props.data && props.data.id) {

@@ -53,7 +53,7 @@
           <template #default="scope">
             <span class="flex justify-center align-middle">
               <el-button link type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
-              <el-dropdown>
+              <!-- <el-dropdown>
                 <img style="width: 20px; height: 20px;margin-top: 5px;" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -64,7 +64,7 @@
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </span>
           </template>
         </el-table-column>
