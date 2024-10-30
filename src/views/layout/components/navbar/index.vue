@@ -1,7 +1,7 @@
 <template>
   <section class="app-header">
     <!-- 第一排 -->
-    <header class="header-bg h-[50px] w-full flex border-b text-sm pl-[10px] hidden">
+    <header class="header-bg h-[50px] w-full flex border-b text-sm pl-[10px]">
       <el-menu popper-class="header-menus" :default-active="activeIndex" :hide-timeout="100" :show-timeout="0"
         :collapse-transition="false" class="h-[40px] flex-1" mode="horizontal" @select="handleSelect"
         v-show="routesList.length">
