@@ -1,29 +1,44 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2">
-      <div>
-        <el-button :type="searchForm.role == item.value ? 'success' : 'default'" v-for="(item) in option"
-        :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-      <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/备注" style="width: 200px;" />
-      <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-        end-placeholder="请选择结束时间" style="width: 280px;" />
+  <div class="">
+    <div class="flex justify-between p-2 reset-el-styte-v2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="contractPos">合约持仓单</el-radio-button>
+          <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
+          <el-radio-button label="contractCtr">合约场控</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="flex items-center">
+         <div class="w-[168px]">
+          <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
+            <el-option  v-for="(item) in option"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[264px] ml-2">
+          <el-input v-model="searchForm.params"  suffix-icon="search" placeholder="UID/用户名/备注" />
+        </div>
+        <div class="w-[400px] ml-2">
+          <el-date-picker style="width:100%;" v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间" end-placeholder="请选择结束时间"/>
+        </div>
       <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
           <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
         </el-select> -->
-      <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
+      <el-button type="primary" class="w-[120px] ml-2" :icon="Search" @click="getDataList(1)" :loading="isLoading">查询</el-button>
     </div>
     </div>
-    <div class="p-2 pt-0 h-full">
+    <div class="p-2 pt-0 h-full reset-el-styte-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'profit'" >
-              <span class="w-100 block" :class="scope.row[item.prop] > 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
+            <span v-if="item.prop === 'profit'"  class="flex items-center">
+              <span class="w-100 block" :class="scope.row[item.prop] >= 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
                 {{ scope.row[item.prop] }}
               </span>
-              <span class="w-100 block" :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
+              <b class="split-line"></b>
+              <span class="w-100 block" :class="scope.row['ratio'] >= 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
                 {{ scope.row['ratio'] * 100 }}%
               </span>
             </span>
@@ -32,7 +47,7 @@
                 scope.row[item.prop] }}</span>
             </template>
             <span v-else-if="item.prop === 'username'">
-            <span class=" cursor-pointer text-[#165DFF]"
+            <span class=" cursor-pointer text-[#4377FE] underline"
               @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
             </span>
@@ -48,10 +63,10 @@
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
-            <span v-else-if="['offset'].includes(item.prop)">
+            <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>
-              {{ transKeyName(scope.row[item.prop], item.prop) }}
+              <span class="status-bg" :class="[scope.row[item.prop] == 'long' ? 'success' : 'short']">{{ transKeyName(scope.row[item.prop], item.prop) }}</span>
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
@@ -71,9 +86,11 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="70" align="center">
+        <el-table-column label="操作" width="160" align="center">
           <template #default="scope">
-            <el-button link type="primary" @click="showDialog(scope.row)">查看订单</el-button>
+            <el-button link type="primary" @click="showDialog(scope.row)">
+              <img class="mr-[5px]" src="/src/assets/images/order.svg" />查看订单
+            </el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
@@ -97,11 +114,20 @@ import detailDialog from '/@/components/detailDialog/index.vue'
 
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:contractSearch', () => {
   getDataList()
 })
+
+const tabPosition = ref('contractSearch')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
 const timeRanges=ref([])
 const optionStatus = [
   {
@@ -208,18 +234,18 @@ const transKeyName = (val, key) => {
 
 const columnBase = ref([
   // { prop: 'order_no', label: '订单号',width: 80, align: 'center' },
-  { prop: 'uid', label: 'UID', width: 80, align: 'center' },
+  { prop: 'uid', label: 'UID', width: 100, align: 'center' },
   { prop: 'username', label: '用户名', width: 150, align: 'center' },
   { prop: 'role', label: '角色', width: 100, align: 'center' },
   { prop: 'name', label: '名称', align: 'center' },
-  { prop: 'offset', label: '开仓',  align: 'center' },
+  { prop: 'offset', label: '开仓',width: 200,  align: 'center' },
   // { prop: 'price_type', label: '限价方式', align: 'center' },
-  { prop: 'open_volume', label: '开仓数量', width: 110, align: 'center' },
+  { prop: 'open_volume', label: '开仓数量', width: 150, align: 'center' },
   { prop: 'margin', label: '开仓保证金', align: 'center' },
   // { prop: 'settled_price', label: '订单结算价格', width: 110, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',  width: 110, align: 'center' },
-  { prop: 'status', label: '状态', width: 70, align: 'center' },
-  { prop: 'date', label: '时间',  width: 110, align: 'center' }
+  { prop: 'profit', label: '订单收益/百分比',  width: 200, align: 'center' },
+  { prop: 'status', label: '状态', width: 120, align: 'center' },
+  { prop: 'date', label: '时间',  width: 150, align: 'center' }
 ])
 
 // const column = reactive([
