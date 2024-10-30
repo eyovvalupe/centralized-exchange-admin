@@ -1,17 +1,21 @@
 <template>
   <section class="app-header">
     <!-- 第一排 -->
-    <header class="header-bg h-[40px] w-full flex border-b text-sm">
+    <header class="header-bg h-[50px] w-full flex border-b text-sm pl-[10px] hidden">
       <el-menu popper-class="header-menus" :default-active="activeIndex" :hide-timeout="100" :show-timeout="0"
         :collapse-transition="false" class="h-[40px] flex-1" mode="horizontal" @select="handleSelect"
         v-show="routesList.length">
         <template v-for="(item, index) in routesList" :key="index">
           <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''"
-            v-if="!item.children || item.hiddenChild">{{ item.meta.title }}</el-menu-item>
+            v-if="!item.children || item.hiddenChild">
+            <SvgIcon class="w-4 h-4 mr-2" size="16px" :name="item.icon" />
+            {{ item.meta.title }}
+          </el-menu-item>
           <el-sub-menu :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''" v-else
             class="top-sub-menu">
             <template #title>
-              <span>{{ item.meta.title }}</span>
+              <span class="flex items-center">
+                <SvgIcon :name="item.icon" color="#e00" class="w-4 h-4 mr-2" size="16px" />{{ item.meta.title }}</span>
             </template>
             <template v-for="(_item, _index) in item.children" :key="_index">
               <template v-if="!_item.subMenu && !_item.meta.hidden">
@@ -75,7 +79,7 @@
       <ul class="menu-two flex items-center text-sm">
         <li v-for="item in shortCut" :key="item.name" class="cursor-pointer flex items-center"
           @click="onShortCut(item)">
-          <span class="px-2 mr-4 flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
+          <span class="mr-[30px] flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
             <span class="badge-box">
               <el-image :src="`/images/menus/${item.icon || item.name}.svg`" class="w-5 h-5 mr-1">
                 <template #error>
@@ -137,7 +141,7 @@
     </header>
     <!-- 第三排 -->
     <footer class="bg-white">
-      <el-tabs v-model="activeIndex" type="card" closable @tab-click="handleClickTab" @tab-remove="removeTab">
+      <el-tabs v-model="activeIndex" type="card" class="custom-tab" closable @tab-click="handleClickTab" @tab-remove="removeTab">
         <el-tab-pane v-for="(item, index) in tabs" :key="index" :label="item.meta.title" :name="item.name">
           <template #label>
             <span>
@@ -176,6 +180,8 @@ import { useServiceStore, useUserStore, useAppStore, useCommonStore } from '/@/s
 import { apilogout } from '/@/api/modules/login.api'
 import routes from '/@/router/modules/menus'
 import UpdatePassword from '../../components/updatePwd'
+
+import SvgIcon from '/@/components/SvgIcon.vue'
 
 // import ServiceDialog from './components/service'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -412,29 +418,23 @@ function goGooglePage(){
     background: #fff !important;
   }
 
-  .el-menu-item,
-  .el-sub-menu {
-    width: 55px !important;
-    text-align: center;
-    flex: none;
-
-    &:hover {
-      color: #333 !important;
-      background: #f5f5f5 !important;
-    }
-  }
-
   .top-sub-menu {
+    padding: 0 20px;
+    > .el-sub-menu__title {
+      padding: 0px !important;
+    }
     .el-icon {
       display: none;
     }
 
     &.is-active {
-      // background: #e8ebee !important;
-
       .el-sub-menu__title {
-        color: #165DFF !important;
+        color: var(--el-color-primary) !important;
         border: none !important;
+        font-size: 16px;
+      }
+      svg path{
+        fill:var(--el-color-primary) !important;
       }
     }
   }
@@ -442,17 +442,16 @@ function goGooglePage(){
 
 .el-sub-menu__title {
   font-weight: 400;
-  color: #666 !important;
+  color: #000;
 }
 
 .badge-box {
   position: relative;
-  background-color: #f5f5f5;
-  padding: 5px;
+  background-color: #F0F0F0;
+  padding: 5px 10px;
   height: 30px;
-  line-height: 22px;
   width: auto;
-  border-radius: 5px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -527,5 +526,50 @@ function goGooglePage(){
   transform: translateY(30px);
   opacity: 0;
 }
+.custom-tab :deep(.el-tabs__nav-wrap){
+  margin-bottom: 0px;
+}
+
+.custom-tab :deep(.el-tabs__header .el-tabs__nav) {
+  background: #fff;
+  border: none !important;
+  border-bottom: 1px solid #f5f5f5;
+}
+.custom-tab :deep(.el-tabs__header .el-tabs__item){
+  margin:0px !important;
+  padding: 0px !important;
+  box-shadow: 0 0 0 #f5f5f5 !important;
+  border:0px !important;
+  height: 39px !important;
+  border-radius: 4px;
+  font-weight: normal;
+  color:#666;
+  > span{
+    padding:0 48px;
+  }
+  .is-icon-close{
+    position: absolute;
+    right:7px;
+    top:6px;
+    opacity: 0;
+  }
+  &:hover.is-icon-close{
+      opacity: 1;
+  }
+  &:hover {
+    padding: 0px !important;
+  }
+  &.is-active {
+    padding: 0px;
+    color: #4377FE;
+    background-color: #E1EAFF !important;
+    .is-icon-close{
+      opacity: 1;
+    }
+  }
+}
+
+
+
 </style>(: string)(: { notArrow: any; name: any; isRoute: any; isDialog: any }): any(: any[])(: { children: any[] })(:
 { subMenu: any; children: any[] })(: any): string: any(: { paneName: any })(: any)(: any)(: any)

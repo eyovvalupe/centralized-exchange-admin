@@ -5,7 +5,7 @@ export default [
     path: "/dashboard",
     name: "Dashboard",
     component: Layout,
-    icon: 'Console',
+    icon: 'home',
     hiddenChild: true,
     meta: { title: '首页' },
     redirect: "/dashboard",
@@ -23,8 +23,8 @@ export default [
     path: '/users',
     component: Layout,
     name: 'users',
-    icon: 'yewu',
-    meta: { title: '业务', icon: 'devices' },
+    icon: 'business',
+    meta: { title: '业务' },
     children: [
       {
         path: '/AgentList',
@@ -89,8 +89,8 @@ export default [
     path: '/order',
     component: Layout,
     name: 'order',
-    icon: 'FundsFlow',
-    meta: { title: '交易', icon: 'devices' },
+    icon: 'trade',
+    meta: { title: '交易' },
     children: [
       {
         path: '/orderPositions',
@@ -168,8 +168,8 @@ export default [
     path: '/ipo',
     component: Layout,
     name: 'ipo',
-    icon: 'FundsFlow',
-    meta: { title: '理财', icon: 'devices' },
+    icon: 'financial',
+    meta: { title: '理财'},
     children: [
       {
         path: '/ipoIndex',
@@ -192,8 +192,8 @@ export default [
     path: '/statistics',
     component: Layout,
     name: 'statistics',
-    icon: 'sjdata',
-    meta: { title: '数据', icon: 'devices' },
+    icon: 'data',
+    meta: { title: '数据' },
     children: [
       {
         path: '/whithdrawDeposit',
@@ -248,7 +248,7 @@ export default [
   // },
   {
     component: Layout,
-    icon: 'ParamsSet',
+    icon: 'setting',
     meta: { title: '配置', icon: 'devices' },
     children: [
       // {
@@ -335,8 +335,8 @@ export default [
     path: '/System',
     component: Layout,
     name: 'System',
-    icon: 'sys',
-    meta: { title: '系统', icon: 'devices' },
+    icon: 'system',
+    meta: { title: '系统' },
     children: [
       {
         path: '/ParamsSet',
