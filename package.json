@@ -72,6 +72,7 @@
     "vite": "^3.2.3",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-mock": "^2.9.6",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^9.1.0"
   },
   "homepage": "",

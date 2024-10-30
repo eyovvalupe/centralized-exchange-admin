@@ -10,6 +10,9 @@ import './permission'
 import 'tailwindcss/tailwind.css'
 import 'element-plus/dist/index.css'
 
+//svg icon
+import 'virtual:svg-icons-register'
+
 // 导入公共样式
 // import './assets/styles/index.scss'
 
