@@ -5,7 +5,7 @@
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
-          <el-radio-button label="contractCtr">合约场控</el-radio-button>
+          <el-radio-button label="contractIndex">合约场控</el-radio-button>
         </el-radio-group>
         <el-button class="ml-2" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
         <!-- <el-button :type="checkAuthCode(232)?'success':'info'" :disabled="!checkAuthCode(232)"  @click="showDialog(null, 'showCtrDialog')">合约场控</el-button> -->

@@ -1,35 +1,42 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="`${detailData.username || ''}个人详细信息`" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <div v-loading="dialogLoading" style="min-height: 400px;">
+    <div v-loading="dialogLoading" style="min-height: 400px;" class="mt-[10px]">
       <template v-if="!dialogLoading">
         <el-tabs v-model="activeName" type="border-card">
           <el-tab-pane label="财务数据" name="first">
-            <div class="border p-2 bg-slate-50">
-              <div class="flex mb-3 reset-el-styte">
-                <el-date-picker v-model="searchForm.start_time" :disabled-date="disabledStart" type="date"
-                  placeholder="请选择开始时间" />
-                <el-date-picker v-model="searchForm.end_time" :disabled-date="disabledEnd" type="date" class="mx-2"
-                  placeholder="请选择结束时间" />
-                <el-button type="primary" class="default_btn" @click="handleSearch"> 搜索 </el-button>
+            <div class="border p-[20px] bg-slate-50">
+              <div class="flex search-box">
+                <el-date-picker
+                  class="search-date-picker"
+                  v-model="daterange"
+                  type="daterange"
+                  start-placeholder="请选择开始时间"
+                  end-placeholder="请选择结束时间"
+                  range-separator="至"
+                  format="YYYY-MM-DD"
+                  date-format="YYYY/MM/DD"
+                  @change="daterangeChange"
+                />
+                <el-button type="primary" class="rounded-[8px] ml-[10px] w-[80px]" @click="handleSearch"> 查询 </el-button>
               </div>
-              <div class="text-sm mt-2 mb-1">充提合计(USDT)</div>
+              <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">充提合计(USDT)</div>
               <div v-for="(item, index2) in columnBase" :key="index2"
                 class="table-list flex flex-nowrap justify-between">
-                <span>{{ item.label }}</span>
-                <span class="w-7/12 text-center">{{ detailData.fund[item.prop] }}</span>
+                <span class="text-center">{{ item.label }}</span>
+                <span class="w-7/12 text-center" style="color:#000;">{{ detailData.fund[item.prop] }}</span>
               </div>
             </div>
-            <div class="flex">
+            <div class="flex mt-[20px]">
               <div class="w-7/12">
-                <div class="flex mt-2 mb-1">
-                <div class="text-sm mt-1">业务账户</div>
+                <div class="flex mb-[5px]">
+                <div class="text-sm mt-1" style="color:#000;">业务账户</div>
               </div>
-                <div>
+                <div style="color:#000;">
                   <div class="table-list flex flex-nowrap justify-between bg-slate-50">
                     <span class="w-4/12 text-center">账户</span>
-                    <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;"><b>货币</b></span>
-                    <span class="w-8/12 text-center"><b>金额</b></span>
+                    <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;">货币</span>
+                    <span class="w-8/12 text-center">金额</span>
                   </div>
                   <div v-for="child in detailData.fund['account']" :key="child.currency"
                     class="table-list flex flex-nowrap justify-between">
@@ -40,20 +47,20 @@
                 </div>
               </div>
               <div class="w-5/12 ml-2">
-              <div class="flex justify-between mt-2 mb-1">
-                <div class="text-sm mt-1">现金账户</div>
+              <div class="flex justify-between mb-[5px]">
+                <div class="text-sm mt-1" style="color:#000;">现金账户</div>
                 <div>
-                  <span class="mr-2">隐藏0余额</span>
+                  <span class="mr-2 text-xs">隐藏0余额</span>
                   <el-switch v-model="showZreo" size="small" />
                 </div>
               </div>
-              <div class="table-list flex flex-nowrap justify-between bg-slate-50">
+              <div class="table-list flex flex-nowrap justify-between bg-slate-50" style="color:#000;">
                 <span class="w-4/12 text-center">货币</span>
-                <span class="w-7/12 text-center"><b>金额</b></span>
+                <span class="w-7/12 text-center">金额</span>
               </div>
               <template v-for="child in detailData.fund['wallet']" :key="child.currency">
-                <div class="table-list flex flex-nowrap justify-between" v-if="!(showZreo && child.amount == 0)">
-                  <span>{{ child.name }}</span>
+                <div class="table-list flex flex-nowrap justify-between" v-if="!(showZreo && child.amount == 0)" style="color:#000;">
+                  <span class="text-center">{{ child.name }}</span>
                   <span class="w-7/12 text-center">{{ child.amount }}</span>
                 </div>
               </template>
@@ -63,30 +70,30 @@
           </el-tab-pane>
           <el-tab-pane label="基础数据" name="second">
             <div v-for="(item, index) in columnInfo" :key="index" class="table-list flex flex-nowrap justify-between">
-              <span>{{ item.label }}</span>
-              <span class="w-7/12 text-center" v-if="item.prop === 'kyc'">
-                <span class="status-bg" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'status-green'">
+              <span class="w-4/12 bg-slate-50">{{ item.label }}</span>
+              <span class="w-8/12" v-if="item.prop === 'kyc'">
+                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'lock'">
                   {{ ['未实名', 'L1认证', 'L2认证'][detailData.base[item.prop]] }}
                 </span>
               </span>
-              <span class="w-7/12  text-center " v-else-if="item.prop === 'limit'">
-                <span class="status-bg" :class="detailData.base[item.prop] ? 'status-yellow' : 'status-green'">
+              <span class="w-8/12" v-else-if="item.prop === 'limit'">
+                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] ? 'status-yellow' : 'status-green'">
                   {{ detailData.base['limit'] ? detailData.base['limit'] : '未限制' }}
                 </span>
               </span>
-              <span class="w-7/12  text-center " v-else-if="item.prop === 'role'">
+              <span class="w-8/12" v-else-if="item.prop === 'role'">
                 {{ roleName(detailData.base[item.prop]) }}
               </span>
-              <span class="w-7/12 text-center" v-else>
-                <span class="status-bg" v-if="item.prop === 'locked'"
+              <span class="w-8/12" v-else>
+                <div class="status" v-if="item.prop === 'locked'"
                   :class="!detailData.base[item.prop] ? '' : 'status-yellow'">
                   {{ detailData.base[item.prop] ? '限制' : '正常' }}
-                </span>
-                <span class="status-bg" v-else
+                </div>
+                <div class="status" v-else
                   :class="detailData.base[item.prop] || detailData.base[item.prop] == null ? '' : 'status-yellow'">
                   {{ typeof (detailData.base[item.prop]) === 'boolean' ? (detailData.base[item.prop] ? '正常' : '限制') :
                     detailData.base[item.prop] }}
-                </span>
+                </div>
               </span>
             </div>
           </el-tab-pane>
@@ -116,7 +123,15 @@ const searchForm = reactive({
   start_time: '',
   end_time: ''
 })
-
+const daterange = ref([])
+const daterangeChange = (val)=>{
+  if(val[0]){
+    searchForm.start_time = val[0]
+  }
+  if(val[1]){
+    searchForm.end_time = val[1]
+  }
+}
 const options = {
   money: '现金账户',
   stock: '股票账户',
@@ -197,5 +212,3 @@ handleSearch();
 getBaseInfo();
 const emit = defineEmits(['close', 'success'])
 </script>
-
-<style lang="scss" scoped></style>

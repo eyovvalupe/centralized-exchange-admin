@@ -544,17 +544,17 @@ function goGooglePage(){
   padding: 0px !important;
   box-shadow: 0 0 0 #f5f5f5 !important;
   border:0px !important;
-  height: 39px !important;
+  height: 32px !important;
   border-radius: 4px;
   font-weight: normal;
   color:#666;
   > span{
-    padding:0 48px;
+    padding:0 23px;
   }
   .is-icon-close{
     position: absolute;
-    right:7px;
-    top:6px;
+    right:3px;
+    top:3px;
     opacity: 0;
   }
   &:hover .is-icon-close{

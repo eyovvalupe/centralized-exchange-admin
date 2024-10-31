@@ -1,7 +1,7 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="540" class="reset-el-styte" title="新增锁定单" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="新增锁定单" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <div class="flex">
+    <div class="flex py-[10px]">
       <div class="w-6/12">
         <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm" v-loading="loading">
           <el-form-item label="用户UID" required prop="uid">
@@ -20,13 +20,13 @@
             </el-select>
           </el-form-item>
           <div class="flex justify-between">
-            <el-form-item label="开仓方向" required prop="offset" class="w-4/12 mr-1">
+            <el-form-item label="开仓方向" required prop="offset" class="w-4/12 mr-[5px]">
               <el-select v-model="form.offset" class="w-full" placeholder="">
                 <el-option label="买涨" value="long" />
                 <el-option label="买跌" value="short" />
               </el-select>
             </el-form-item>
-            <el-form-item label="杠杆类型" required prop="lever_type" class="w-4/12 mr-1">
+            <el-form-item label="杠杆类型" required prop="lever_type" class="w-4/12 mr-[5px]">
               <el-select v-model="form.lever_type" class="w-full" placeholder="">
                 <el-option label="全仓" value="cross" />
                 <el-option label="逐仓" value="isolated" />
@@ -41,7 +41,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="w-6/12 pl-2 right-box" :class="{ showcolor: showErrClass }">
+      <div class="w-6/12 pl-[20px] right-box" :class="{ showcolor: showErrClass }">
         <div>
           <h2 class="mb-2">锁定单确认</h2>
           <div class="table-list flex flex-nowrap justify-between">
@@ -54,19 +54,19 @@
           </div>
           <div class="table-list flex flex-nowrap justify-between">
             <span style="width: 50%;font-weight: normal;" class="text-right">锁定差额</span>
-            <span class="w-6/12 text-left status" :class="diffBalance <= 0 ? 'fail' : ''">{{ diffBalance }}</span>
+            <span class="w-6/12 text-left status" :class="diffBalance <= 0 ? 'error' : ''">{{ diffBalance }}</span>
           </div>
         </div>
-        <div class="txt-tips mt-5 status fail" v-if="diffBalance <= 0">
+        <div class="mt-[10px] status error text-xs" v-if="diffBalance <= 0">
           * 锁定差额小于或等于0，无效订单
         </div>
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="pb-[10px] pr-[10px]">
+        <el-button size="large" class="w-[98px]" @click="emit('close', false)" round>取消</el-button>
+        <el-button size="large" type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

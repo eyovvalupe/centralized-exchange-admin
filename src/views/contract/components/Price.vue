@@ -1,7 +1,7 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="680" class="reset-el-styte" title="调整价格" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="调整价格" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <div class="flex justify-between" v-loading="loading">
+    <div class="flex justify-between pt-[10px]" v-loading="loading">
       <div class="w-7/12">
         <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
           <el-form-item label="名称">
@@ -13,9 +13,9 @@
           <el-form-item label="调整值" required prop="adjust">
             <el-input v-model="form.adjust"  autocomplete="off" />
             <div>
-              <el-button type="success" size="small" plain @click="mathBtnPrice(1)">涨1%</el-button>
-              <el-button type="success" size="small" plain @click="mathBtnPrice(5)">涨5%</el-button>
-              <el-button type="success" size="small" plain @click="mathBtnPrice(10)">涨10%</el-button>
+              <el-button type="success" size="small"  @click="mathBtnPrice(1)">涨1%</el-button>
+              <el-button type="success" size="small"  @click="mathBtnPrice(5)">涨5%</el-button>
+              <el-button type="success" size="small"  @click="mathBtnPrice(10)">涨10%</el-button>
               <el-button type="danger" size="small" plain @click="mathBtnPrice(-1)">跌1%</el-button>
               <el-button type="danger" size="small" plain @click="mathBtnPrice(-5)">跌5%</el-button>
               <el-button type="danger" size="small" plain @click="mathBtnPrice(-10)">跌10%</el-button>
@@ -61,10 +61,10 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div  class="pb-[10px] pr-[10px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

@@ -18,21 +18,21 @@
       <div class="w-5/12 ml-4 right-box">
         <div class="mt-7">
           <div class="table-list p-2">
-            原成交额(调整前) <br>
-            <p class="text-left status blue">{{ oldAmountMath || 'N/A' }}</p>
+            <label>原成交额(调整前) </label><br>
+            <p class="leading-[22px] status blue">{{ oldAmountMath || 'N/A' }}</p>
           </div>
           <div class="table-list p-2">
-            最新成交额(调整后) <br>
-            <p class="text-left status blue">{{ amountMath || 'N/A' }}</p>
+            <label>最新成交额(调整后)</label> <br>
+            <p class="leading-[22px] status blue">{{ amountMath || 'N/A' }}</p>
           </div>
         </div>
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div  class="pb-[10px] pr-[10px]">
+        <el-button @click="emit('close', false)" round class="w-[98px]">取消</el-button>
+        <el-button type="primary"  class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

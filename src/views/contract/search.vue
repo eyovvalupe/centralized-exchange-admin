@@ -1,11 +1,11 @@
 <template>
-  <div class="">
+  <div class="p-2">
     <div class="flex justify-between p-2 reset-el-styte-v2">
       <div class="flex items-center ">
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
-          <el-radio-button label="contractCtr">合约场控</el-radio-button>
+          <el-radio-button label="contractIndex">合约场控</el-radio-button>
         </el-radio-group>
       </div>
       <div class="flex items-center">

@@ -1,5 +1,5 @@
 <template>
-     <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" :loading="dialogLoading" width="480" title="订单详情"
+     <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" :loading="dialogLoading" width="500" title="订单详情"
         @close="closeDialogType">
         <div v-loading="dialogLoading" class="order-con-ovderhide">
             <template v-if="!dialogLoading">
@@ -9,29 +9,33 @@
                         style="display: flex;justify-content: center;flex-direction: column;">{{ item.label }}</span>
                     <span class="table-span-right">
                         <!-- <span v-if="item.prop ==='ratio'"  :class="detailData[item.prop]<0?'success':detailData[item.prop]>0?'failure':''">{{ detailData[item.prop] }} %</span> -->
-                        <span v-if="['offset'].includes(item.prop)">
+                        <span class="flex items-center" v-if="['offset'].includes(item.prop)">
                             {{ transKeyName(detailData['lever_type'], 'lever_type') }}
                             <b class="split-line"></b>
-                            {{ transKeyName(detailData[item.prop], item.prop) }}
+                            <span class="status-bg" :class="[detailData[item.prop] == 'long' ? 'success' : 'short']">{{ transKeyName(detailData[item.prop], item.prop) }}</span>
                             <b class="split-line"></b>
                             {{ detailData['lever'] }}X
                         </span>
-                        <span v-else-if="['status'].includes(item.prop)"
-                            :class="detailData[item.prop] == 'lock' ? 'status-bg none' : ''">
+                        <span v-else-if="['status'].includes(item.prop)">
                             {{ transKeyName(detailData[item.prop], item.prop) }}
                         </span>
                         <span v-else-if="item.prop === 'username'"> {{ detailData['uid'] }} / {{ detailData[item.prop]
                             }}</span>
-                        <span v-else-if="item.prop === 'price_type'"> {{ transKeyName(detailData[item.prop], item.prop)
-                            }} ｜ {{
+                        <span class="flex items-center" v-else-if="item.prop === 'price_type'"> {{ transKeyName(detailData[item.prop], item.prop)
+                            }} <b class="split-line"></b> {{
                                 detailData['open_price'] }}</span>
                         <span v-else-if="item.prop === 'lever'">{{ detailData[item.prop] }}x</span>
-                        <span v-else-if="item.prop === 'profit'"
-                            style="display: flex;justify-content: center;flex-direction: column;"
-                            :class="detailData[item.prop] > 0 ? 'success' : detailData[item.prop] < 0 ? 'failure' : ''">{{
-                                detailData[item.prop] }} <br> {{
-                                detailData['ratio'] * 100
-                            }}%</span>
+                        <span class="flex items-center" v-else-if="item.prop === 'profit'"
+                            :class="detailData[item.prop] > 0 ? 'success' : detailData[item.prop] < 0 ? 'failure' : ''">
+                                <span :class="detailData[item.prop] >= 0 ? 'success' : detailData[item.prop] < 0 ? 'failure' : ''">
+                                    {{detailData[item.prop] }}
+                                </span>
+                                <b class="split-line"></b>
+                                <span 
+                                    :class="detailData['ratio'] >= 0 ? 'success' : detailData['ratio'] < 0 ? 'failure' : ''">
+                                {{ detailData['ratio'] * 100 }}%
+                                </span>
+                        </span>
                         <span v-else-if="item.prop === 'stop_profit'">
                             <span v-if="detailData[item.prop]">
                                 {{ transKeyName(detailData['stop_profit_type'], 'stop_profit_type') }}
@@ -50,7 +54,7 @@
                                 禁用
                             </span>
                         </span>
-                        <span v-else :class="[item.prop, detailData[item.prop]]" class="status-bg">{{
+                        <span v-else :class="[item.prop, detailData[item.prop]]">{{
                             transKeyName(detailData[item.prop], item.prop) }}</span>
                     </span>
                 </div>

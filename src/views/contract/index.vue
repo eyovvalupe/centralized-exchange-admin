@@ -1,6 +1,16 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div>
+  <div class="p-2">
+    <div class="reset-el-styte-v2 p-2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="contractPos">合约持仓单</el-radio-button>
+          <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
+          <el-radio-button label="contractIndex">合约场控</el-radio-button>
+        </el-radio-group>
+        
+      </div>
+    </div>
+    <div class="p-2 reset-el-styte-v2  pt-0 h-full">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
@@ -22,13 +32,16 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" :width="getWidth(300)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
-              <el-button link type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
+            <div class="flex justify-between items-center w-full px-[5px]">
+              <div class="flex items-center justify-center flex-1">
+                <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
+                <b class="split-line"></b>
+                <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
+              </div>
               <el-dropdown>
-                <img style="width: 20px; height: 20px;margin-top: 5px;" src="/src/assets/images/more.svg" />
+                <img class="ml-[20px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item :disabled="scope.row['unadjusted'] <= 0" @click="handleClear(scope.row)">
@@ -39,7 +52,7 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
 
           </template>
         </el-table-column>
@@ -64,6 +77,8 @@ import Price from './components/Price.vue'
 import Volume from './components/Volume.vue'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import { useSocketStore } from '/@/store'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const socketStore = useSocketStore()
 const isLoading = ref(false)
 const tableData = computed(() => {
@@ -75,14 +90,27 @@ const dialogType = reactive({
   info: null
 })
 
+const tabPosition = ref('contractIndex')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
+
+
+const getWidth = (w)=>{
+  return Math.round(w/1920 * window.innerWidth)
+}
+const width = getWidth(180)
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'center' },
-  { prop: 'symbol', label: '代码', align: 'center', width: 100 },
+  { prop: 'name', label: '名称', align: 'center',width },
+  { prop: 'symbol', label: '代码', align: 'center', width },
   { prop: 'old_price', label: '原价格(调整前)', align: 'center' },
   { prop: 'price', label: '最新价格(调整后)', align: 'center' },
-  { prop: 'unadjusted', label: '未生效调整', align: 'center', width: 100 },
-  { prop: 'second', label: '生效时间', align: 'center', width: 100 },
-  { prop: 'volume_multiple', label: '成交量系数', align: 'center', width: 100 }
+  { prop: 'unadjusted', label: '未生效调整', align: 'center', width },
+  { prop: 'second', label: '生效时间', align: 'center', width },
+  { prop: 'volume_multiple', label: '成交量系数', align: 'center', width }
 ])
 const handleSubmit = (row) => {
   isLoading.value = true
