@@ -8,14 +8,14 @@
         <template v-for="(item, index) in routesList" :key="index">
           <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''"
             v-if="!item.children || item.hiddenChild">
-            <SvgIcon class="w-4 h-4 mr-2" size="16px" :name="item.icon" />
+            <SvgIcon class="mr-[8px]" size="16px" :name="item.icon" />
             {{ item.meta.title }}
           </el-menu-item>
           <el-sub-menu :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''" v-else
             class="top-sub-menu">
             <template #title>
               <span class="flex items-center">
-                <SvgIcon :name="item.icon" color="#e00" class="w-4 h-4 mr-2" size="16px" />{{ item.meta.title }}</span>
+                <SvgIcon :name="item.icon" class="mr-[8px]" size="16px" />{{ item.meta.title }}</span>
             </template>
             <template v-for="(_item, _index) in item.children" :key="_index">
               <template v-if="!_item.subMenu && !_item.meta.hidden">
@@ -76,39 +76,34 @@
         </template>
       </el-menu>
       <!-- 第二排 -->
-      <ul class="menu-two flex items-center text-sm">
+      <ul class="menu-two flex items-center">
         <li v-for="item in shortCut" :key="item.name" class="cursor-pointer flex items-center"
           @click="onShortCut(item)">
           <span class="mr-[30px] flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
             <span class="badge-box">
-              <el-image :src="`/images/menus/${item.icon || item.name}.svg`" class="w-5 h-5 mr-1">
-                <template #error>
-                  <span class="image-slot"> </span>
-                </template>
-              </el-image>
+              <SvgIcon :name="item.icon || item.name" size="16px" class="mr-[5px]"/>
               <span>{{ item.text }}</span>
               <el-badge :value="messageNumObj[item.badge]" v-if="messageNumObj[item.badge]"></el-badge>
             </span>
           </span>
         </li>
       </ul>
-      <div class="flex menu-three">
-        <div class="flex items-center pr-5">
+      <div class="flex menu-three ml-[70px]">
+        <div class="flex items-center pr-[20px]">
           <el-switch v-model="sound" @change="changeVoice" size="small" />
-          <div class="ml-2">声音</div>
+          <div class="ml-[5px]">声音</div>
         </div>
-        <div class="flex items-center pr-5 cursor-pointer" @click="toggle()">
-          <el-icon>
-            <FullScreen v-if="!isFullscreen" />
-            <el-image v-else src="/images/menus/FullScreen2.svg"></el-image>
-          </el-icon>
-          <div class="ml-2">全屏</div>
+        <div class="flex items-center pr-[20px] cursor-pointer" @click="toggle()">
+          <img src="/images/menus/FullScreen.svg" v-if="isFullscreen" />
+          <img v-else src="/images/menus/FullScreen2.svg" />
+
+          <div class="ml-[5px]">全屏</div>
         </div>
         <el-dropdown class="p8 avatar-container right-menu-item hover-effect">
-          <div class="flex items-center pr-2">
+          <div class="flex items-center pr-[20px]">
             <!-- <span class="mr-2">{{ userName }}</span> -->
             <!-- 顶部导航 用户名改成头像 -->
-            <el-image src="/images/menus/nav-user.png" class="nav-user-icon"></el-image>
+            <img src="/images/menus/nav-user.svg" />
             <span style="margin: 0 5px;">用户</span>
             <el-icon>
               <ArrowDown />
@@ -181,7 +176,7 @@ import { apilogout } from '/@/api/modules/login.api'
 import routes from '/@/router/modules/menus'
 import UpdatePassword from '../../components/updatePwd'
 
-import SvgIcon from '/@/components/SvgIcon.vue'
+import SvgIcon from '/@/components/icons/Index.vue'
 
 // import ServiceDialog from './components/service'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -215,10 +210,10 @@ const dialogVisible = ref(false)
 const sound = ref(useService.playVoice)
 const messageNumObj = computed(() => useService.messageNumObj)
 const shortCut = ref([
-  { name: 'RechargeOrder', icon: "RechargeOrder", badge: 'deposit', text: '充值', type: 'badge' },
-  { name: 'withdrawlOrder', icon: "tx", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false },
-  { name: 'kycList', icon: "smrz", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false },
-  { name: 'notice', icon: "kf", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false },
+  { name: 'RechargeOrder', icon: "recharge", badge: 'deposit', text: '充值', type: 'badge' },
+  { name: 'withdrawlOrder', icon: "withdraw", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false },
+  { name: 'kycList', icon: "realname", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false },
+  { name: 'notice', icon: "service", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false },
   // { name: 'service', text: '客服', type: 'arrow', isDialog: true },
   // { name: 'service', text: '客服', isDialog: true },
   // { name: 'Console', text: 'Crash控制台', isRoute: true },
@@ -411,12 +406,6 @@ function goGooglePage(){
     margin: 0 10px;
   }
 
-  .header-bg,
-  .el-menu {
-    flex: none;
-    min-width: 660px !important;
-    background: #fff !important;
-  }
 
   .top-sub-menu {
     padding: 0 20px;
@@ -429,14 +418,24 @@ function goGooglePage(){
 
     &.is-active {
       .el-sub-menu__title {
-        color: var(--el-color-primary) !important;
-        border: none !important;
+        color: var(--el-color-primary);
+        border: none;
         font-size: 16px;
       }
       svg path{
-        fill:var(--el-color-primary) !important;
+        fill:var(--el-color-primary);
       }
     }
+  }
+  .el-menu-item{
+    &.is-active {
+      svg path{
+        fill:var(--el-color-primary);
+      }
+    }
+  }
+ .el-sub-menu__title{
+    border-bottom: 0px !important;
   }
 }
 
@@ -450,30 +449,37 @@ function goGooglePage(){
   background-color: #F0F0F0;
   padding: 5px 10px;
   height: 30px;
-  width: auto;
   border-radius: 10px;
   display: flex;
   justify-content: center;
-  align-content: center;
-  text-align: center;
+  align-items: center;
+  font-size: 14px;
+  transition: .3s;
+  svg path{
+    transition: .3s;
+  }
+  &:hover{
+    background-color: #F0F0F0;
+    color:var(--el-color-primary);
+    svg path{
+      fill:var(--el-color-primary); 
+    }
+  }
+  .el-badge .el-badge__content{
+    border-radius: 6px 6px 6px 0px;
+    border:0px;
+    height: 16px;
+  }
+
+  .el-menu--horizontal .el-menu .el-menu-item,
+  .el-menu--horizontal .el-menu .el-sub-menu__title {
+    height: auto;
+  }
+  .el-menu--horizontal>.el-sub-menu .el-sub-menu__title{
+    border-bottom: 0px;
+  }
 }
 
-.el-popper.is-light {
-  // margin-top: -6px;
-  transform: translateY(-6px);
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-top: none;
-}
-
-.el-menu--horizontal .el-menu .el-menu-item,
-.el-menu--horizontal .el-menu .el-sub-menu__title {
-  height: auto;
-}
-
-.el-dialog__body {
-  // padding: 0px !important;
-}
 
 .service {
   .h-home {
@@ -526,15 +532,13 @@ function goGooglePage(){
   transform: translateY(30px);
   opacity: 0;
 }
+.custom-tab :deep(.el-tabs__nav){
+  border: 0px !important;
+}
 .custom-tab :deep(.el-tabs__nav-wrap){
   margin-bottom: 0px;
 }
 
-.custom-tab :deep(.el-tabs__header .el-tabs__nav) {
-  background: #fff;
-  border: none !important;
-  border-bottom: 1px solid #f5f5f5;
-}
 .custom-tab :deep(.el-tabs__header .el-tabs__item){
   margin:0px !important;
   padding: 0px !important;
@@ -553,19 +557,20 @@ function goGooglePage(){
     top:6px;
     opacity: 0;
   }
-  &:hover.is-icon-close{
+  &:hover .is-icon-close{
       opacity: 1;
   }
   &:hover {
-    padding: 0px !important;
+    color:var(--el-color-primary); 
   }
   &.is-active {
     padding: 0px;
-    color: #4377FE;
+    color: var(--el-color-primary);
     background-color: #E1EAFF !important;
     .is-icon-close{
       opacity: 1;
     }
+   
   }
 }
 

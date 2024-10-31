@@ -243,13 +243,13 @@ export default [
   //   component: Layout,
   //   name: 'business',
   //   icon: 'yewu',
-  //   meta: { title: '财务', icon: 'devices' },
+  //   meta: { title: '财务' },
   //   children: [ ]
   // },
   {
     component: Layout,
     icon: 'setting',
-    meta: { title: '配置', icon: 'devices' },
+    meta: { title: '配置' },
     children: [
       // {
       //   path: '/Agent3',

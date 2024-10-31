@@ -34,6 +34,7 @@ export default defineComponent({
   --el-color-primary: #4377FE !important;
   --el-font-weight-primary: 400 !important;
   --el-dialog-padding-primary: 10px !important;
+  --el-color-danger:#FF0004;
 }
 
 body,
@@ -362,9 +363,13 @@ th.el-table__cell.bg-color3,
     .el-radio-button.is-active .el-radio-button__inner{
       border-radius: 8px;
     }
+    .el-radio-button:first-child .el-radio-button__inner{
+      border-left: 0px;
+    }
   }
 
 
+  
   .el-date-editor--daterange,
   .el-button--large,
   .el-input,
@@ -859,18 +864,11 @@ small {
 .el-tabs--bottom .el-tabs--right>.el-tabs__header .el-tabs__item:nth-child(2),
 .el-tabs--bottom.el-tabs--border-card>.el-tabs__header .el-tabs__item:nth-child(2),
 .el-tabs--bottom.el-tabs--card>.el-tabs__header .el-tabs__item:nth-child(2),
-.el-tabs--top .el-tabs--left>.el-tabs__header .el-tabs__item:nth-child(2),
-.el-tabs--top .el-tabs--right>.el-tabs__header .el-tabs__item:nth-child(2),
-.el-tabs--top.el-tabs--border-card>.el-tabs__header .el-tabs__item:nth-child(2),
-.el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:nth-child(2),
+
 .el-tabs--bottom .el-tabs--left>.el-tabs__header .el-tabs__item:last-child,
 .el-tabs--bottom .el-tabs--right>.el-tabs__header .el-tabs__item:last-child,
 .el-tabs--bottom.el-tabs--border-card>.el-tabs__header .el-tabs__item:last-child,
-.el-tabs--bottom.el-tabs--card>.el-tabs__header .el-tabs__item:last-child,
-.el-tabs--top .el-tabs--left>.el-tabs__header .el-tabs__item:last-child,
-.el-tabs--top .el-tabs--right>.el-tabs__header .el-tabs__item:last-child,
-.el-tabs--top.el-tabs--border-card>.el-tabs__header .el-tabs__item:last-child,
-.el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:last-child {
+.el-tabs--bottom.el-tabs--card>.el-tabs__header .el-tabs__item:last-child {
   padding: 0 13px !important;
 }
 

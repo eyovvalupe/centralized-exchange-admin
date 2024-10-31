@@ -6,7 +6,6 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 // import { composePlugins } from './config/plugins'
 
@@ -35,12 +34,7 @@ export default defineConfig(({ command, mode }) => {
       // eslintPlugin( {
       //   include : ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue']
       // } ),
-      createSvgIconsPlugin({
-        // 指定需要缓存的图标文件夹
-        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
-        // 指定symbolId格式
-        symbolId: "icon-[dir]-[name]",
-      }),
+      
       Components({
         resolvers: [VantResolver()]
       }),
