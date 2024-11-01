@@ -1,9 +1,9 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="680" class="reset-el-styte" title="品种选择" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <div class="flex justify-end mb-2">
+    <div class="flex justify-end search-box">
       <div class="flex">
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="合约名称/交易代码" style="width: 250px;" />
+        <el-input v-model="searchForm.params" class="mr-2" placeholder="合约名称/交易代码" style="width: 264px;" />
         <el-button type="primary" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
       </div>
     </div>

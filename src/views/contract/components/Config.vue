@@ -1,20 +1,20 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="交易参数配置" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form class="pt-[10px]" :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
       <el-form-item label="开仓手续费(%)" required prop="open_fee">
-          <el-input v-model="form.open_fee" autocomplete="off" />
+          <el-input-number class="input-number" :controls="false" :min="0" v-model="form.open_fee" autocomplete="off" />
         </el-form-item>
         <el-form-item label="持仓手续费(%)" required prop="holding_fee">
-          <el-input v-model="form.holding_fee"  autocomplete="off" />
+          <el-input-number class="input-number" :controls="false" :min="0" v-model="form.holding_fee"  autocomplete="off" />
         </el-form-item>
         <small class="txt-gray2">00:00 UTC、08:00 UTC、16:00 UTC 收取</small>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="pb-[10px] pr-[10px] mt-[30px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

@@ -1,14 +1,14 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="680" class="reset-el-styte" title="品种选择" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" title="品种选择" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <div class="flex justify-end mb-2">
+    <div class="flex justify-end search-box">
       <div class="flex">
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="合约名称/交易代码" style="width: 250px;" />
-        <el-button type="primary" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
+        <el-input suffix-icon="search" v-model="searchForm.params" placeholder="合约名称/交易代码" style="width: 264px;" />
+        <el-button type="primary" class="w-[80px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
     </div>
-    <div class="soll-list">
-      <el-table :data="tableData" border  v-loading="isLoading">
+    <div class="soll-list mt-[10px] reset-el-style-v2">
+      <el-table :data="tableData" border v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
@@ -18,7 +18,7 @@
         <el-table-column label="操作" width="80" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link :type="scope.row['status'] == 1?'':'primary'" :disabled="scope.row['status'] == 1"
+              <el-button link icon="plus" :type="scope.row['status'] == 1?'':'primary'" :disabled="scope.row['status'] == 1"
                 @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
             </span>
           </template>
@@ -27,13 +27,17 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+      
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="flex justify-between p-[10px] items-center">
+        <Pagination @changePage="getDataList" style="padding-top: 0px;" v-if="tableData.length" :currentPage="currentLastPage" />
+        <div class="flex">
+          <el-button @click="emit('close', false)" round class="w-[98px]">取消</el-button>
+          <el-button type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
+        </div>
+       
+      </div>
     </template>
   </el-dialog>
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
@@ -51,6 +55,7 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
 const columnBase = ref([
   { prop: 'name', label: '名称', align: 'center' },
   { prop: 'symbol', label: '代码', align: 'center', width: 100 },
