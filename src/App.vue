@@ -351,6 +351,30 @@ th.el-table__cell.bg-color3,
   }
 }
 
+.soll-list{
+  &::-webkit-scrollbar {
+      width:6px;
+      
+  }
+  
+  &::-webkit-scrollbar-track {
+      background: #fff;
+      border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+      background: rgba(144,147,153,.2);
+      border-radius: 10px;
+
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+      background: rgba(144,147,153,.4);
+  }
+}
+.soll-list-y{
+  overflow-y: auto;
+}
 .reset-el-style-v2 {
 
   .el-table--large .el-table__cell {
