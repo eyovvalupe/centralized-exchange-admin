@@ -36,9 +36,9 @@
           <template #default="scope">
             <div class="flex justify-between items-center w-full px-[5px]">
               <div class="flex items-center justify-center flex-1">
-                <el-button link class="underline" size="medium" type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
+                <el-button link class="underline" size="default" type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
                 <b class="split-line"></b>
-                <el-button link class="underline" size="medium" type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
+                <el-button link class="underline" size="default" type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
               </div>
               <el-dropdown>
                 <img class="ml-[20px]" src="/src/assets/images/more.svg" />
@@ -46,7 +46,7 @@
                   <el-dropdown-menu>
                     <el-dropdown-item :disabled="scope.row['unadjusted'] <= 0" @click="handleClear(scope.row)">
                       <el-icon :size="14">
-                        <DeleteFilled color="#FF0004" />
+                        <DeleteFilled :color="scope.row['unadjusted'] <= 0 ? '#ccc' : '#FF0004'" />
                       </el-icon><span class="ml-[10px] text-[14px]">清除未生效调整</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>

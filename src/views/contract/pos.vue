@@ -102,7 +102,7 @@
           <template #default="scope">
             <div class="w-full flex justify-between">
               <div class="flex-1 flex justify-center items-center">
-                <el-button link type="primary" size="medium" class="underline" @click="showDialog(scope.row, 'showDialog')">
+                <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showDialog')">
                   查看订单
                 </el-button>
               </div>
@@ -233,11 +233,10 @@ const transKeyName = (val, key) => {
       none: "开仓",
       lock: "锁定",
       open: "持仓",
+      done: "平仓",
       close: "平仓",
-      settled: "已结算",
       fail: "失败",
-      cancel: "已取消",
-      done: "完成"
+      cancel: "已取消"
     }
   }
   str = obj[val] || val;

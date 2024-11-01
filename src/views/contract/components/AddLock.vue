@@ -33,11 +33,11 @@
               </el-select>
             </el-form-item>
             <el-form-item label="杠杆" required prop="lever" class="w-4/12">
-              <el-input-number :controls="false" class="input-number" :min="1" v-model="form.lever" />
+              <el-input-number :controls="false" class="input-number" :precision="0" :min="1" v-model="form.lever" />
             </el-form-item>
           </div>
           <el-form-item label="开仓数量" required prop="volume">
-            <el-input-number :controls="false" class="input-number" :min="1" v-model="form.volume" />
+            <el-input-number :controls="false" class="input-number" :precision="0" :min="1" v-model="form.volume" />
           </el-form-item>
         </el-form>
       </div>
@@ -94,7 +94,7 @@ const show = ref(true)
 const options = ref([])
 const symbolInfo = ref();
 const form = reactive({
-  uid: '',
+  uid: null,
   symbol: undefined,
   offset: 'long',
   volume: '',
@@ -108,11 +108,16 @@ const disabledCheck = computed(() => {
   return diffBalance.value <= 0 || !stockBalance.value || !marginBalance.value
 })
 const getBalance = () => {
-  if (!form.uid || form.uid.length <= 7) {
+  if(form.uid == 0){
+    form.uid = ''
+  }
+  if (!form.uid || form.uid.toString().length <= 7) {
+    
     stockBalance.value = ''
     return
   }
   apiUserBalance({ uid: form.uid }).then(res => {
+    console.log(res)
     const obj = res.find(f => f.currency === 'stock') || { amount: 0 };
     stockBalance.value = Number(obj.amount).toFixed(2);
   })

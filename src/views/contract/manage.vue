@@ -22,10 +22,8 @@
           <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
             :align="item.align">
             <template #default="scope">
-              <span v-if="item.prop === 'locked'" :style="{ color: !scope.row[item.prop] ? 'green' : '#ff0000' }">
-                {{ scope.row[item.prop] ? '禁用' : '启用' }}
-              </span>
-              <span v-else-if="item.prop === 'vip'">
+             
+              <span v-if="item.prop === 'vip'">
                 <span class="status-tag primary" v-for="v in scope.row['lever']" :key="v" v-show="v > 1">
                   {{ v + 'X' }}
                 </span>

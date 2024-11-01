@@ -3,22 +3,22 @@
     @close="emit('close', false)">
     <div class="flex justify-end search-box">
       <div class="flex">
-        <el-input suffix-icon="search" v-model="searchForm.params" placeholder="合约名称/交易代码" style="width: 264px;" />
+        <el-input prefix-icon="search" v-model="searchForm.params" placeholder="合约名称/交易代码" style="width: 264px;" />
         <el-button type="primary" class="w-[80px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
     </div>
     <div class="soll-list mt-[10px] reset-el-style-v2">
       <el-table :data="tableData" border v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             {{ scope.row[item.prop] || 'N/A' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" min-width="80" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link icon="plus" :type="scope.row['status'] == 1?'':'primary'" :disabled="scope.row['status'] == 1"
+              <el-button link icon="plus" :type="scope.row['status'] == 1 ? '' :'primary'" :disabled="scope.row['status'] == 1"
                 @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
             </span>
           </template>
@@ -27,11 +27,10 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      
     </div>
     <template #footer>
-      <div class="flex justify-between p-[10px] items-center">
-        <Pagination @changePage="getDataList" style="padding-top: 0px;" v-if="tableData.length" :currentPage="currentLastPage" />
+      <div class="flex justify-between p-[10px] items-center" v-if="tableData.length" >
+        <Pagination @changePage="getDataList" style="padding-top: 0px;" :currentPage="currentLastPage" />
         <div class="flex">
           <el-button @click="emit('close', false)" round class="w-[98px]">取消</el-button>
           <el-button type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
@@ -56,11 +55,12 @@ const props = defineProps({
   }
 })
 
+
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'center' },
-  { prop: 'symbol', label: '代码', align: 'center', width: 100 },
-  { prop: 'price', label: '最新价', align: 'center', width: 100 },
-  { prop: 'amount', label: '交易金额(24H)', align: 'center', width: 180 },
+  { prop: 'name', label: '名称', align: 'center', minWidth: 80 },
+  { prop: 'symbol', label: '代码', align: 'center', minWidth: 80 },
+  { prop: 'price', label: '最新价', align: 'center', minWidth: 80 },
+  { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: 100 },
 ])
 const searchForm = reactive({
   params: ''

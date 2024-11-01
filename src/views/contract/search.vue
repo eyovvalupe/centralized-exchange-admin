@@ -72,7 +72,7 @@
               {{ scope.row['lever'] }}X
             </span>
             <span v-else-if="['status'].includes(item.prop)">
-              <span :class="scope.row[item.prop]=='lock'?'status-bg none':''">
+              <span :class="scope.row[item.prop]=='lock' ? 'status-bg none' : ''">
                 {{ transKeyName(scope.row[item.prop], item.prop) }}
               </span>
             </span>
@@ -92,7 +92,7 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="minWidth" align="center">
           <template #default="scope">
-            <el-button link type="primary" size="medium" class="underline" @click="showDialog(scope.row,'showDialog')">
+            <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row,'showDialog')">
               查看订单
             </el-button>
           </template>
@@ -230,10 +230,9 @@ const transKeyName = (val, key) => {
       lock: "锁定",
       open: "持仓",
       done: "平仓",
-      settled: "已结算",
+      close: "平仓",
       fail: "失败",
-      cancel: "已取消",
-      done: "完成"
+      cancel: "已取消"
     }
   }
   str = obj[val] || val;

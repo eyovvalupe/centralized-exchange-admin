@@ -11,22 +11,22 @@
             <el-input v-model="form.symbol" disabled autocomplete="off" />
           </el-form-item>
           <div class="flex">
-            <el-form-item label="最小变化价位" required class="mr-2 w-1/2" prop="pip">
-              <el-input-number v-model="form.pip"  class="input-number"  autocomplete="off" :controls="false" @focus="setFocus('priceMath')"
-                @blur="celarFocus" />
+            <el-form-item label="最小变化点差" required class="mr-2 w-1/2" prop="pip">
+              <el-input-number v-model="form.pip" class="input-number"   :controls="false" @focus="setFocus('priceMath')"
+                @blur="form.pip <= 0 ? form.pip = '' : '';celarFocus" />
             </el-form-item>
-            <el-form-item label="最小变化价位的点值" required class="w-1/2" prop="pip_value">
-              <el-input-number class="input-number" :controls="false" v-model="form.pip_value"  autocomplete="off" />
+            <el-form-item label="点值" required class="w-1/2" prop="pip_value">
+              <el-input-number class="input-number" @blur="form.pip_value <= 0 ? form.pip_value = '' : '';" :controls="false" v-model="form.pip_value"   />
             </el-form-item>
           </div>
           <div class="flex" v-if="!isEdit">
             <el-form-item label="价格系数" required class="mr-2 w-1/2" prop="price_multiple">
               <el-input-number class="input-number" :controls="false"  v-model="form.price_multiple" 
-                @focus="setFocus('price')" @blur="celarFocus" autocomplete="off" />
+                @focus="setFocus('price')" @blur="form.price_multiple <= 0 ? form.price_multiple = '' : '';celarFocus"  />
             </el-form-item>
             <el-form-item label="成交量系数" required class="w-1/2" prop="volume_multiple">
               <el-input-number class="input-number" :controls="false" :min="0" v-model="form.volume_multiple" 
-                @focus="setFocus('volume')" @blur="celarFocus" autocomplete="off" />
+                @focus="setFocus('volume')" @blur="form.volume_multiple <= 0 ? form.volume_multiple = '' : '';celarFocus"  />
             </el-form-item>
           </div>
           <el-form-item label="杠杆" required prop="lever">
@@ -151,22 +151,14 @@ onMounted(() => {
   getData();
 })
 const trigger = ['blur', 'change']
-const validateVol = (rule, value, callback) => {
-  if (value === '') {
-    callback(new Error(''))
-  } else if (value <= 0) {
-    callback(new Error("成交量系数需大于0"))
-  } else {
-    callback()
-  }
-}
+
 const rules = {
   name: [{ required: true, message: '', trigger }],
   symbol: [{ required: true, message: '', trigger }],
   pip: [{ required: true, message: '', trigger }],
   pip_value: [{ required: true, message: '', trigger }],
   price_multiple: [{ required: true, message: '', trigger }],
-  volume_multiple: [{ required: true, message: '', trigger,validator:validateVol }]
+  volume_multiple: [{ required: true, message: '', trigger }]
 }
 
 const emit = defineEmits(['close', 'success'])

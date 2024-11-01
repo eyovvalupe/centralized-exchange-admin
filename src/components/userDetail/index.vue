@@ -27,45 +27,55 @@
                 <span class="w-7/12 text-center" style="color:#000;">{{ detailData.fund[item.prop] }}</span>
               </div>
             </div>
-            <div class="flex mt-[20px]">
-              <div class="w-7/12">
-                <div class="flex mb-[5px]">
-                <div class="text-sm mt-1" style="color:#000;">业务账户</div>
-              </div>
-                <div style="color:#000;">
-                  <div class="table-list flex flex-nowrap justify-between bg-slate-50">
-                    <span class="w-4/12 text-center">账户</span>
-                    <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;">货币</span>
-                    <span class="w-8/12 text-center">金额</span>
-                  </div>
-                  <div v-for="child in detailData.fund['account']" :key="child.currency"
-                    class="table-list flex flex-nowrap justify-between">
-                    <span class="w-4/12 text-center" style="font-weight: normal;">{{ options[child.account] }}</span>
-                    <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;">{{ child.name }}</span>
-                    <span class="w-8/12 text-center">{{ child.amount }}</span>
-                  </div>
+            <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">业务账户（USDT计价）</div>
+            <div style="color:#000;">
+                <div class="table-list flex items-center">
+                  <span class="w-0 flex-1 text-center bor-r bg-slate-50">账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">现金账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">外汇账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">合约账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">股票账户</span>
+                  <span class="w-0 flex-1 text-center">大宗账户</span>
+                </div>
+                <div class="table-list flex">
+                  <span class="w-0 flex-1 text-center bor-r bg-slate-50">金额</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['money']  ? detailData.fund['money'] || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['forex'] && detailData.fund['forex'][0] ? detailData.fund['forex'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['futures'] && detailData.fund['futures'][0] ? detailData.fund['futures'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['stock'] && detailData.fund['stock'][0] ? detailData.fund['stock'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center">{{detailData.fund['blocktrade'] && detailData.fund['blocktrade'][0] ? detailData.fund['blocktrade'][0].amount || 0 : '--'}}</span>
                 </div>
               </div>
-              <div class="w-5/12 ml-2">
-              <div class="flex justify-between mb-[5px]">
-                <div class="text-sm mt-1" style="color:#000;">现金账户</div>
+
+            <div class="mt-[20px] reset-el-style-v2">
+              
+              <div class="flex justify-between items-center">
+                <el-radio-group v-model="account">
+                  <el-radio-button label="wallet">现金账户</el-radio-button>
+                  <el-radio-button label="forex">外汇账户</el-radio-button>
+                  <el-radio-button label="futures">合约账户</el-radio-button>
+                  <el-radio-button label="stock">股票账户</el-radio-button>
+                  <el-radio-button label="blocktrade">大宗账户</el-radio-button>
+                </el-radio-group>
                 <div>
-                  <span class="mr-2 text-xs">隐藏0余额</span>
+                  <span class="mr-[10px] text-[13px]">隐藏0余额</span>
                   <el-switch v-model="showZreo" size="small" />
                 </div>
               </div>
-              <div class="table-list flex flex-nowrap justify-between bg-slate-50" style="color:#000;">
-                <span class="w-4/12 text-center">货币</span>
-                <span class="w-7/12 text-center">金额</span>
+              <div class="table-list flex bg-slate-50 mt-[10px]" style="color:#000;">
+                <span class="flex-1 w-0 text-center">货币</span>
+                <span class="flex-1 w-0 text-center">金额</span>
               </div>
-              <template v-for="child in detailData.fund['wallet']" :key="child.currency">
-                <div class="table-list flex flex-nowrap justify-between" v-if="!(showZreo && child.amount == 0)" style="color:#000;">
-                  <span class="text-center">{{ child.name }}</span>
-                  <span class="w-7/12 text-center">{{ child.amount }}</span>
+              <template v-if="detailData.fund[account] && detailData.fund[account].length">
+                <div class="table-list flex" v-for="child in detailData.fund[account]" :key="child.currency" v-show="!(showZreo && child.amount == 0)" style="color:#000;">
+                  <span class="flex-1 w-0 text-center">{{ child.name }}</span>
+                  <span class="flex-1 w-0 text-center">{{ child.amount }}</span>
                 </div>
               </template>
+              <div class="table-list flex" v-else>
+                <span class="flex-1 w-0 text-center" style="color:#666;">暂无货币</span>
+              </div>
 
-            </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="基础数据" name="second">
@@ -152,6 +162,8 @@ const roleOptions = [
     label: '模拟用户',
   }
 ]
+
+const account = ref("wallet")
 const roleName = (key) => {
   const obj = roleOptions.find(f => f.value === key);
   return obj ? obj.label : ''
@@ -212,3 +224,9 @@ handleSearch();
 getBaseInfo();
 const emit = defineEmits(['close', 'success'])
 </script>
+<style lang="scss" scoped>
+.search-box{
+  :deep(.el-input__wrapper){background-color: #fff;}
+}
+
+</style>

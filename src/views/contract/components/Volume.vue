@@ -11,7 +11,7 @@
             <el-input v-model="form.symbol" disabled autocomplete="off" />
           </el-form-item>
           <el-form-item label="成交量系数" required prop="volume_multiple">
-            <el-input-number v-model="form.volume_multiple" :min="0" :controls="false" class="input-number" autocomplete="off" />
+            <el-input-number v-model="form.volume_multiple" @blur="form.volume_multiple <= 0 ? form.volume_multiple = '' : ''" :min="0" :controls="false" class="input-number" autocomplete="off" />
           </el-form-item>
         </el-form>
       </div>

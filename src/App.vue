@@ -633,6 +633,9 @@ th.el-table__cell.bg-color3,
   border: 1px solid #e6e6e6;
   border-bottom: none;
 
+  span.bor-r{
+    border-right: 1px solid #e6e6e6;
+  }
   span:not(.status-bg) {
     padding: 8px 20px;
     line-height: 20px;

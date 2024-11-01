@@ -6,7 +6,7 @@
       :page-sizes="pageSizeArr"
       :page-size="tablePage.pageSize"
       layout="pager, slot, jumper"
-      size="medium"
+      size="default"
       :total="total"
       @current-change="handleCurrentChange"
     >
