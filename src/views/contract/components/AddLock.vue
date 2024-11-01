@@ -75,7 +75,7 @@
 import { apifuturesLock } from '/@/api/modules/business/withdrawl-order.api'
 import { ref, reactive, onMounted, nextTick, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { apiUserBalance } from '/@/api/modules/business/player.api'
+import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
 
 const props = defineProps({
@@ -116,9 +116,11 @@ const getBalance = () => {
     stockBalance.value = ''
     return
   }
-  apiUserBalance({ uid: form.uid }).then(res => {
-    console.log(res)
-    const obj = res.find(f => f.currency === 'stock') || { amount: 0 };
+  apiWalletBalance({ 
+    uid: form.uid,
+    account:"futures"
+  }).then(res => {
+    const obj = res.find(f => f.account === 'futures') || { amount: 0 };
     stockBalance.value = Number(obj.amount).toFixed(2);
   })
 }
