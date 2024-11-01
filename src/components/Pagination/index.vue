@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container pt-[10px]">
     <el-pagination
       class="rear-page"
       :current-page="tablePage.currentPage"
       :page-sizes="pageSizeArr"
       :page-size="tablePage.pageSize"
       layout="pager, slot, jumper"
+      size="medium"
       :total="total"
       @current-change="handleCurrentChange"
     >
@@ -88,10 +89,7 @@ const goPage=(num)=>{
 
 }
 ::v-deep(.el-pagination) {
-  // position: absolute;
-  // bottom: 20px;
-  // float: left;
-  margin-top: 10px;
+
   .btn-prev,
   .btn-next,
   .el-pager > li {

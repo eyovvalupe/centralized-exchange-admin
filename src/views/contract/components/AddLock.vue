@@ -5,7 +5,7 @@
       <div class="w-6/12">
         <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm" v-loading="loading">
           <el-form-item label="用户UID" required prop="uid">
-            <el-input v-model="form.uid" @blur="getBalance" />
+            <el-input-number :min="0" class="input-number" :precision="0" :controls="false" v-model="form.uid" @blur="getBalance" />
           </el-form-item>
           <el-form-item label="合约" required prop="symbol">
             <!-- <el-input v-model="form.symbol" :disabled="!form.market"  /> -->
@@ -33,11 +33,11 @@
               </el-select>
             </el-form-item>
             <el-form-item label="杠杆" required prop="lever" class="w-4/12">
-              <el-input v-model="form.lever" />
+              <el-input-number :controls="false" class="input-number" :min="1" v-model="form.lever" />
             </el-form-item>
           </div>
           <el-form-item label="开仓数量" required prop="volume">
-            <el-input v-model="form.volume" />
+            <el-input-number :controls="false" class="input-number" :min="1" v-model="form.volume" />
           </el-form-item>
         </el-form>
       </div>

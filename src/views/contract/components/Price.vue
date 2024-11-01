@@ -11,7 +11,7 @@
             <el-input v-model="form.symbol" disabled autocomplete="off" />
           </el-form-item>
           <el-form-item label="调整值" required prop="adjust">
-            <el-input v-model="form.adjust"  autocomplete="off" />
+            <el-input-number class="input-number" :controls="false" v-model="form.adjust" autocomplete="off" />
             <div>
               <el-button type="success" size="small"  @click="mathBtnPrice(1)">涨1%</el-button>
               <el-button type="success" size="small"  @click="mathBtnPrice(5)">涨5%</el-button>
@@ -23,11 +23,11 @@
           </el-form-item>
           <el-form-item label="生效时间" required prop="second">
             <div class="flex w-full">
-              <el-input v-model="form.second" placeholder="">
-                <template #append>秒</template>
-              </el-input>
+              <el-input-number class="input-number" v-model="form.second" :min="0" :controls="false" placeholder="">
+                <template #suffix>秒</template>
+              </el-input-number>
             </div>
-            <small class="txt-gray1">0为即时生效</small>
+            <small class="color-[#666] mt-[8px]">0为即时生效</small>
           </el-form-item>
         </el-form>
       </div>
@@ -90,7 +90,7 @@ const show = ref(true)
 const form = ref({
   name: '',
   symbol: '',
-  adjust: 0,
+  adjust: '',
   second: 0,
 })
 let formRight = { unadjusted: 0 };
@@ -103,7 +103,7 @@ const percentMath = computed(() => {
 const getData = () => {
   loading.value = true;
   apiDetial({ symbol: props.data.symbol }).then(res => {
-    form.value = { ...res, adjust: 0 };
+    form.value = { ...res, adjust: '' };
     formRight = { ...res };
   }).finally(() => {
     loading.value = false
@@ -115,10 +115,19 @@ onUnmounted(() => {
   socketStore.send('realtime', '')
 })
 
+const validateAdjust = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error(''))
+  } else if (value == 0) {
+    callback(new Error("调整值不能为0"))
+  } else {
+    callback()
+  }
+}
 const trigger = ['blur', 'change']
 const rules = {
   second: [{ required: true, message: '', trigger }],
-  adjust: [{ required: true, message: '', trigger }]
+  adjust: [{ required: true, message: '', trigger,validator:validateAdjust }]
 }
 
 const emit = defineEmits(['close', 'success'])
@@ -126,6 +135,7 @@ const emit = defineEmits(['close', 'success'])
 const handleSubmit = async () => {
   ruleForm.value.validate(async valid => {
     if (valid) {
+      
       isLoading.value = true
       try {
         const { symbol, adjust, second } = form.value;
@@ -140,6 +150,14 @@ const handleSubmit = async () => {
         emit('close', { reload: true })
       } catch (error) {
         isLoading.value = false
+      }
+    }else {
+      if(form.value.adjust == '0'){
+        ElMessage({
+          type: 'tips',
+          message: '调整值不能为0',
+          offset: 200
+        })
       }
     }
   })

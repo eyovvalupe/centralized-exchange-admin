@@ -1,8 +1,8 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="690" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" :width="!isEdit ? 700 : 500" class="reset-el-styte" :title="!isEdit ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <div class="w-full flex flex-nowrap justify-between">
-      <div class="w-7/12">
+    <div class="w-full" :class="[!isEdit ? ' flex flex-nowrap justify-between' : '']">
+      <div class="pt-[10px]" :class="{'w-7/12':!isEdit}">
         <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
           <el-form-item label="名称" required prop="name">
             <el-input v-model="form.name" autocomplete="off" />
@@ -12,43 +12,43 @@
           </el-form-item>
           <div class="flex">
             <el-form-item label="最小变化价位" required class="mr-2 w-1/2" prop="pip">
-              <el-input v-model="form.pip" autocomplete="off" @focus="setFocus('priceMath')"
+              <el-input-number v-model="form.pip"  class="input-number"  autocomplete="off" :controls="false" @focus="setFocus('priceMath')"
                 @blur="celarFocus" />
             </el-form-item>
             <el-form-item label="最小变化价位的点值" required class="w-1/2" prop="pip_value">
-              <el-input v-model="form.pip_value"  autocomplete="off" />
+              <el-input-number class="input-number" :controls="false" v-model="form.pip_value"  autocomplete="off" />
             </el-form-item>
           </div>
-          <div class="flex">
+          <div class="flex" v-if="!isEdit">
             <el-form-item label="价格系数" required class="mr-2 w-1/2" prop="price_multiple">
-              <el-input v-model="form.price_multiple" :disabled="(props.data && props.data.id)" 
+              <el-input-number class="input-number" :controls="false"  v-model="form.price_multiple" 
                 @focus="setFocus('price')" @blur="celarFocus" autocomplete="off" />
             </el-form-item>
             <el-form-item label="成交量系数" required class="w-1/2" prop="volume_multiple">
-              <el-input v-model="form.volume_multiple" :disabled="(props.data && props.data.id)" 
+              <el-input-number class="input-number" :controls="false" :min="0" v-model="form.volume_multiple" 
                 @focus="setFocus('volume')" @blur="celarFocus" autocomplete="off" />
             </el-form-item>
           </div>
           <el-form-item label="杠杆" required prop="lever">
-            <el-input v-model="form.lever"  placeholder="支持多个，英文逗号隔开" 
+            <el-input v-model="form.lever" placeholder="支持多个，英文逗号隔开" 
               @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" />
           </el-form-item>
         </el-form>
       </div>
-      <div class="w-6/12 ml-5">
+      <div class="w-6/12 ml-[20px] mt-[10px]" v-if="!isEdit">
         <div>
-          <div class="w-full flex table-list p-1" :class="{ fouseName: fouseName == 'price' }">
+          <div class="w-full flex table-list" :class="{ fouseName: fouseName == 'price' }">
             <span class="w-6/12">价格</span>
             <span class="text-left w-8/12 status blue">{{ priceMath || 'N/A' }}</span>
           </div>
-          <div class="w-full flex table-list p-1" :class="{ fouseName: fouseName == 'volume' }">
+          <div class="w-full flex table-list" :class="{ fouseName: fouseName == 'volume' }">
             <span class="w-6/12">成交量</span>
             <span class="w-8/12 text-left status blue">{{ volumeMath || 'N/A' }}</span>
           </div>
         </div>
-        <h3 class="w-full mt-2 mb-1">盈亏浮动(24H)</h3>
+        <h3 class="w-full mt-[20px] text-xs mb-[10px]" v-if="configData.lever && configData.lever.length">盈亏浮动(24H)</h3>
         <div :class="{ fouseName: fouseName == 'priceMath' }">
-          <div class="w-full flex table-list p-1" v-for="(item, idx) in configData.lever" :key="idx">
+          <div class="w-full flex table-list" v-for="(item, idx) in configData.lever" :key="idx">
             <span class="w-6/12">{{ item }}X</span>
             <span class="w-8/12 text-left status blue">{{ profitMath(item) }}</span>
           </div>
@@ -57,10 +57,10 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round @click="emit('close', false)" class="w-[98px]">取消</el-button>
+        <el-button round type="primary" class="w-[98px]" @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
@@ -79,6 +79,9 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   }
+})
+const isEdit = computed(()=>{
+  return props.data && props.data.id ? true : false
 })
 const fouseName = ref('');
 const ruleForm = ref(null)
@@ -115,6 +118,8 @@ const form = reactive({
   lever:'',
   googlecode: '',
 })
+
+
 const profitMath = (lever) => {
   // 价格的change/最小变价位*点值*杠杆
   return (realtimeData.value.change / (form.pip || 1) * (form.pip_value || 0) * lever).toFixed(2)
@@ -146,13 +151,22 @@ onMounted(() => {
   getData();
 })
 const trigger = ['blur', 'change']
+const validateVol = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error(''))
+  } else if (value <= 0) {
+    callback(new Error("成交量系数需大于0"))
+  } else {
+    callback()
+  }
+}
 const rules = {
   name: [{ required: true, message: '', trigger }],
   symbol: [{ required: true, message: '', trigger }],
   pip: [{ required: true, message: '', trigger }],
   pip_value: [{ required: true, message: '', trigger }],
   price_multiple: [{ required: true, message: '', trigger }],
-  volume_multiple: [{ required: true, message: '', trigger }]
+  volume_multiple: [{ required: true, message: '', trigger,validator:validateVol }]
 }
 
 const emit = defineEmits(['close', 'success'])

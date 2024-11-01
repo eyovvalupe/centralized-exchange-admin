@@ -10,8 +10,8 @@
           <el-form-item label="代码">
             <el-input v-model="form.symbol" disabled autocomplete="off" />
           </el-form-item>
-          <el-form-item label="成交量系数" required prop="price">
-            <el-input v-model="form.volume_multiple"  autocomplete="off" />
+          <el-form-item label="成交量系数" required prop="volume_multiple">
+            <el-input-number v-model="form.volume_multiple" :min="0" :controls="false" class="input-number" autocomplete="off" />
           </el-form-item>
         </el-form>
       </div>
@@ -50,6 +50,7 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
 const ruleForm = ref(null)
 const loading = ref(false)
 const isLoading = ref(false)
@@ -76,9 +77,19 @@ onUnmounted(() => {
   socketStore.send('realtime', '')
 })
 
+const validateVol = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error(''))
+  } else if (value <= 0) {
+    callback(new Error("成交量系数需大于0"))
+  } else {
+    callback()
+  }
+}
+
 const trigger = ['blur', 'change']
 const rules = {
-  volume_multiple: [{ required: true, message: '', trigger }]
+  volume_multiple: [{ required: true, message: '', trigger,validator:validateVol }]
 }
 
 const emit = defineEmits(['close', 'success'])
@@ -100,6 +111,14 @@ const handleSubmit = async () => {
         emit('close', { reload: true })
       } catch (error) {
         isLoading.value = false
+      }
+    }else{
+      if(form.value.volume_multiple <= 0){
+        ElMessage({
+          type: 'tips',
+          message: '成交量系数需大于0',
+          offset: 200
+        })
       }
     }
   })

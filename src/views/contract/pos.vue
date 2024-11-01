@@ -1,13 +1,13 @@
 <template>
-  <div class="player p-2">
-    <div class="flex reset-el-styte-v2  justify-between p-2">
+  <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2  justify-between">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
           <el-radio-button label="contractIndex">合约场控</el-radio-button>
         </el-radio-group>
-        <el-button class="ml-2" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
+        <el-button class="ml-[10px]" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
         <!-- <el-button :type="checkAuthCode(232)?'success':'info'" :disabled="!checkAuthCode(232)"  @click="showDialog(null, 'showCtrDialog')">合约场控</el-button> -->
       </div>
       <div class="flex items-center">
@@ -18,16 +18,16 @@
           </el-select>
         </div>
         <div class="w-[264px] ml-2">
-          <el-input v-model="searchStrbtn" suffix-icon="search" placeholder="UID/用户名" />
+          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
         </div>
         <el-button type="primary" class="w-[120px] ml-2" @click="getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
     </div>
-    <div class="p-2 reset-el-styte-v2  pt-0 h-full">
+    <div class="reset-el-style-v2 py-[10px]">
       <el-table :data="tableData" :border="tableData.length > 0" :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column :min-width="item.minWidth" v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'profit'" class="flex items-center">
@@ -98,14 +98,16 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" align="center">
+        <el-table-column label="操作" :min-width="minWidth" align="center">
           <template #default="scope">
-            <div class="flex items-center">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">
-                 <img class="mr-[5px]" src="/src/assets/images/order.svg" /> 查看订单
-              </el-button>
+            <div class="w-full flex justify-between">
+              <div class="flex-1 flex justify-center items-center">
+                <el-button link type="primary" size="medium" class="underline" @click="showDialog(scope.row, 'showDialog')">
+                  查看订单
+                </el-button>
+              </div>
               <el-dropdown> 
-                <img class="ml-[20px]" src="/src/assets/images/more.svg" />
+                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="showDialog(scope.row, 'closePos')" :disabled="!checkAuthCode(232)">
@@ -174,7 +176,7 @@ const tabChange = ()=>{
 }
 
 const dialogLoading = ref(false)
-const searchValue = ref(localStorage.getItem('searchstr') || 'all')
+const searchValue = ref('all')
 const searchStrbtn = ref('')
 const searchStr = ref('')
 const tableData = computed(() => {
@@ -197,9 +199,10 @@ const dialogType = reactive({
   showDialog: false,
   closePos: false
 })
+const searchInput = ref(null)
 const getDataList = () => {
+
   searchStr.value = searchStrbtn.value;
-  searchValue.value = 'all';
 }
 const transKeyName = (val, key) => {
   let str = val;
@@ -240,23 +243,25 @@ const transKeyName = (val, key) => {
   str = obj[val] || val;
   return str;
 }
+
+const minWidth = 120
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号', width: 100, align: 'center' },
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'username', label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center' },
-  { prop: 'name', label: '合约', align: 'center' },
-  { prop: 'offset', label: '开仓', width: 200, align: 'center' },
-  // { prop: 'price_type', label: '限价方式', width: 100, align: 'center' },
-  { prop: 'unsold_volume', label: '可售数量', width: 150, align: 'center' },
-  // { prop: 'margin', label: '保证金/剩余金额', width: 130, align: 'center' },
-  // { prop: 'profit', label: '收益/百分比', align: 'center' },
-  // { prop: 'unsold_volume', label: '持仓数量', align: 'center' },
-  { prop: 'surplus_margin', label: '剩余保证金', align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', width: 180, align: 'center' },
-  // { prop: 'ratio', label: '收益率',  width: 80,align: 'center' },
-  { prop: 'status', label: '状态', width: 120, align: 'center' },
-  { prop: 'date', label: '时间', width: 150, align: 'center' }
+  // { prop: 'order_no', label: '订单号', minWidth, align: 'center' },
+  { prop: 'uid', label: 'UID',minWidth, align: 'center' },
+  { prop: 'username', label: '用户名',minWidth, align: 'center' },
+  { prop: 'role', label: '角色',minWidth, align: 'center' },
+  { prop: 'name', label: '合约',minWidth, align: 'center' },
+  { prop: 'offset', label: '开仓',minWidth: 165, align: 'center' },
+  // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
+  { prop: 'unsold_volume', label: '可售数量', minWidth, align: 'center' },
+  // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
+  // { prop: 'profit', label: '收益/百分比',minWidth, align: 'center' },
+  // { prop: 'unsold_volume', label: '持仓数量',minWidth, align: 'center' },
+  { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth, align: 'center' },
+  // { prop: 'ratio', label: '收益率',  minWidth,align: 'center' },
+  { prop: 'status', label: '状态', minWidth, align: 'center' },
+  { prop: 'date', label: '时间', minWidth, align: 'center' }
 ])
 
 const isLoading = ref(false)
@@ -279,9 +284,7 @@ const closeDialogType = (item) => {
 }
 const changeSearch = (s) => {
   searchValue.value = s;
-  searchStrbtn.value = ''
-  searchStr.value = ''
-  localStorage.setItem('searchstr', s);
+
 }
 watch(() => socketStore.sokcetWS, (ws) => {
   if (ws) {
@@ -290,10 +293,4 @@ watch(() => socketStore.sokcetWS, (ws) => {
 }, { immediate: true })
 </script>
 
-<style lang="scss">
-.player {
-  .el-pager {
-    display: none;
-  }
-}
-</style>
+

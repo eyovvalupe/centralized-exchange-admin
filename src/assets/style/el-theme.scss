@@ -1,0 +1,29 @@
+:root:root {
+    --el-color-primary-light-5: #4377FE !important;
+    --el-color-primary: #4377FE !important;
+    --el-font-weight-primary: 400 !important;
+    --el-dialog-padding-primary: 10px !important;
+    --el-color-danger:#FF0004;
+    --el-disabled-bg-color:#F5F5F5;
+    
+    .el-button--primary{
+      --el-button-hover-bg-color:#2e68fa;
+      --el-button-hover-border-color:#2e68fa;
+      --el-button-active-bg-color:#2663fd;
+      --el-button-active-border-color:#2663fd;
+    }
+    .el-button--primary.is-link, .el-button--primary.is-plain, .el-button--primary.is-text{
+      --el-button-hover-text-color:var(--el-color-primary);
+      --el-button-active-text-color:var(--el-color-primary);
+    }
+    .el-input{
+        --el-input-text-color:#000;
+    }
+ 
+    .el-pagination__editor.el-input--medium{
+        --el-input-height:30px;
+    }
+    .el-dialog {
+        --el-dialog-border-radius:16px;
+    }
+}

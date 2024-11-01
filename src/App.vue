@@ -21,6 +21,7 @@ export default defineComponent({
   setup() {
     const appStore = useAppStore()
     const size = computed(() => appStore.size)
+  
     return {
       size,
       locale: zhCn
@@ -29,14 +30,8 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
-:root:root {
-  --el-color-primary-light-5: #4377FE !important;
-  --el-color-primary: #4377FE !important;
-  --el-font-weight-primary: 400 !important;
-  --el-dialog-padding-primary: 10px !important;
-  --el-color-danger:#FF0004;
-  --el-disabled-bg-color:#F5F5F5;
-}
+@import url(./assets/style/el-theme.scss);
+
 
 body,
 html {
@@ -50,6 +45,7 @@ html {
 }
 #app {
   font-size: 13px;
+  min-width: 1600px;
   .noborder {
     .el-table__inner-wrapper::before {
       display: none !important;
@@ -156,7 +152,20 @@ th.el-table__cell.bg-color3,
   color: #ff6800;
 }
 
-
+.input-number.el-input-number{
+  width: 100%;
+  text-align: center;
+  .el-input__inner{
+    text-align: left;
+  }
+  .el-input__suffix{
+    background-color: #F5F5F5;
+    border-left: 1px solid #ddd;
+    padding:0 15px;
+    margin-right: -14px;
+    border-radius: 0 4px 4px 0;
+  }
+}
 .el-tabs__header {
   margin: 0 !important;
 }
@@ -316,6 +325,7 @@ th.el-table__cell.bg-color3,
 
   .el-form--large.el-form--label-top .el-form-item .el-form-item__label {
     margin-bottom: 10px !important;
+    line-height: 20px;
   }
 
   .el-input--large .el-input__inner {
@@ -341,7 +351,7 @@ th.el-table__cell.bg-color3,
   }
 }
 
-.reset-el-styte-v2 {
+.reset-el-style-v2 {
 
   .el-table--large .el-table__cell {
     padding: 5px 0 !important;
@@ -372,16 +382,16 @@ th.el-table__cell.bg-color3,
       border-left: 0px;
     }
   }
-
+  
 
   
   .el-date-editor--daterange,
   .el-button--large,
   .el-input,
   .el-select--large .el-select__wrapper {
-    height: 40px !important;
-    min-height: 40px !important;
-    line-height: 40px !important;
+    height: 40px;
+    min-height: 40px;
+    line-height: 40px;
     border-radius: 8px;
   }
   .el-button.is-plain{
@@ -455,26 +465,24 @@ th.el-table__cell.bg-color3,
 }
 
 .el-dialog {
-  border-radius: 10px !important;
 
   .el-dialog__header {
     height: 40px;
     line-height: 40px;
     border-bottom: 1px solid #e0e0e0;
-    padding: 0 10px !important;
+    padding: 0 20px !important;
     margin: 0 !important;
 
     .el-dialog__title {
-      color: #272727;
-      font-size: 16px;
+      color: #000;
+      font-size: 14px;
       font-weight: 400;
     }
 
     .el-dialog__headerbtn {
-      top: -2px;
-
+      top: -1px;
       .el-dialog__close {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bolder;
         color: #000;
       }
@@ -540,6 +548,20 @@ th.el-table__cell.bg-color3,
 .disabled{
   color: #999;
 }
+
+.status-tag{
+  padding: 0 8px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 4px;
+  display: inline-block;
+  margin:0 5px;
+}
+.status-tag.primary{
+  color:#4377FE;
+  background: rgba(67, 119, 254, 0.10);
+}
+
 .status-bg {
   border-radius: 10px;
   line-height: 20px;
@@ -583,8 +605,6 @@ th.el-table__cell.bg-color3,
 
 }
 
-
-
 .status-bg.issuing,
 .status-bg.success,
 .status-bg.long,
@@ -614,8 +634,8 @@ th.el-table__cell.bg-color3,
   border-bottom: none;
 
   span:not(.status-bg) {
-    padding: 7px 20px;
-
+    padding: 8px 20px;
+    line-height: 20px;
     &:first-child {
       text-align: left;
       width: 40%;
@@ -929,10 +949,17 @@ small {
   }
 }
 
+
+.search-box .el-input,
+.search-box .el-input__wrapper,
 .search-box .search-date-picker{
   height: 32px !important;
   min-height: 32px !important;
   border-radius: 8px;
+}
+.search-box .el-input__wrapper{
+  background-color: #F5F5F5;
+  box-shadow:0px 0px 0px rgba(255,255,255,0);
 }
 .search-box .el-button{
   border-radius: 8px;

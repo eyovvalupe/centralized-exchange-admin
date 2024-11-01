@@ -1,6 +1,6 @@
 <template>
-  <div class="p-2">
-    <div class="reset-el-styte-v2 p-2">
+  <div class="px-[30px] py-[10px]">
+    <div class="reset-el-style-v2">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
@@ -10,10 +10,10 @@
         
       </div>
     </div>
-    <div class="p-2 reset-el-styte-v2  pt-0 h-full">
+    <div class="reset-el-style-v2 py-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column :min-width="item.minWidth" v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'locked'" :style="{ color: !scope.row[item.prop] ? 'green' : '#ff0000' }">
@@ -32,22 +32,22 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :width="getWidth(300)" align="center">
+        <el-table-column label="操作" :min-width="165" align="center">
           <template #default="scope">
             <div class="flex justify-between items-center w-full px-[5px]">
               <div class="flex items-center justify-center flex-1">
-                <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
+                <el-button link class="underline" size="medium" type="primary" @click="showDialog(scope.row, 'showDialog')">调整价格</el-button>
                 <b class="split-line"></b>
-                <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
+                <el-button link class="underline" size="medium" type="primary" @click="showDialog(scope.row, 'showVolumeDialog')">调整成交量</el-button>
               </div>
               <el-dropdown>
                 <img class="ml-[20px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item :disabled="scope.row['unadjusted'] <= 0" @click="handleClear(scope.row)">
-                      <el-icon :size="20">
-                        <DeleteFilled />
-                      </el-icon> <span class="ml-1">清除未生效调整</span>
+                      <el-icon :size="14">
+                        <DeleteFilled color="#FF0004" />
+                      </el-icon><span class="ml-[10px] text-[14px]">清除未生效调整</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -97,20 +97,15 @@ const tabChange = ()=>{
   })
 }
 
-
-
-const getWidth = (w)=>{
-  return Math.round(w/1920 * window.innerWidth)
-}
-const width = getWidth(180)
+const minWidth = 120
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'center',width },
-  { prop: 'symbol', label: '代码', align: 'center', width },
-  { prop: 'old_price', label: '原价格(调整前)', align: 'center' },
-  { prop: 'price', label: '最新价格(调整后)', align: 'center' },
-  { prop: 'unadjusted', label: '未生效调整', align: 'center', width },
-  { prop: 'second', label: '生效时间', align: 'center', width },
-  { prop: 'volume_multiple', label: '成交量系数', align: 'center', width }
+  { prop: 'name', label: '名称', align: 'center',minWidth },
+  { prop: 'symbol', label: '代码', align: 'center', minWidth },
+  { prop: 'old_price', label: '原价格(调整前)',minWidth:165, align: 'center' },
+  { prop: 'price', label: '最新价格(调整后)',minWidth:165, align: 'center' },
+  { prop: 'unadjusted', label: '未生效调整', align: 'center', minWidth },
+  { prop: 'second', label: '生效时间', align: 'center', minWidth },
+  { prop: 'volume_multiple', label: '成交量系数', align: 'center', minWidth }
 ])
 const handleSubmit = (row) => {
   isLoading.value = true

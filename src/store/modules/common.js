@@ -11,6 +11,9 @@ const useCommonStore = defineStore({
       parameters: ''
     }
   },
+  mutations:{
+    
+  },
   actions: {
 
   }

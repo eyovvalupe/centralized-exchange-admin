@@ -119,7 +119,7 @@ const transKeyName = (val, key) => {
             open: '持仓',
             close: '平仓',
             fail: '失败',
-            done: '已结算',
+            done: '平仓',
             cancel: '已取消',
         }
     }
