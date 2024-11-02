@@ -69,6 +69,8 @@
       </div>
     </template>
   </el-dialog>
+
+  <safeword v-model="showPwd" @submit="submit" />
 </template>
 
 <script setup>
@@ -77,6 +79,7 @@ import { ref, reactive, onMounted, nextTick, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
+import safeword from '/@/components/safeword'
 
 const props = defineProps({
   data: { // 行数据
@@ -181,18 +184,19 @@ const handleSubmit = async () => {
         }, 1000);
         return
       }
-      submit()
+      showPwd.value = true
     }
   })
 }
 
-const submit = async () => {
-  showPwd.value = false;
+const submit = async (safeword) => {
+  
+  showPwd.value = false
   // 发送请求
   isLoading.value = true
   try {
     const token = await getSessionToken()
-    const send = { ...form, token };
+    const send = { ...form, token,safeword };
     const result = await apifuturesLock(send)
     ElMessage({
       type: 'tips',

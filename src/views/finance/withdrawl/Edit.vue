@@ -19,7 +19,7 @@
       </span>
     </template>
   </el-dialog>
-   <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="交易密码" v-model="showPwd">
+  <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="交易密码" v-model="showPwd">
     <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm2" v-loading="loading">
       <el-form-item label="交易密码" required :label-width="formLabelWidth" prop="safeword">
         <el-input v-model="form.safeword" type="password" autocomplete="off" placeholder="请输入交易密码" />

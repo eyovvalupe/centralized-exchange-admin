@@ -170,7 +170,10 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
-      tableData.value = res || []
+      res.map(item=>{
+        item.role = item.role || ''
+      })
+      tableData.value = res
     })
     .finally(() => {
       isLoading.value = false

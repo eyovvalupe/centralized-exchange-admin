@@ -66,9 +66,7 @@
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
-            <!-- <span v-else-if="item.prop === 'role'">
-              {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
-            </span> -->
+          
             <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>

@@ -548,12 +548,12 @@ th.el-table__cell.bg-color3,
 
   &.open,
   &.none {
-    color: #34c759;
+    color: #000;
   }
 
   &.close,
   &.cancel {
-    color: #666;
+    color: #999;
   }
 
   &.fail {

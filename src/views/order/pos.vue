@@ -51,12 +51,13 @@
               </el-tooltip>
             </template> -->
             <span v-else-if="item.prop === 'username'">
-              <span class=" cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showInfoDialog')">{{
+              <span class=" cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
               </span>
             </span>
-            <span v-else-if="item.prop === 'symbol'">
+            <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
               {{ scope.row['symbol'] }}
+              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
             </span>
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
@@ -238,14 +239,13 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth, align: 'center' },
   { prop: 'username', label: '用户名',minWidth, align: 'center' },
   { prop: 'role', label: '角色',minWidth, align: 'center' },
-  { prop: 'father_username', label: '代理',minWidth, align: 'center' },
   { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
   { prop: 'offset', label: '开仓', minWidth: 150, align: 'center' },
   // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
   { prop: 'unsold_volume', label: '可售数量', minWidth, align: 'center' },
   // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
   { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', minWidth: 150, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth: 200, align: 'center' },
   // { prop: 'ratio', label: '收益率',  width: 80,align: 'center' },
   { prop: 'status', label: '状态', minWidth, align: 'center' },
   { prop: 'date', label: '时间', minWidth, align: 'center' }

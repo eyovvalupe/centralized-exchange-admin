@@ -69,6 +69,9 @@
       </div>
     </template>
   </el-dialog>
+
+  <safeword v-model="showPwd" @submit="submit" />
+
 </template>
 
 <script setup>
@@ -187,18 +190,18 @@ const handleSubmit = async () => {
         }, 1000);
         return
       }
-      submit()
+      showPwd.value = true
     }
   })
 }
 
-const submit = async () => {
+const submit = async (safeword) => {
   showPwd.value = false;
   // 发送请求
   isLoading.value = true
   try {
     const token = await getSessionToken()
-    const send = { ...form, token };
+    const send = { ...form, token,safeword };
     const result = await apiStocksLock(send)
     ElMessage({
       type: 'tips',

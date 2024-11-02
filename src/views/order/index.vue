@@ -49,7 +49,7 @@
                 scope.row[item.prop] }}</span>
             </template>
             <span v-else-if="item.prop === 'username'">
-            <span class=" cursor-pointer text-[#165DFF]"
+            <span class=" cursor-pointer text-[#4377FE] underline"
               @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
             </span>
@@ -62,8 +62,15 @@
                 </span>
               </el-tooltip>
             </template>
+            <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
+              {{ scope.row['symbol'] }}
+              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
+            </span>
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
+            </span>
+            <span v-else-if="item.prop === 'role'">
+              {{ optionStatus.find(f => f.value == scope.row[item.prop]) ? optionStatus.find(f => f.value == scope.row[item.prop]).label : '--' }}
             </span>
             <span  class="flex items-center justify-center" v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
@@ -73,7 +80,7 @@
               {{ scope.row['lever'] }}X
             </span>
             <span v-else-if="['status'].includes(item.prop)">
-              <span :class="scope.row[item.prop]=='lock'?'status-bg none':''">
+              <span class="status" :class="scope.row[item.prop]">
                 {{ transKeyName(scope.row[item.prop], item.prop) }}
               </span>
             </span>
@@ -237,38 +244,16 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID', minWidth, align: 'center' },
   { prop: 'username', label: '用户名', minWidth, align: 'center' },
   { prop: 'role', label: '角色', minWidth, align: 'center' },
-  { prop: 'father_username', label: '代理',minWidth,  align: 'center' },
   { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:150,  align: 'center' },
   // { prop: 'price_type', label: '限价方式',minWidth, align: 'center' },
   { prop: 'open_volume', label: '开仓数量', minWidth, align: 'center' },
   { prop: 'margin', label: '开仓保证金', align: 'center' },
   // { prop: 'settled_price', label: '订单结算价格', minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',  minWidth:150, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比',  minWidth:200, align: 'center' },
   { prop: 'status', label: '状态', minWidth, align: 'center' },
   { prop: 'date', label: '时间',  minWidth, align: 'center' }
 ])
-
-// const column = reactive([
-//   { prop: 'order_no', label: '订单号' },
-//   { prop: ['username', 'uid'], label: 'UID/用户名' },
-//   { prop: 'father_username', label: '代理称' },
-//   { prop: 'market', label: '市场' },
-//   { prop: 'symbol', label: '交易代码' },
-//   { prop: ['offset', 'lever_type', 'lever'], label: '开仓方向' },
-//   { prop: ['price_type', 'price'], label: '限价方式/价格', },
-//   { prop: ['open_volume', 'unsold_volume'], label: '开仓/未售数量' },
-//   { prop: ['margin', 'surplus_margin'], label: '保证金/剩余金额' },
-//   { prop: 'unlock', label: '解锁金额', },
-//   { prop: ['profit', 'ratio'], label: '订单收益/百分比', color: true },
-//   { prop: 'fee', label: '手续费' },
-//   { prop: 'open_price', label: '开仓价格' },
-//   { prop: 'settled_price', label: '订单结算价格' },
-//   { prop: ['stop_profit', 'stop_profit_type', 'stop_profit_price'], label: '止盈' },
-//   { prop: ['stop_loss', 'stop_loss_type', 'stop_loss_price'], label: '止损' },
-//   { prop: 'status', label: '状态', width: 90 },
-//   { prop: 'date', label: '订单时间' }
-// ])
 
 const isLoading = ref(false)
 const orderNo = ref('')
@@ -316,7 +301,8 @@ const getDataList = page => {
         return;
       }
       currentPage.value = currentLastPage.value;
-      tableData.value = res || []
+     
+      tableData.value = res
     })
     .finally(() => {
       isLoading.value = false
