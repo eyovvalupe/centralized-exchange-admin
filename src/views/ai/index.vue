@@ -38,7 +38,7 @@
              {{  scope.row['compare']=='ge'?'大于或等于':'小于' }} {{   scope.row[item.prop] }}%
             </span> 
             <span v-else-if="item.prop === 'username'">
-              <span class=" cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showInfoDialog')">{{
+              <span class="underline cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
               </span>
             </span>

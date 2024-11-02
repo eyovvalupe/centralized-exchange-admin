@@ -1,6 +1,6 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="420"  @close="emit('close', false)" v-model="show" title="修改实名认证" :append-to-body="true" @open="open">
-    <el-form :model="form" label-position="top" ref="ruleForm" :rules="rules">
+   <el-dialog :close-on-click-modal="false" width="500"  @close="emit('close', false)" v-model="show" title="修改实名认证" :append-to-body="true" @open="open">
+    <el-form :model="form" label-position="top" class="pt-[10px]" ref="ruleForm" :rules="rules">
       <el-form-item label="实名认证" prop="limit">
         <el-select v-model="form.kyc" placeholder="请选择认证方式" style="width: 100%;">
           <el-option label="未认证" :value="0" />
@@ -10,10 +10,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <span>
-        <el-button @click="show = false"> 取消 </el-button>
-        <el-button type="primary" class="default_btn" @click="submit" :loading="isLoading"> 确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
+        <el-button type="primary" round class="w-[98px]" @click="submit" :loading="isLoading"> 确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

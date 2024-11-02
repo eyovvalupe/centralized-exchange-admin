@@ -24,7 +24,7 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <span v-else-if="item.prop === 'username'" class=" cursor-pointer text-[#165DFF]"
+            <span v-else-if="item.prop === 'username'" class="underline cursor-pointer text-[#165DFF]"
               @click="showDialog(scope.row, 'showInfoDialog')">
               {{ scope.row[item.prop] }}
             </span>

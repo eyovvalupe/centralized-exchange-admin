@@ -1,95 +1,105 @@
 <template>
-  <div class="w-full h-full reset-el-styte">
-    <div class="flex justify-end  p-2">
+  <div class="px-[30px] py-[10px]">
+    <div class="reset-el-style-v2">
       <!-- <el-button type="primary" @click="addVisible = true">增加新玩家</el-button> -->
-      <div class="flex">
-        <div class="mr-5">
-          <el-button :type="role == item.value ? 'success' : 'default'" v-for="(item) in roleOptions"
-            :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
+      <div class="flex justify-end">
+    
+        <div class="w-[168px]">
+          <el-select v-model="role" @change="changeSearch(role)">
+            <el-option v-for="(item) in roleOptions"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
         </div>
-        <div class="mr-2">
-          <el-input v-model="searchValue" class="mx-1" placeholder="UID/用户名/备注" />
+
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchValue" suffix-icon="search"  placeholder="UID/用户名/备注" />
         </div>
         <!-- <el-select v-model="role" class="ml-2">
           <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select> -->
-        <el-button type="primary" :icon="Search" @click="getPlayerList(1)" :loading="isLoading">搜索</el-button>
+        <el-button type="primary"  class="w-[120px] ml-[10px]" @click="getPlayerList(1)" :loading="isLoading">查询</el-button>
       </div>
     </div>
-
-    <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
-      v-loading="isLoading">
-      <el-table-column v-for="item in column" :key="item.prop" :prop="item.prop" :label="item.label" :align="item.align"
-        :width="item.width">
-        <template #default="scope">
-          <!-- :class="['status-yellow', 'status-green', 'status-green'][scope.row[item.prop]]" -->
-          <span v-if="item.prop === 'kyc'">
-            {{ ['未实名', 'L1认证', 'L2认证'][scope.row[item.prop]] || '-' }}
-          </span>
-          <span v-else-if="item.prop === 'lastlogin'">
-            {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-          </span>
-          <span v-else-if="item.prop === 'uid'" class=" cursor-pointer" @click="copy(scope.row.uid)">
-            {{ scope.row[item.prop] }}
-          </span>
-          <span class="status-bg " v-else-if="item.prop === 'role'"
-            :class="scope.row[item.prop] == 'guest' ? 'review' : 'success'">
-            {{ scope.row[item.prop] == 'guest' ? '模拟' : '真实' }}
-          </span>
-          <span v-else-if="item.prop === 'wallet'">
-            <span class="cursor-pointer text-[#165DFF]"
-              @click="showDialog({ ...scope.row, ...item }, 'showMoneyDialog', item.label)">查看余额</span>
-          </span>
-          <span v-else-if="item.prop === 'username'">
-            <span class=" cursor-pointer text-[#165DFF]"
-              @click="showDialog({ ...scope.row, ...item }, 'showInfoDialog', scope.row[item.prop] + '详细信息')">{{
-                scope.row[item.prop] }}
+    <div class="py-[10px] reset-el-style-v2">
+      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
+        v-loading="isLoading">
+        <el-table-column v-for="item in column" :key="item.prop" :prop="item.prop" :label="item.label" :align="item.align"
+          :width="item.width" :min-width="item.minWidth">
+          <template #default="scope">
+            <!-- :class="['status-yellow', 'status-green', 'status-green'][scope.row[item.prop]]" -->
+            <span v-if="item.prop === 'kyc'">
+              {{ ['未实名', 'L1认证', 'L2认证'][scope.row[item.prop]] || '-' }}
             </span>
-          </span>
-          <span v-else>{{ scope.row[item.prop] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="200" align="center">
-        <template #default="scope">
-          <el-button class="data" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'showTxDialog')" :disabled="!checkAuthCode(11101)">提现限制</el-button>
-          <el-button class="data" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'fundVisible')"  :disabled="!checkAuthCode(11101)">修改余额</el-button>
-          <el-popover popper-class="operation_popover" placement="bottom" title="" :width="120" trigger="click"
-            :show-arrow="false">
-            <template #reference>
-              <el-button link type="primary" size="small"><img style="width: 20px; height: 20px"
-                  src="/src/assets/images/more.svg" /></el-button>
-            </template>
-            <div class="flex flex-col cursor-pointer">
-              <p @click="showDialog(scope.row, 'modifyVisible')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
-                <el-icon :size="20">
-                  <EditPen />
-                </el-icon> <span class="ml-1">修改</span>
-              </p>
-              <p @click="showDialog(scope.row, 'showIdDialog')" :class="{ disabled: !checkAuthCode(10201) }"
-                class="flex items-center py-2">
-                <el-icon :size="20">
-                  <Postcard />
-                </el-icon><span class="ml-1">修改实名认证</span>
-              </p>
-              <p @click="showDialog(scope.row, 'showParentDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
-                <el-icon :size="20">
-                  <Share />
-                </el-icon><span class="ml-1">修改代理</span>
-              </p>
-              <p @click="showDialog(scope.row, 'showLinkDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2 border-b1">
-                <el-icon :size="20">
-                  <Link />
-                </el-icon><span class="ml-1">重置链接</span>
-              </p>
+            <span v-else-if="item.prop === 'lastlogin'">
+              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
+            </span>
+            <span v-else-if="item.prop === 'uid'" class=" cursor-pointer" @click="copy(scope.row.uid)">
+              {{ scope.row[item.prop] }}
+            </span>
+            <span class="status-bg " v-else-if="item.prop === 'role'">
+              {{ scope.row[item.prop] == 'guest' ? '模拟' : '真实' }}
+            </span>
+            <span v-else-if="item.prop === 'wallet'">
+              <span class="underline cursor-pointer text-[#4377FE]"
+                @click="showDialog({ ...scope.row, ...item }, 'showMoneyDialog')">查看余额</span>
+            </span>
+            <span v-else-if="item.prop === 'username'">
+              <span class="underline cursor-pointer text-[#165DFF]"
+                @click="showDialog({ ...scope.row, ...item }, 'showInfoDialog', scope.row[item.prop] + '详细信息')">{{
+                  scope.row[item.prop] }}
+              </span>
+            </span>
+            <span v-else>{{ scope.row[item.prop] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" :min-width="150" align="center">
+          <template #default="scope">
+            <div class="w-full flex justify-between">
+              <div class="flex-1 flex justify-center items-center">
+                <el-button size="default" class="data underline" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'showTxDialog')" :disabled="!checkAuthCode(11101)">提现限制</el-button>
+                <el-button size="default" class="data underline" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'fundVisible')"  :disabled="!checkAuthCode(11101)">修改余额</el-button>
+              </div>
+
+              <el-popover popper-class="operation_popover" placement="bottom" title="" :width="120" trigger="click"
+              :show-arrow="false">
+                <template #reference>
+                  <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+                </template>
+                <div class="flex flex-col cursor-pointer">
+                  <p @click="showDialog(scope.row, 'modifyVisible')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
+                    <el-icon :size="20">
+                      <EditPen />
+                    </el-icon> <span class="ml-1">修改</span>
+                  </p>
+                  <p @click="showDialog(scope.row, 'showIdDialog')" :class="{ disabled: !checkAuthCode(10201) }"
+                    class="flex items-center py-2">
+                    <el-icon :size="20">
+                      <Postcard />
+                    </el-icon><span class="ml-1">修改实名认证</span>
+                  </p>
+                  <p @click="showDialog(scope.row, 'showParentDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
+                    <el-icon :size="20">
+                      <Share />
+                    </el-icon><span class="ml-1">修改代理</span>
+                  </p>
+                  <p @click="showDialog(scope.row, 'showLinkDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2 border-b1">
+                    <el-icon :size="20">
+                      <Link />
+                    </el-icon><span class="ml-1">重置链接</span>
+                  </p>
+                </div>
+              </el-popover>
             </div>
-          </el-popover>
+           
+            
+          </template>
+        </el-table-column>
+        <template v-slot:empty>
+          <el-empty class="nodata" description="暂无数据" />
         </template>
-      </el-table-column>
-      <template v-slot:empty>
-        <el-empty class="nodata" description="暂无数据" />
-      </template>
-    </el-table>
-    <div class="ml-2">
+      </el-table>
+    </div>
+    <div class="pb-[10px]">
       <Pagination @changePage="getPlayerList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -105,48 +115,9 @@
     :editInfo="detailData" @close="closeDialogType" @success="closeDialogType('reload')" />
   <playerResetLinkDialog v-if="dialogType.showLinkDialog" :visible="dialogType.showLinkDialog" :editInfo="detailData"
     @close="closeDialogType" @success="closeDialogType('reload')" />
-  <el-dialog :close-on-click-modal="false" v-model="dialogType.showMoneyDialog" :loading="dialogLoading"
-    class="reset-el-styte" width="700" :title="dialogType.title" @close="closeDialogType">
-    <div v-loading="dialogLoading" style="min-height: 80px;">
-      <template v-if="!dialogLoading">
-        <div class="flex">
-          <div class="w-7/12">
-            <div class="text-sm mt-1 mb-2">业务账户</div>
-            <div class="table-list flex flex-nowrap justify-between bg-slate-50">
-              <span class="w-4/12 text-center">账户</span>
-              <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;"><b>货币</b></span>
-              <span class="w-8/12 text-center"><b>金额</b></span>
-            </div>
-            <div v-for="child in detailData['account']" :key="child.currency"
-              class="table-list flex flex-nowrap justify-between">
-              <span class="w-4/12 text-center" style="font-weight: normal;">{{ options[child.account] }}</span>
-              <span class="w-4/12 text-center" style="border-right: 1px solid #e6e6e6;">{{ child.name }}</span>
-              <span class="w-8/12 text-center">{{ child.amount }}</span>
-            </div>
-          </div>
-          <div class="w-5/12 ml-2">
-            <div class="flex justify-between mb-2">
-              <div class="text-sm mt-1">现金账户</div>
-              <div>
-                <span class="mr-2">隐藏0余额</span>
-                <el-switch v-model="showZreo" size="small" />
-              </div>
-            </div>
-            <div class="table-list flex flex-nowrap justify-between bg-slate-50">
-              <span class="w-4/12 text-center">货币</span>
-              <span class="w-7/12 text-center"><b>金额</b></span>
-            </div>
-            <template v-for="(item, index) in detailData['wallet']" :key="index">
-              <div v-if="!(showZreo && item.amount == 0)" class="table-list flex flex-nowrap justify-between">
-                <span>{{ item.name }}</span>
-                <span class="w-7/12 text-center">{{ item.amount }}</span>
-              </div>
-            </template>
-          </div>
-        </div>
-      </template>
-    </div>
-  </el-dialog>
+ 
+  <userMoney v-if="dialogType.showMoneyDialog" :partyid="detailData.partyid" @close="closeDialogType" />
+
   <userDetail v-if="dialogType.showInfoDialog" :partyid="detailData.partyid" @close="closeDialogType" />
 
 </template>
@@ -158,9 +129,7 @@ export default { name: 'Player' };
 import {
   apiUserList,
   apiUserDeposit,
-  apiUserWithdraw,
-  apiUserFunds,
-  apiUserBalance,
+  apiUserWithdraw
 } from '/@/api/modules/business/player.api'
 // import { apiRoleList } from '/@/api/modules/system/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
@@ -175,6 +144,7 @@ import modifyDialog from './modifyDialog.vue'
 import playerTxDialog from './playerTxDialog.vue'
 import { ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
+import userMoney from '/@/components/userDetail/money.vue'
 
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 
@@ -227,16 +197,17 @@ const options = {
   forex: '外汇账户'
 }
 
+const minWidth = 100
 const column = reactive([
-  { prop: 'uid', label: 'UID', width: 100, align: 'center' },
-  { prop: 'username',width: 200, label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center',width: 100, },
-  { prop: 'father_username', label: '代理', align: 'center',width: 150, },
-  { prop: 'kyc', label: '实名认证', width: 90, align: 'center' },
-  { prop: 'wallet', label: '账户余额', align: 'center',width: 120, },
-  { prop: 'limit', label: '流水限制', width: 100, align: 'center' },
-  { prop: 'lastlogin', label: '最后登录', width: 140, align: 'center' },
-  { prop: 'remarks', label: '备注', align: 'center' },
+  { prop: 'uid', label: 'UID', minWidth, align: 'center' },
+  { prop: 'username',minWidth, label: '用户名', align: 'center' },
+  { prop: 'role', label: '角色', align: 'center',minWidth, },
+  // { prop: 'father_username', label: '代理', align: 'center',minWidth },
+  { prop: 'kyc', label: '实名认证', minWidth, align: 'center' },
+  { prop: 'wallet', label: '账户余额', align: 'center', minWidth },
+  { prop: 'limit', label: '流水限制', minWidth, align: 'center' },
+  { prop: 'lastlogin', label: '最后登录', minWidth, align: 'center' },
+  { prop: 'remarks', label: '备注',minWidth:150, align: 'center' },
 ])
 const columnWallet = ref([])
 const isLoading = ref(false)
@@ -245,7 +216,7 @@ const maxHeight = ref(420)
 onMounted(() => {
   maxHeight.value = document.body.offsetHeight - 290
 })
-const func = { wallet: apiUserFunds, withdraw: apiUserWithdraw, deposit: apiUserDeposit }
+const func = { withdraw: apiUserWithdraw, deposit: apiUserDeposit }
 const showDialog = (data, key, title) => {
   if (!checkAuthCode(10201)) {
     return

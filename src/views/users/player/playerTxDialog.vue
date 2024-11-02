@@ -1,6 +1,6 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="520"  @close="emit('close', false)" class="reset-el-styte" v-model="show" title="提现限制" :append-to-body="true" @open="open">
-    <el-form :model="form" label-position="top" ref="ruleForm" :rules="rules">
+   <el-dialog :close-on-click-modal="false" width="500"  @close="emit('close', false)" class="reset-el-styte" v-model="show" title="提现限制" :append-to-body="true" @open="open">
+    <el-form :model="form" label-position="top" class="pt-[10px]" ref="ruleForm" :rules="rules">
       <el-form-item label="流水限制" prop="limit">
         <el-input v-model="form.limit" placeholder="请输入限制金额">
           <template #append>
@@ -9,15 +9,15 @@
         </el-input>
       </el-form-item>
     </el-form>
-    <div class="txt-tips">
+    <div class="text-xs text-gray-300">
       <span class="block mb-2">* 流水限制大于0时，用户无法提现 </span>
       <span>* 用户通过业务下单，增加流水金额，限制扣减为0时，恢复提现权限</span>
     </div>
     <template #footer>
-      <span>
-        <el-button @click="show = false"> 取消 </el-button>
-        <el-button type="primary" class="default_btn" @click="submit" :loading="isLoading"> 确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
+        <el-button type="primary" round class="w-[98px]" @click="submit" :loading="isLoading"> 确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

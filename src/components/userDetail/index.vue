@@ -60,15 +60,15 @@
                   </el-radio-group>
                   <div>
                     <span class="mr-[10px] text-[13px]">隐藏0余额</span>
-                    <el-switch v-model="showZreo" size="small" />
+                    <el-switch v-model="showZero" size="small" />
                   </div>
                 </div>
                 <div class="table-list flex bg-slate-50 mt-[10px]" style="color:#000;">
                   <span class="flex-1 w-0 text-center">货币</span>
                   <span class="flex-1 w-0 text-center">金额</span>
                 </div>
-                <template v-if="detailData.fund[account] && detailData.fund[account].length">
-                  <div class="table-list flex" v-for="child in detailData.fund[account]" :key="child.currency" v-show="!(showZreo && child.amount == 0)" style="color:#000;">
+                <template v-if="detailData.fund[account] && detailData.fund[account].length && (!accountAllZero || !showZero)">
+                  <div class="table-list flex" v-for="child in detailData.fund[account]" :key="child.currency" v-show="!(showZero && child.amount == 0)" style="color:#000;">
                     <span class="flex-1 w-0 text-center">{{ child.name }}</span>
                     <span class="flex-1 w-0 text-center">{{ child.amount }}</span>
                   </div>
@@ -124,7 +124,7 @@ import { getGlobalWalletList } from '/@/api/modules/base.api'
 import { dayjs } from 'element-plus'
 const detailData = reactive({ base: {}, fund: {} })
 const show = ref(true)
-const showZreo = ref(true)
+const showZero = ref(true)
 const activeName = ref('first')
 const dialogLoading = ref(false)
 const props = defineProps({
@@ -146,12 +146,8 @@ const daterangeChange = (val)=>{
     searchForm.end_time = val[1]
   }
 }
-const options = {
-  money: '现金账户',
-  stock: '股票账户',
-  futures: '合约账户',
-  forex: '外汇账户'
-}
+
+
 const roleOptions = [
   {
     value: 'all',
@@ -168,23 +164,27 @@ const roleOptions = [
 ]
 
 const account = ref("wallet")
+
+const accountAllZero = computed(()=>{
+  let result = false
+  if(!detailData.fund[account]){
+    return true
+  }
+  detailData.fund[account].map(item=>{
+    if(item.amount > 0){
+      result = true
+    }
+  })
+  return result
+})
+
+
 const roleName = (key) => {
   const obj = roleOptions.find(f => f.value === key);
   return obj ? obj.label : ''
 }
-const disabledStart = (time) => {
-  return time.getTime() >= Date.now()
-}
-const disabledEnd = (time) => {
-  return time.getTime() < Date.now()
-}
-// const columnWallet = reactive([
-//   { prop: 'main', label: '交易账户', width: 120, align: 'center' },
-//   { prop: 'USD', label: '美元', width: 100, align: 'center' },
-//   { prop: 'USDT', label: 'USDT', width: 100, align: 'center' },
-//   { prop: 'BTC', label: 'BTC', width: 100, align: 'center' },
-//   { prop: 'ETH', label: 'ETH', width: 100, align: 'center' },
-// ])
+
+
 const columnInfo = ref([
   { prop: 'uid', label: 'UID', width: 100, align: 'center' },
   { prop: 'username', label: '用户名', width: 130, align: 'center' },

@@ -17,10 +17,10 @@
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
-        <div class="w-[264px] ml-2">
+        <div class="w-[264px] ml-[10px]">
           <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
         </div>
-        <el-button type="primary" class="w-[120px] ml-2" @click="getDataList(1)"
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
     </div>

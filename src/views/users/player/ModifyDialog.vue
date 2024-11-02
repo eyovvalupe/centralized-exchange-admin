@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改" :append-to-body="true">
-    <el-form ref="ruleForm" :model="form" :rules="rules" label-position="top">
+    <el-form ref="ruleForm" class="pt-[10px]" :model="form" :rules="rules" label-position="top">
       <el-form-item label="业务权限" prop="enabled" :label-width="formLabelWidth">
         <el-select v-model="form.enabled" class="w-full">
           <el-option label="正常" :value="true" />
@@ -24,10 +24,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <span>
-        <el-button @click="emit('close')">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="submit" :loading="isLoading"> 修改 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
+        <el-button type="primary"  round class="w-[98px]" @click="submit" :loading="isLoading"> 修改 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

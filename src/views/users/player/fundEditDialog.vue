@@ -1,7 +1,7 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="580" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改余额" :append-to-body="true">
-    <div class="flex justify-between">
-      <div class="w-6/12">
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改余额" :append-to-body="true">
+    <div class="flex justify-between pt-[10px]">
+      <div class="w-7/12">
         <el-form ref="ruleForm" label-position="top" :model="form" :rules="rules">
           <el-form-item label="账户" prop="currency" :label-width="formLabelWidth" required>
             <el-select v-model="form.currency" placeholder="请选择账户" @change="currencyChange" style="width: 100%;">
@@ -23,7 +23,7 @@
         </el-form>
         <div class="txt-tips my-2" v-if="form.action == 'withdraw'">提现金额不计入充值报表</div>
       </div>
-      <div class="w-6/12 ml-2" v-loading="loading">
+      <div class="w-5/12 ml-[20px]" v-loading="loading">
         <div>
           <div class="table-list flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">账户余额</span>
@@ -42,25 +42,23 @@
       </div>
     </div>
     <template #footer>
-      <span>
-        <el-button @click="emit('close')">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="showPwdDialog" :disabled="currMoney < 0"
+      <div class="p-[10px]">
+        <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
+        <el-button type="primary" round class="w-[98px]" @click="showPwdDialog" :disabled="currMoney < 0"
           :loading="isLoading">确定</el-button>
-      </span>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" v-model="showPwd" class="reset-el-styte" width="350" title="交易密码验证" :append-to-body="true">
-    <p class="my-2">
-      <el-form>
+      <el-form class="pt-[10px]">
         <el-input type="password" autocomplete="off" show-password v-model="form.safeword" placeholder="请输入交易密码" />
       </el-form>
-    </p>
-    <template #footer>
-      <span class="p-2">
-        <el-button @click="emit('close')">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleInnerDialog">确定</el-button>
-      </span>
-    </template>
+      <template #footer>
+        <div class="p-10">
+          <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
+          <el-button type="primary" round class="w-[98px]" @click="handleInnerDialog">确定</el-button>
+        </div>
+      </template>
   </el-dialog>
 </template>
 

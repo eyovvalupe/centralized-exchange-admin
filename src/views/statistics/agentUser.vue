@@ -28,7 +28,7 @@
                     <el-table-column label="操作" width="160" align="center">
                         <template #default="scope">
                                 
-                            <el-button class="data" link type="primary"
+                            <el-button size="default" class="data underline" link type="primary"
                                 @click="showDialog(scope.row)">
                                 充提货币详情</el-button>
                         </template>

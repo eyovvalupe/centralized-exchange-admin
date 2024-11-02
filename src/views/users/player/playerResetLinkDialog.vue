@@ -1,7 +1,7 @@
 <template>
   <div>
-     <el-dialog :close-on-click-modal="false" width="320"  @close="emit('close', false)" class="reset-el-styte" v-model="show" title="生成重置链接" :append-to-body="true">
-      <el-form label-position="top">
+     <el-dialog :close-on-click-modal="false" width="500"  @close="emit('close', false)" class="reset-el-styte" v-model="show" title="生成重置链接" :append-to-body="true">
+      <el-form label-position="top" class="pt-[10px]">
         <el-form-item label="重置链接" v-if="showLink">
           <el-input readonly v-model="link" :prefix-icon="Link">
             <template #suffix>
@@ -20,10 +20,10 @@
       </el-form>
 
       <template #footer>
-        <span v-if="!showGoogle">
-          <el-button @click="show = false"> 取消 </el-button>
-          <el-button type="primary" @click="handleReset" :loading="isLoading"> 重置链接 </el-button>
-        </span>
+        <div class="p-[10px]" v-if="!showGoogle">
+          <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
+          <el-button round class="w-[98px]" type="primary" @click="handleReset" :loading="isLoading"> 重置链接 </el-button>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -111,7 +111,6 @@ const handleReset = () => {
    margin: 0 auto;
    .input-items{
     margin-bottom: 20px !important;
-
    }
    
 }

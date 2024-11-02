@@ -1,16 +1,16 @@
 <template>
   <div>
-     <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" v-model="show" title="修改代理" :append-to-body="true">
-      <el-form :model="form" ref="ruleForm" label-position="top" :rules="rules">
+     <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" v-model="show" title="修改代理" :append-to-body="true">
+      <el-form :model="form" ref="ruleForm" class="pt-[10px]" label-position="top" :rules="rules">
         <el-form-item label="代理UID" prop="father_uid" :label-width="formLabelWidth">
           <el-input v-model="form.father_uid" placeholder="请输入代理商UID" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <span>
-          <el-button @click="show = false"> 取消 </el-button>
-          <el-button type="primary" @click="showInnerDialog" :loading="isLoading"> 确定 </el-button>
-        </span>
+        <div class="p-[10px]">
+          <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
+          <el-button round class="w-[98px]" type="primary" @click="showInnerDialog" :loading="isLoading"> 确定 </el-button>
+        </div>
       </template>
     </el-dialog>
      <el-dialog :close-on-click-modal="false" title="操作者验证" class="reset-el-styte" v-model="showGoogle" width="320">

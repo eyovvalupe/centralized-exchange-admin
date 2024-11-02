@@ -22,33 +22,34 @@
 
     <div class="form-center" style="margin-bottom: 20px">谷歌验证码</div> -->
     <div class="form-left my-2" v-if="!props.noTitle">请验证你的谷歌验证码</div> 
-    <el-form-item class="input-items mt-2">
-      <el-input type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
-      <el-input type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
-      <el-input type="text" ref="int3" maxlength="1" v-model="third" @input="thirdChange" />
-      <el-input type="text" ref="int4" maxlength="1" v-model="fourth" @input="fourthChange" />
-      <el-input type="text" ref="int5" maxlength="1" v-model="fifth" @input="fifthChange" />
-      <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
+    <el-form-item class="mt-[10px] flex items-center input-items">
+      <el-input class="flex-1" type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
+      <el-input class="flex-1" type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
+      <el-input class="flex-1" type="text" ref="int3" maxlength="1" v-model="third" @input="thirdChange" />
+      <el-input class="flex-1" type="text" ref="int4" maxlength="1" v-model="fourth" @input="fourthChange" />
+      <el-input class="flex-1" type="text" ref="int5" maxlength="1" v-model="fifth" @input="fifthChange" />
+      <el-input class="flex-1" type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
   </el-form>
-  <div class="flex justify-end mt-5 reset-el-styte">
-     <div></div>
-     <div class="el-dialog__footer">
+  <div class="flex justify-end pt-[20px] reset-el-styte">
       <el-button
+        round
+        type="primary"
+        class="w-[98px]"
         plain
         @click.prevent="emit('close')"
       >
       取消
       </el-button>
       <el-button
-        class="google-submit"
+        round
+        class="w-[98px]"
         :loading="loading"
         type="primary"
         @click.prevent="loginHandle"
       >
       验证
       </el-button>
-     </div>
   </div>
 </template>
 
@@ -211,20 +212,11 @@ onMounted(()=>{
 .google-submit{
   margin: 0 auto;
 }
-.input-items {
-  margin-bottom: 50px;
-  :deep(.el-form-item__content) {
-    display: flex;
-    justify-content: space-between;
-    .el-input {
-      width: 40px;
-      height: 40px;
-      background-color: #fff;
-      box-sizing: border-box;
-      .el-input__inner {
-        text-align: center;
-      }
-    }
-  }
+
+.input-items{
+  margin-left: -10px;
+}
+.input-items .el-input{
+  margin-left: 10px;
 }
 </style>

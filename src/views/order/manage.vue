@@ -41,7 +41,7 @@
               <span class="mx-1">~</span>
               <el-tag type="info" size="small"> {{ dayjs(scope.row['issue_end_date']).format('YYYY-MM-DD')  }}</el-tag>
             </span> -->
-            <!-- <span v-else-if="item.prop === 'company_name'"  class="cursor-pointer text-[#165DFF]" @click="copy(scope.row[item.prop])">
+            <!-- <span v-else-if="item.prop === 'company_name'"  class="underline cursor-pointer text-[#4377FE]" @click="copy(scope.row[item.prop])">
               {{ scope.row[item.prop] }}
             </span> -->
             <span v-else>
