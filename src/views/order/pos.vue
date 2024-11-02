@@ -1,30 +1,42 @@
 <template>
-  <div class="player reset-el-styte p-2">
-    <div class="flex justify-between p-2">
-      <div>
-        <el-button type="primary" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
+   <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="orderPositions">股票持仓单</el-radio-button>
+          <el-radio-button label="orderIndex">股票历史订单</el-radio-button>
+        </el-radio-group>
+        <el-button type="primary" class="ml-[10px]" icon="plus" plain @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
-      <div>
-        <el-button :type="searchValue == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-          :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        <el-input v-model="searchStrbtn" class="mx-2" placeholder="UID/用户名" style="width: 200px;" />
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
-      </div>
-    </div>
-    <div class="p-2 pt-0 h-full">
+
+      <div class="flex items-center">
+        <div class="w-[168px]">
+          <el-select v-model="searchValue" @change="changeSearch(searchValue)">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[264px] ml-2">
+          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>      
+    </div> 
+    <div class="py-[10px] reset-el-style-v2">
       <el-table :data="tableData" :border="tableData.length > 0" :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'profit'" style="line-height: 20px;">
+            <span class="flex justify-center items-center" v-if="item.prop === 'profit'" style="line-height: 20px;">
               <span class="w-100 block"
-                :class="scope.row[item.prop] > 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
+                :class="scope.row[item.prop] >= 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
                 {{ scope.row[item.prop] }}
               </span>
+              <b class="split-line"></b>
               <span class="w-100 block"
-                :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
+                :class="scope.row['ratio'] >= 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
                 {{ scope.row['ratio'] * 100 }}%
               </span>
             </span>
@@ -45,7 +57,6 @@
             </span>
             <span v-else-if="item.prop === 'symbol'">
               {{ scope.row['symbol'] }}
-              <!-- <b class="split-line"></b>{{ scope.row['market'] }} -->
             </span>
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
@@ -53,10 +64,10 @@
             <span v-else-if="item.prop === 'role'">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
             </span>
-            <span v-else-if="['offset'].includes(item.prop)">
+            <span class="flex items-center justify-center" v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>
-              {{ transKeyName(scope.row[item.prop], item.prop) }}
+              <span class="status-bg" :class="[scope.row[item.prop] == 'long' ? 'success' : 'short']">{{ transKeyName(scope.row[item.prop], item.prop) }}</span>
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
@@ -82,21 +93,26 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column label="操作" :min-width="minWidth" align="center">
           <template #default="scope">
-            <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">查看订单</el-button>
-            <el-dropdown>
-              <img style="width: 20px; height: 20px;margin-top: 5px;" src="/src/assets/images/more.svg" />
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="showDialog(scope.row, 'closePos')">
-                    <el-icon :size="20" color="red">
-                      <WarnTriangleFilled />
-                    </el-icon> <span class="ml-1" style="color: red;">强行平仓</span>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+            <div class="w-full flex justify-between">
+              <div class="flex-1 flex justify-center items-center">
+                <el-button link type="primary" class="underline" size="default" @click="showDialog(scope.row, 'showDialog')">查看订单</el-button>
+              </div>
+            
+              <el-dropdown>
+                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="showDialog(scope.row, 'closePos')">
+                      <el-icon :size="20" color="red">
+                        <WarnTriangleFilled />
+                      </el-icon> <span class="ml-1" style="color: red;">强行平仓</span>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
           </template>
         </el-table-column>
         <template v-slot:empty>
@@ -121,11 +137,12 @@ import closePos from './components/closePos.vue'
 import detailDialog from '/@/components/detailDialog/index.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
 import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
 import AddLock from './components/AddLock.vue'
 import { useSocketStore } from '/@/store'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const socketStore = useSocketStore()
 const optionStatus = [
   {
@@ -142,8 +159,15 @@ const optionStatus = [
   }
 ]
 
+const tabPosition = ref('orderPositions')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 const dialogLoading = ref(false)
-const searchValue = ref(localStorage.getItem('searchstr') || 'all')
+const searchValue = ref('all')
 const searchStrbtn = ref('')
 const searchStr = ref('')
 const tableData = computed(() => {
@@ -158,6 +182,7 @@ const tableData = computed(() => {
   }
   return list
 });
+
 const dialogType = reactive({
   info: null,
   showInfoDialog: false,
@@ -198,34 +223,32 @@ const transKeyName = (val, key) => {
       none: "开仓",
       lock: "锁定",
       open: "持仓",
-      close: "平仓",
+      done: "平仓",
       settled: "已结算",
       fail: "失败",
-      cancel: "已取消",
-      done: "完成"
+      cancel: "已取消"
     }
   }
   str = obj[val] || val;
   return str;
 }
+const minWidth = 100
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号', width: 100, align: 'center' },
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'username', label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center' },
-  { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'symbol', label: '股票代码', align: 'center' },
-  { prop: 'offset', label: '开仓', width: 120, align: 'center' },
-  // { prop: 'price_type', label: '限价方式', width: 100, align: 'center' },
-  { prop: 'unsold_volume', label: '可售数量', width: 120, align: 'center' },
-  // { prop: 'margin', label: '保证金/剩余金额', width: 130, align: 'center' },
-  // { prop: 'profit', label: '收益/百分比', align: 'center' },
-  // { prop: 'unsold_volume', label: '持仓数量', align: 'center' },
-  { prop: 'surplus_margin', label: '剩余保证金', align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', width: 130, align: 'center' },
+  // { prop: 'order_no', label: '订单号', minWidth, align: 'center' },
+  { prop: 'uid', label: 'UID',minWidth, align: 'center' },
+  { prop: 'username', label: '用户名',minWidth, align: 'center' },
+  { prop: 'role', label: '角色',minWidth, align: 'center' },
+  { prop: 'father_username', label: '代理',minWidth, align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
+  { prop: 'offset', label: '开仓', minWidth: 150, align: 'center' },
+  // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
+  { prop: 'unsold_volume', label: '可售数量', minWidth, align: 'center' },
+  // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
+  { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth: 150, align: 'center' },
   // { prop: 'ratio', label: '收益率',  width: 80,align: 'center' },
-  { prop: 'status', label: '状态', width: 70, align: 'center' },
-  { prop: 'date', label: '时间', width: 110, align: 'center' }
+  { prop: 'status', label: '状态', minWidth, align: 'center' },
+  { prop: 'date', label: '时间', minWidth, align: 'center' }
 ])
 
 const isLoading = ref(false)
@@ -250,7 +273,6 @@ const changeSearch = (s) => {
   searchValue.value = s;
   searchStrbtn.value = ''
   searchStr.value = ''
-  localStorage.setItem('searchstr', s);
 }
 // watch(() => socketStore.sokcetWS, (ws) => {
 //   if (ws) {

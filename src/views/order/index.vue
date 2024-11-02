@@ -1,28 +1,45 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2">
-      <div>
-        <el-button :type="searchForm.role == item.value ? 'success' : 'default'" v-for="(item) in option"
-        :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-      <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/备注" style="width: 200px;" />
-      <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-        end-placeholder="请选择结束时间" style="width: 280px;" />
-      <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
-          <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-      <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
+  <div class="px-[30px] py-[10px]">
+    <div class="flex justify-between reset-el-style-v2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="orderPositions">股票持仓单</el-radio-button>
+          <el-radio-button label="orderIndex">股票历史订单</el-radio-button>
+        </el-radio-group>
+      </div>
+
+      <div class="flex items-center">
+          <div class="w-[168px]">
+            <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
+              <el-option  v-for="(item) in option"
+              :key="item.value" :value="item.value" :label="item.label"></el-option>
+            </el-select>
+          </div>
+          
+          <div class="w-[400px] ml-2">
+            <el-date-picker style="width:100%;" v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间" end-placeholder="请选择结束时间"/>
+          </div>
+          <div class="w-[264px] ml-2">
+            <el-input v-model="searchForm.params"  suffix-icon="search" placeholder="UID/用户名/备注" />
+          </div>
+        <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
+            <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select> -->
+        <el-button type="primary" class="w-[120px] ml-2" @click="getDataList(1)" :loading="isLoading">查询</el-button>
+      </div>
+
     </div>
-    </div>
-    <div class="p-2 pt-0 h-full">
+    <div class="py-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'profit'" >
+            <span class="flex justify-center items-center" v-if="item.prop === 'profit'" >
               <span class="w-100 block" :class="scope.row[item.prop] > 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
                 {{ scope.row[item.prop] }}
               </span>
+              <b class="split-line"></b>
               <span class="w-100 block" :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
                 {{ scope.row['ratio'] * 100 }}%
               </span>
@@ -48,10 +65,10 @@
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
-            <span v-else-if="['offset'].includes(item.prop)">
+            <span  class="flex items-center justify-center" v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>
-              {{ transKeyName(scope.row[item.prop], item.prop) }}
+              <span class="status-bg" :class="[scope.row[item.prop] == 'long' ? 'success' : 'short']">{{ transKeyName(scope.row[item.prop], item.prop) }}</span>
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
@@ -71,17 +88,18 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="70" align="center">
+        <el-table-column label="操作" :min-width="minWidth" align="center">
           <template #default="scope">
-            <el-button link type="primary" @click="showDialog(scope.row)">查看订单</el-button>
+            <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row,'showDialog')">查看订单</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+      
     </div>
+    <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
   </div>
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :orderNo="orderNo" @close="closeDialogType" />
@@ -99,11 +117,21 @@ import detailDialog from '/@/components/detailDialog/index.vue'
 import { Search } from '@element-plus/icons-vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:orderIndex', () => {
   getDataList()
 })
+
+const tabPosition = ref('orderIndex')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 const timeRanges=ref([])
 const optionStatus = [
   {
@@ -123,7 +151,7 @@ const optionStatus = [
     label: '持仓',
   },
   {
-    value: 'close',
+    value: 'done',
     label: '平仓',
   },
   {
@@ -133,10 +161,6 @@ const optionStatus = [
   {
     value: 'cancel',
     label: '已取消',
-  },
-  {
-    value: 'done',
-    label: '完成',
   }
 ]
 const option = [
@@ -154,6 +178,7 @@ const option = [
   }
 ]
 const dialogType = reactive({
+  info: null,
   showDialog: false,
   showInfoDialog:false,
   showLockDialog:false,
@@ -194,35 +219,34 @@ const transKeyName = (val, key) => {
     }
   } else if (key === 'status') {
     obj = {
-      none: "无",
+      none: "开仓",
       lock: "锁定",
       open: "持仓",
-      close: "平仓",
-      settled: "已结算",
+      done: "平仓",
       fail: "失败",
-      cancel: "已取消",
-      done: "完成"
+      cancel: "已取消"
     }
   }
   str = obj[val] || val;
   return str;
 }
 
+const minWidth = 100
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号',width: 80, align: 'center' },
-  { prop: 'uid', label: 'UID', width: 80, align: 'center' },
-  { prop: 'username', label: '用户名', width: 100, align: 'center' },
-  { prop: 'role', label: '角色', width: 100, align: 'center' },
-  { prop: 'father_username', label: '代理',width: 110,  align: 'center' },
-  { prop: 'symbol', label: '股票代码', align: 'center' },
-  { prop: 'offset', label: '开仓',  align: 'center' },
-  // { prop: 'price_type', label: '限价方式', align: 'center' },
-  { prop: 'open_volume', label: '开仓数量', width: 110, align: 'center' },
+  // { prop: 'order_no', label: '订单号',minWidth, align: 'center' },
+  { prop: 'uid', label: 'UID', minWidth, align: 'center' },
+  { prop: 'username', label: '用户名', minWidth, align: 'center' },
+  { prop: 'role', label: '角色', minWidth, align: 'center' },
+  { prop: 'father_username', label: '代理',minWidth,  align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
+  { prop: 'offset', label: '开仓',minWidth:150,  align: 'center' },
+  // { prop: 'price_type', label: '限价方式',minWidth, align: 'center' },
+  { prop: 'open_volume', label: '开仓数量', minWidth, align: 'center' },
   { prop: 'margin', label: '开仓保证金', align: 'center' },
-  // { prop: 'settled_price', label: '订单结算价格', width: 110, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',  width: 110, align: 'center' },
-  { prop: 'status', label: '状态', width: 70, align: 'center' },
-  { prop: 'date', label: '时间',  width: 110, align: 'center' }
+  // { prop: 'settled_price', label: '订单结算价格', minWidth, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比',  minWidth:150, align: 'center' },
+  { prop: 'status', label: '状态', minWidth, align: 'center' },
+  { prop: 'date', label: '时间',  minWidth, align: 'center' }
 ])
 
 // const column = reactive([
@@ -248,15 +272,13 @@ const columnBase = ref([
 
 const isLoading = ref(false)
 const orderNo = ref('')
-const showDialog = (data) => {
-  if(data==='lock'){
-    dialogType.showLockDialog = true;
-  }else{
+const showDialog = (data, key) => {
+  if (data) {
     const { order_no } = data;
     orderNo.value = order_no;
-    dialogType.showDialog = true;
+    dialogType.info = Object.assign({}, data);
   }
-
+  dialogType[key] = true;
 }
  
 // 获取玩家列表 page若传则为第一页

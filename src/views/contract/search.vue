@@ -120,10 +120,7 @@ import userDetail from '/@/components/userDetail/index.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import { useRouter } from 'vue-router'
-import store from '../../store'
 const router = useRouter()
-import { useCommonStore } from '/@/store';
-const useCommon = useCommonStore()
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:contractSearch', () => {
@@ -240,14 +237,14 @@ const transKeyName = (val, key) => {
 }
 const minWidth = 120
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号',width: 80, align: 'center' },
+  // { prop: 'order_no', label: '订单号',minWidth, align: 'center' },
   { prop: 'uid', label: 'UID',minWidth, align: 'center' },
   { prop: 'username', label: '用户名',minWidth, align: 'center' },
   { prop: 'role', label: '角色',minWidth, align: 'center' },
   { prop: 'name', label: '名称',minWidth, align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:165,  align: 'center' },
   // { prop: 'price_type', label: '限价方式', align: 'center' },
-  { prop: 'open_volume', label: '开仓数量',minWidth, align: 'center' },
+  { prop: 'open_volume', label: '开仓张数',minWidth, align: 'center' },
   { prop: 'margin', label: '开仓保证金',minWidth, align: 'center' },
   // { prop: 'settled_price', label: '订单结算价格',minWidth: 110, align: 'center' },
   { prop: 'profit', label: '订单收益/百分比',minWidth, align: 'center' },

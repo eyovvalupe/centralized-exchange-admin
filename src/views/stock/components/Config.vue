@@ -1,37 +1,39 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" title="交易参数配置" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="交易参数配置" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
       <el-form-item label="交易杠杆" required  prop="lever">
           <el-input v-model="form.lever"  autocomplete="off" placeholder="支持多个，英文逗号隔开" />
-          <small class="txt-gray2">支持多个，英文逗号隔开</small> 
+          <small class="txt-gray2 pt-[10px]">支持多个，英文逗号隔开</small> 
         </el-form-item>
         <el-form-item label="开仓数量规则" required  prop="volumelimit">
           <el-input v-model="form.volumelimit"  autocomplete="off" placeholder="" />
-          <small class="txt-gray2">逗号隔开，第一个最低下单量，第二个倍增数量</small> 
+          <small class="txt-gray2 pt-[10px]">逗号隔开，第一个最低下单量，第二个倍增数量</small> 
         </el-form-item>
        <div class="flex">
         <el-form-item label="开仓手续费(%)" required prop="openfee" class="w-6/12">
-          <el-input v-model="form.openfee"  autocomplete="off" />
+          <el-input-number class="input-number" :min="0" :max="100" :controls="false" v-model="form.openfee"  autocomplete="off" />
         </el-form-item>
         <el-form-item label="平仓手续费(%)" required prop="closefee"  class="w-6/12 ml-2">
-          <el-input v-model="form.closefee" autocomplete="off" />
+          <el-input-number class="input-number" :min="0" :max="100" :controls="false" v-model="form.closefee" autocomplete="off" />
         </el-form-item>
        </div>
-        <el-form-item label="配资利息" required prop="interest">
-          <el-input v-model="form.interest" autocomplete="off" />
-          <small class="txt-gray2">隔夜借贷资金每日利息</small> 
+        <el-form-item label="配资隔夜利息(%)" required prop="interest">
+          <el-input-number class="input-number" :min="0" :max="100" :controls="false" v-model="form.interest" autocomplete="off" />
+          <small class="txt-gray2 pt-[10px]">隔夜借贷资金每日利息</small> 
         </el-form-item>
-        <el-form-item label="强平线" required prop="closingline">
-          <el-input v-model="form.closingline"  autocomplete="off" />
+        <el-form-item label="强平线(%)" required prop="closingline">
+          <el-input-number  class="input-number" :max="100" :min="0" @blur="form.closingline <= 0 ? form.closingline = '' : ''" :controls="false" v-model="form.closingline"  autocomplete="off">
+           
+            </el-input-number>
         </el-form-item>
         <!-- <small class="txt-gray2">00:00 UTC、08:00 UTC、16:00 UTC 收取</small> -->
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round class="w-[98px]"  @click="emit('close', false)">取消</el-button>
+        <el-button type="primary" round class="w-[98px]"  @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

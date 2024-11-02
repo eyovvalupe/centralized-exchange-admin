@@ -126,14 +126,15 @@ const transKeyName = (val, key) => {
     str = obj[val] || val;
     return str;
 }
+const numstr =  props.contract ? '张数' : '数量'
 const column = reactive([
     { prop: 'order_no', label: '订单号' },
     { prop: props.contract ? 'name' : 'symbol', label: props.contract ? '合约' : '股票代码' },
     { prop: 'status', label: '状态' },
     { prop: 'offset', label: '开仓' },
     { prop: 'price_type', label: '限价方式', },
-    { prop: 'open_volume', label: '开仓数量' },
-    { prop: 'unsold_volume', label: '未售数量' },
+    { prop: 'open_volume', label: '开仓'+numstr },
+    { prop: 'unsold_volume', label: '未售'+numstr },
     { prop: 'margin', label: '开仓保证金' },
     { prop: 'surplus_margin', label: '剩余保证金' },
     { prop: 'unlock', label: '解锁金额', },

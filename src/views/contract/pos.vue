@@ -252,7 +252,7 @@ const columnBase = ref([
   { prop: 'name', label: '合约',minWidth, align: 'center' },
   { prop: 'offset', label: '开仓',minWidth: 165, align: 'center' },
   // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
-  { prop: 'unsold_volume', label: '可售数量', minWidth, align: 'center' },
+  { prop: 'unsold_volume', label: '可售张数', minWidth, align: 'center' },
   // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
   // { prop: 'profit', label: '收益/百分比',minWidth, align: 'center' },
   // { prop: 'unsold_volume', label: '持仓数量',minWidth, align: 'center' },

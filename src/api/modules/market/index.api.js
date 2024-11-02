@@ -21,3 +21,11 @@ export function stocksSell(data) {
     data
   } )
 }
+
+export function stockPara(data){
+  return request({
+    method:'post',
+    url:'/roles/v1/stock/m/para',
+    data
+  })
+}

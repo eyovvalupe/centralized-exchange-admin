@@ -36,7 +36,7 @@
               <el-input-number :controls="false" class="input-number" :precision="0" :min="1" v-model="form.lever" />
             </el-form-item>
           </div>
-          <el-form-item label="开仓数量" required prop="volume">
+          <el-form-item label="开仓张数" required prop="volume">
             <el-input-number :controls="false" class="input-number" :precision="0" :min="1" v-model="form.volume" />
           </el-form-item>
         </el-form>

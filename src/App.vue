@@ -309,7 +309,6 @@ th.el-table__cell.bg-color3,
     height: 40px !important;
     min-height: 40px !important;
     line-height: 40px !important;
-    border-radius: 4px;
   }
   .el-button--primary.is-plain{
     background: none;
@@ -491,20 +490,20 @@ th.el-table__cell.bg-color3,
 .el-dialog {
 
   .el-dialog__header {
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
     border-bottom: 1px solid #e0e0e0;
     padding: 0 20px !important;
     margin: 0 !important;
 
     .el-dialog__title {
       color: #000;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
     }
 
     .el-dialog__headerbtn {
-      top: -1px;
+      top: 4px;
       .el-dialog__close {
         font-size: 18px;
         font-weight: bolder;

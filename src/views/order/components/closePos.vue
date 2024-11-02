@@ -1,15 +1,15 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="520" class="reset-el-styte" v-model="show" title="强行平仓" :append-to-body="true">
-    <el-form ref="ruleForm" label-position="top" :model="form" :rules="rules">
+    <el-form ref="ruleForm" class="pt-[10px]" label-position="top" :model="form" :rules="rules">
       <el-form-item label="平仓数量" prop="volume" label-width="0" required>
-        <el-input v-model="form.volume" placeholder="请输入平仓数量" style="width: 100%;" />
+        <el-input-number class="input-number" :precision="0" :max="dataInfo.unsold_volume" :controls="false" :min="1" v-model="form.volume" placeholder="请输入平仓数量" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <span>
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleInnerDialog" :loading="isLoading">确定</el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round class="w-[98px]" @click="emit('close', false)">取消</el-button>
+        <el-button round class="w-[98px]" type="primary" @click="handleInnerDialog" :loading="isLoading">确定</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

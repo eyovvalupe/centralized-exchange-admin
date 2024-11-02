@@ -1,27 +1,28 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex justify-between p-2">
+   <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
       <div>
-        <el-button type="primary"  @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
-        <el-button class="ml-2" @click="openTimeDialog('us')">{{marketTitleMap.us}}</el-button>
-        <el-button class="ml-2" @click="openTimeDialog('japan')">{{marketTitleMap.japan}}</el-button>
-        <el-button class="ml-2" @click="openTimeDialog('india')">{{marketTitleMap.india}}</el-button>
-        <el-button class="ml-2" @click="openTimeDialog('korea')">{{marketTitleMap.korea}}</el-button>
+        <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
+        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('us')">{{marketTitleMap.us}}</el-button>
+        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('japan')">{{marketTitleMap.japan}}</el-button>
+        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('india')">{{marketTitleMap.india}}</el-button>
+        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('korea')">{{marketTitleMap.korea}}</el-button>
       </div>
       <div class="flex">
-        <el-input v-model="searchForm.symbol" class="mr-2" placeholder="股票代码" style="width: 250px;" />
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+        <div class="w-[264px]">
+          <el-input v-model="searchForm.symbol" suffix-icon="search" placeholder="股票代码"  />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
       </div>
     </div>
-    <div>
-
-      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
+    <div class="py-[10px]">
+      <el-table :data="tableData" border class="mb-[10px]" :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :min-width="item.minWidth" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'enabled'" class="status-bg" :class="scope.row[item.prop]==1?'success':'fail'">
+            <span v-if="item.prop === 'enabled'" class="status" :class="scope.row[item.prop]==1?'success':'fail'">
               {{ scope.row[item.prop]==1 ? '启用' : '禁用' }}
             </span>
             <span v-else>
@@ -29,10 +30,10 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="minWidth" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
+              <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
             </span>
           </template>
         </el-table-column>
@@ -79,18 +80,20 @@ const searchForm = reactive({
   symbol: ''
 })
 const marketTitleMap = ref({
-  us:"美国交易时间配置",
-  japan:"日本交易时间配置",
-  india:"印度交易时间配置",
-  korea:"韩国交易时间配置"
+  us:"美股配置",
+  japan:"日股配置",
+  india:"印股配置",
+  korea:"韩股配置"
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
+
+const minWidth = 200
 const columnBase = ref([
-  { prop: 'name', label: '公司名称', align: 'center' },
-  { prop: 'symbol', label: '股票代码', align: 'center' },
-  { prop: 'exchange', label: '交易所', align: 'center' },
-  { prop: 'enabled', label: '状态', align: 'center' }
+  { prop: 'name', label: '公司名称', align: 'center',minWidth },
+  { prop: 'symbol', label: '股票代码', align: 'center',minWidth },
+  { prop: 'exchange', label: '交易所', align: 'center',minWidth },
+  { prop: 'enabled', label: '状态', align: 'center',minWidth }
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {

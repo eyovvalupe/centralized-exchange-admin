@@ -1,25 +1,24 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="title" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="title" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
       <el-form-item label="时区" required  prop="timezone">
-          <el-input v-model="form.timezone"  autocomplete="off" />
+          <el-input v-model="form.timezone"  autocomplete="off" disabled />
         </el-form-item>
         <el-form-item label="交易时间" required  prop="tradinghours">
-          <el-input v-model="form.tradinghours"  autocomplete="off" placeholder="" />
-          <small class="txt-gray2">周一至周五</small> 
+          <el-input v-model="form.tradinghours"  autocomplete="off" disabled />
+          <small class="txt-gray2 pt-[10px]">周一至周五</small> 
         </el-form-item>
         <el-form-item label="休市日期" required prop="closeddates">
           <el-input v-model="form.closeddates" type="textarea" autocomplete="off" :rows="2" />
-          <small class="txt-gray2">逗号隔开，示例：2023-01-12,2023-01-13</small> 
+          <small class="txt-gray2 pt-[10px]">逗号隔开，示例：2023-01-12,2023-01-13</small> 
         </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button  round class="w-[98px]" @click="emit('close', false)">取消</el-button>
+        <el-button type="primary"  round class="w-[98px]" @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

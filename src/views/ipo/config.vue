@@ -71,7 +71,7 @@
               <!-- <el-button link type="danger" @click="handleDelete(scope.row)">删除</el-button> -->
               <el-button link  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)"  @click="showDialog(scope.row, 'showDialog')">修改</el-button>
               <el-dropdown>
-                <img style="width: 20px; height: 20px;margin-top: 5px;" src="/src/assets/images/more.svg" />
+                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleDelete(scope.row)" :disabled="!checkAuthCode(22101)">

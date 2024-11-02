@@ -32,7 +32,7 @@
               <!-- <el-button link type="danger" @click="showDialog(scope.row,'showGoogle')">删除</el-button> -->
               <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
               <el-dropdown>
-                <img style="width: 20px; height: 20px;margin-top: 5px;" src="/src/assets/images/more.svg" />
+                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="showDialog(scope.row, 'showResetDialog')">

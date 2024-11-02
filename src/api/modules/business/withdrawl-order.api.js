@@ -37,7 +37,7 @@ export function apiWithdrawAccount( data ) {
 export function apiStocksLock( data ) {
   return request( {
     method : 'post',
-    url : '/roles/v1/stocks/manage/lock',
+    url : '/roles/v1/stock/m/lock',
     data
   })
 }

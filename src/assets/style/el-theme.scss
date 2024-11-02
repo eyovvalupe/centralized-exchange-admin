@@ -5,6 +5,10 @@
     --el-dialog-padding-primary: 10px !important;
     --el-color-danger:#FF0004;
     --el-disabled-bg-color:#F5F5F5;
+    .el-table{
+      --el-table-header-text-color:#000;
+      --el-table-text-color:#000;
+    }
     
     .el-button--primary{
       --el-button-hover-bg-color:#2e68fa;
@@ -25,5 +29,22 @@
     }
     .el-dialog {
         --el-dialog-border-radius:16px;
+    }
+
+    .el-button--info.is-link, .el-button--info.is-plain, .el-button--info.is-text{
+      --el-button-text-color:#666;
+      --el-button-border-color:#666;
+      --el-button-bg-color:rgba(255,255,255,0);
+      --el-button-hover-bg-color:rgba(255,255,255,0);
+      --el-button-hover-text-color:var(--el-color-primary);
+      --el-button-hover-border-color:var(--el-color-primary);
+      --el-button-active-text-color:var(--el-color-primary);
+    }
+
+    .el-select__wrapper{
+      --el-border-radius-base:4px;
+    }
+    .el-input__wrapper{
+      --el-input-border-radius:4px;
     }
 }
