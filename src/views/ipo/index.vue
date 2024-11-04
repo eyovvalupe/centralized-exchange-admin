@@ -22,7 +22,7 @@
           :align="item.align">
           <template #default="scope">
             <template v-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{
+              <span class="truncate cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <span v-else-if="item.prop === 'issue_price_min'">

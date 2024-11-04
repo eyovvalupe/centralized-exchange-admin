@@ -37,7 +37,7 @@
               <b class="split-line"></b>
               <span class="w-100 block"
                 :class="scope.row['ratio'] >= 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
-                {{ scope.row['ratio'] * 100 }}%
+                {{ scope.row['ratio'] }}%
               </span>
             </span>
             <template v-else-if="item.prop === 'uid'">
@@ -59,9 +59,7 @@
               {{ scope.row['symbol'] }}
               <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
             </span>
-            <span v-else-if="item.prop === 'date'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+        
             <span v-else-if="item.prop === 'role'">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
             </span>
@@ -168,9 +166,9 @@ const tabChange = ()=>{
 }
 
 const dialogLoading = ref(false)
-const searchValue = ref('all')
-const searchStrbtn = ref('')
-const searchStr = ref('')
+const searchValue = ref(sessionStorage['orderPosSearchValue'] || 'all')
+const searchStr = ref(sessionStorage['orderPosSearchStr'] || '')
+const searchStrbtn = ref(searchStr.value)
 const tableData = computed(() => {
   let list = socketStore.stockOrderList || []
   if (searchValue.value !== 'all') {
@@ -194,6 +192,8 @@ const dialogType = reactive({
 const getDataList = () => {
   searchStr.value = searchStrbtn.value;
   searchValue.value = 'all';
+  sessionStorage['orderPosSearchValue'] = searchValue.value
+  sessionStorage['orderPosSearchStr'] = searchStr.value
 }
 const transKeyName = (val, key) => {
   let str = val;
@@ -248,7 +248,7 @@ const columnBase = ref([
   { prop: 'profit', label: '订单收益/百分比', minWidth: 200, align: 'center' },
   // { prop: 'ratio', label: '收益率',  width: 80,align: 'center' },
   { prop: 'status', label: '状态', minWidth, align: 'center' },
-  { prop: 'date', label: '时间', minWidth, align: 'center' }
+  { prop: 'date', label: '时间', minWidth:135, align: 'center' }
 ])
 
 const isLoading = ref(false)
@@ -271,8 +271,7 @@ const closeDialogType = (item) => {
 }
 const changeSearch = (s) => {
   searchValue.value = s;
-  searchStrbtn.value = ''
-  searchStr.value = ''
+  sessionStorage['orderPosSearchValue'] = searchValue.value
 }
 // watch(() => socketStore.sokcetWS, (ws) => {
 //   if (ws) {

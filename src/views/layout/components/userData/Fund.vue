@@ -16,7 +16,7 @@
                 {{ parseFloat(scope.row[item.prop]).toFixed(3) }}
               </span>
               <span v-else-if="item.prop === 'nickName'">
-                <span class="underline cursor-pointer text-[#165DFF]" @click="getData(scope.row[item.prop])">{{
+                <span class="underline cursor-pointer text-[#4377FE]" @click="getData(scope.row[item.prop])">{{
                   scope.row[item.prop]
                 }}</span>
               </span>
@@ -27,7 +27,7 @@
                 {{ scope.row[item.prop] ? '已结算' : '未结算' }}
               </span>
               <span v-else-if="item.prop === 'usdt'">
-                <span class="underline cursor-pointer text-[#165DFF]" @click="onDetail(scope.row)">{{
+                <span class="underline cursor-pointer text-[#4377FE]" @click="onDetail(scope.row)">{{
                   scope.row[item.prop]
                 }}</span>
               </span>
@@ -54,7 +54,7 @@
                 {{ parseFloat(scope.row[item.prop]).toFixed(3) }}
               </span>
               <span v-else-if="item.prop === 'nickName'">
-                <span class="underline cursor-pointer text-[#165DFF]">{{
+                <span class="underline cursor-pointer text-[#4377FE]">{{
                   scope.row[item.prop]
                 }}</span>
               </span>
@@ -65,7 +65,7 @@
                 {{ scope.row[item.prop] ? '已结算' : '未结算' }}
               </span>
               <span v-else-if="item.prop === 'usdt'">
-                <span class="underline cursor-pointer text-[#165DFF]">{{
+                <span class="underline cursor-pointer text-[#4377FE]">{{
                   scope.row[item.prop]
                 }}</span>
               </span>

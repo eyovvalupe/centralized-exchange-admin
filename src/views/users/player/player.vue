@@ -44,7 +44,7 @@
                 @click="showDialog({ ...scope.row, ...item }, 'showMoneyDialog')">查看余额</span>
             </span>
             <span v-else-if="item.prop === 'username'">
-              <span class="underline cursor-pointer text-[#165DFF]"
+              <span class="underline cursor-pointer text-[#4377FE]"
                 @click="showDialog({ ...scope.row, ...item }, 'showInfoDialog', scope.row[item.prop] + '详细信息')">{{
                   scope.row[item.prop] }}
               </span>

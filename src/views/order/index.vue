@@ -6,6 +6,7 @@
           <el-radio-button label="orderPositions">股票持仓单</el-radio-button>
           <el-radio-button label="orderIndex">股票历史订单</el-radio-button>
         </el-radio-group>
+        <el-button type="primary" class="ml-[10px]" icon="plus" plain @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
 
       <div class="flex items-center">
@@ -41,7 +42,7 @@
               </span>
               <b class="split-line"></b>
               <span class="w-100 block" :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
-                {{ scope.row['ratio'] * 100 }}%
+                {{ scope.row['ratio'] }}%
               </span>
             </span>
             <template v-else-if="item.prop === 'uid'">
@@ -66,9 +67,7 @@
               {{ scope.row['symbol'] }}
               <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
             </span>
-            <span v-else-if="item.prop === 'date'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+          
             <span v-else-if="item.prop === 'role'">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]) ? optionStatus.find(f => f.value == scope.row[item.prop]).label : '--' }}
             </span>
@@ -108,6 +107,7 @@
     </div>
     <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
   </div>
+  <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :orderNo="orderNo" @close="closeDialogType" />
 </template>
@@ -125,6 +125,9 @@ import { Search } from '@element-plus/icons-vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+
+import AddLock from './components/AddLock.vue'
 const router = useRouter()
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -139,7 +142,10 @@ const tabChange = ()=>{
   })
 }
 
-const timeRanges=ref([])
+const timeRanges = ref([])
+if(sessionStorage['orderSearchTimerange'] && sessionStorage['orderSearchTimerange'] != '[]'){
+  timeRanges.value = JSON.parse(sessionStorage['orderSearchTimerange'])
+}
 const optionStatus = [
   {
     value: 'all',
@@ -191,10 +197,11 @@ const dialogType = reactive({
   showLockDialog:false,
   title: ''
 })
+
 const searchForm = reactive({
-  params: '',
-  role: 'all',
-  status: 'all'
+  params: sessionStorage['orderSearchParams'] || '',
+  role: sessionStorage['orderSearchRole'] || 'all',
+  status: sessionStorage['orderSearchStatus'] || 'all'
 })
 
 const currentLastPage = ref(1)
@@ -244,15 +251,15 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID', minWidth, align: 'center' },
   { prop: 'username', label: '用户名', minWidth, align: 'center' },
   { prop: 'role', label: '角色', minWidth, align: 'center' },
-  { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
-  { prop: 'offset', label: '开仓',minWidth:150,  align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:165, align: 'center' },
+  { prop: 'offset', label: '开仓',minWidth:165,  align: 'center' },
   // { prop: 'price_type', label: '限价方式',minWidth, align: 'center' },
   { prop: 'open_volume', label: '开仓数量', minWidth, align: 'center' },
   { prop: 'margin', label: '开仓保证金', align: 'center' },
   // { prop: 'settled_price', label: '订单结算价格', minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',  minWidth:200, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比',  minWidth:180, align: 'center' },
   { prop: 'status', label: '状态', minWidth, align: 'center' },
-  { prop: 'date', label: '时间',  minWidth, align: 'center' }
+  { prop: 'date', label: '时间',  minWidth:130, align: 'center' }
 ])
 
 const isLoading = ref(false)
@@ -265,13 +272,15 @@ const showDialog = (data, key) => {
   }
   dialogType[key] = true;
 }
- 
+
+
+
 // 获取玩家列表 page若传则为第一页
 const getDataList = page => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
+  
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params
@@ -279,15 +288,31 @@ const getDataList = page => {
   if (searchForm.role !== 'all') {
     send.role = searchForm.role
   }
-  if (searchForm.params !== 'all') {
-    send.params = searchForm.params
+  if (searchForm.status !== 'all') {
+    send.status = searchForm.status
   }
-  if(timeRanges.value&&timeRanges.value.length){
+  if(timeRanges.value && timeRanges.value.length){
     send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
     send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
   }
+  
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['orderSearch']){
+    const orderSearchCache = JSON.parse(sessionStorage['orderSearch'])
+    if(orderSearchCache.cacheKey == cacheKey){
+      tableData.value = orderSearchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
 
-
+  sessionStorage['orderSearchTimerange'] = JSON.stringify(timeRanges.value)
+  sessionStorage['orderSearchParams'] = searchForm.params
+  sessionStorage['orderSearchRole'] = searchForm.role
+  sessionStorage['orderSearchStatus'] = searchForm.status
+  
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -301,8 +326,13 @@ const getDataList = page => {
         return;
       }
       currentPage.value = currentLastPage.value;
-     
       tableData.value = res
+
+      sessionStorage['orderSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
+
     })
     .finally(() => {
       isLoading.value = false

@@ -28,7 +28,7 @@
                 scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{
+              <span class="truncate cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'transfer'">

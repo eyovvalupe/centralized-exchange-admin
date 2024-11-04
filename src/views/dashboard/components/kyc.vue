@@ -10,7 +10,7 @@
               {{ options.find(f => f.value == scope.row[item.prop]).label }}
             </span>
             <template v-else-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#165DFF]" @click="emit('showUserDialog',scope.row)"> {{ scope.row[item.prop] }}</span>
+              <span class="truncate cursor-pointer text-[#4377FE]" @click="emit('showUserDialog',scope.row)"> {{ scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{

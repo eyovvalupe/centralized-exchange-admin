@@ -9,7 +9,7 @@
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
             <template v-else-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#165DFF]" @click="emit('showUserDialog',scope.row)"> {{
+              <span class="truncate cursor-pointer text-[#4377FE]" @click="emit('showUserDialog',scope.row)"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'uid'">

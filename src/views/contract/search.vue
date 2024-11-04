@@ -7,6 +7,7 @@
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
           <el-radio-button label="contractIndex">合约场控</el-radio-button>
         </el-radio-group>
+        <el-button class="ml-[10px]" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
       <div class="flex items-center">
           <div class="w-[168px]">
@@ -40,7 +41,7 @@
               </span>
               <b class="split-line"></b>
               <span class="w-100 block" :class="scope.row['ratio'] >= 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
-                {{ scope.row['ratio'] * 100 }}%
+                {{ scope.row['ratio'] }}%
               </span>
             </span>
             <template v-else-if="item.prop === 'uid'">
@@ -61,9 +62,7 @@
                 </span>
               </el-tooltip>
             </template>
-            <span v-else-if="item.prop === 'date'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+         
             <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>
@@ -105,6 +104,7 @@
     </div>
     <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
   </div>
+  <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :contract="true" :orderNo="orderNo" @close="closeDialogType" />
 </template>
@@ -115,11 +115,15 @@ export default { name: 'contractSearch' };
 <script setup>
 import { apiQueryList } from '/@/api/modules/contract'
 import { copy } from '/@/utils'
+import AddLock from './components/AddLock.vue'
 import detailDialog from '/@/components/detailDialog/index.vue'
 import userDetail from '/@/components/userDetail/index.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
+import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+
 const router = useRouter()
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -134,6 +138,9 @@ const tabChange = ()=>{
   })
 }
 const timeRanges = ref([])
+if(sessionStorage['futuresSearchTimeTanges']){
+  timeRanges.value = JSON.parse(sessionStorage['futuresSearchTimeTanges'])
+}
 const optionStatus = [
   {
     value: 'all',
@@ -185,13 +192,14 @@ const option = [
 const dialogType = reactive({
   info:null,
   showDialog: false,
+  showLockDialog:false,
   showInfoDialog:false,
   title: ''
 })
 const searchForm = reactive({
-  params: '',
-  role: 'all',
-  status: 'all'
+  params: sessionStorage['futuresSearchParams'] || '',
+  role: sessionStorage['futuresSearchRole'] || 'all',
+  status: sessionStorage['futuresSearchStatus'] || 'all'
 })
 
 const currentLastPage = ref(1)
@@ -244,34 +252,14 @@ const columnBase = ref([
   { prop: 'name', label: '名称',minWidth, align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:165,  align: 'center' },
   // { prop: 'price_type', label: '限价方式', align: 'center' },
-  { prop: 'open_volume', label: '开仓张数',minWidth, align: 'center' },
-  { prop: 'margin', label: '开仓保证金',minWidth, align: 'center' },
+  { prop: 'open_volume', label: '开仓张数',minWidth:110, align: 'center' },
+  { prop: 'margin', label: '开仓保证金',minWidth:110, align: 'center' },
   // { prop: 'settled_price', label: '订单结算价格',minWidth: 110, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',minWidth, align: 'center' },
-  { prop: 'status', label: '状态',minWidth, align: 'center' },
-  { prop: 'date', label: '时间',minWidth, align: 'center' }
+  { prop: 'profit', label: '订单收益/百分比',minWidth:165, align: 'center' },
+  { prop: 'status', label: '状态',minWidth:100, align: 'center' },
+  { prop: 'date', label: '时间',minWidth:135, align: 'center' }
 ])
 
-// const column = reactive([
-//   { prop: 'order_no', label: '订单号' },
-//   { prop: ['username', 'uid'], label: 'UID/用户名' },
-//   { prop: 'father_username', label: '代理称' },
-//   { prop: 'market', label: '市场' },
-//   { prop: 'symbol', label: '交易代码' },
-//   { prop: ['offset', 'lever_type', 'lever'], label: '开仓方向' },
-//   { prop: ['price_type', 'price'], label: '限价方式/价格', },
-//   { prop: ['open_volume', 'unsold_volume'], label: '开仓/未售数量' },
-//   { prop: ['margin', 'surplus_margin'], label: '保证金/剩余金额' },
-//   { prop: 'unlock', label: '解锁金额', },
-//   { prop: ['profit', 'ratio'], label: '订单收益/百分比', color: true },
-//   { prop: 'fee', label: '手续费' },
-//   { prop: 'open_price', label: '开仓价格' },
-//   { prop: 'settled_price', label: '订单结算价格' },
-//   { prop: ['stop_profit', 'stop_profit_type', 'stop_profit_price'], label: '止盈' },
-//   { prop: ['stop_loss', 'stop_loss_type', 'stop_loss_price'], label: '止损' },
-//   { prop: 'status', label: '状态', width: 90 },
-//   { prop: 'date', label: '订单时间' }
-// ])
 
 const isLoading = ref(false)
 const orderNo = ref('')
@@ -283,15 +271,13 @@ const showDialog = (data, key) => {
   }
   dialogType[key] = true;
 }
-
-
  
 // 获取玩家列表 page若传则为第一页
 const getDataList = page => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
+  
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params
@@ -302,9 +288,23 @@ const getDataList = page => {
   if (searchForm.params !== 'all') {
     send.params = searchForm.params
   }
-  if(timeRanges.value&&timeRanges.value.length){
+  sessionStorage['futuresSearchParams'] = searchForm.params
+  sessionStorage['futuresSearchTimeTanges'] = JSON.stringify(timeRanges.value)
+  if(timeRanges.value && timeRanges.value.length){
     send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
     send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
+  }
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['futuresSearch']){
+    const futuresSearchCache = JSON.parse(sessionStorage['futuresSearch'])
+    if(futuresSearchCache.cacheKey == cacheKey){
+      tableData.value = futuresSearchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
   }
 
 
@@ -323,7 +323,11 @@ const getDataList = page => {
       currentPage.value = currentLastPage.value;
       res.map(item=>{
         item.name = item.name || item.symbol || '--'
-      })      
+      })
+      sessionStorage['futuresSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
       tableData.value = res
     })
     .finally(() => {
@@ -332,6 +336,7 @@ const getDataList = page => {
 }
 const changeSearch = (s) => {
   searchForm.role = s;
+  sessionStorage['futuresSearchRole'] = s;
   getDataList();
 }
 const closeDialogType = () => {

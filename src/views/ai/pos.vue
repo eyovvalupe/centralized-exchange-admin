@@ -31,7 +31,7 @@
              {{ dayjs(scope.row[item.prop]).format('HH:mm:ss') }} 
             </template>
             <span v-else-if="item.prop === 'username'">
-              <span class="underline cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showInfoDialog')">{{
+              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
               </span>
             </span>

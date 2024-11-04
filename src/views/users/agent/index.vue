@@ -54,7 +54,7 @@
                   class="cursor-pointer">
                   {{ scope.row[item.prop] }}
                 </span>
-                <!-- <span v-else-if="['deposit','withdraw'].includes(item.prop)"  class="underline cursor-pointer text-[#165DFF]">
+                <!-- <span v-else-if="['deposit','withdraw'].includes(item.prop)"  class="underline cursor-pointer text-[#4377FE]">
                   {{ scope.row[item.prop] }}
                 </span> -->
                 <span v-else-if="item.prop == 'sub_net_users'">

@@ -542,7 +542,8 @@ th.el-table__cell.bg-color3,
   color: #f56c6c;
 }
 .status {
-  &.lock {
+  &.lock,
+  &.review {
     color: #EF8401;
   }
 
@@ -690,19 +691,20 @@ th.el-table__cell.bg-color3,
 
   .table-span-left,
   .table-span-right {
-    padding: 7px 20px;
+    padding: 13px 20px;
   }
 
   .table-span-right {
     text-align: left;
     width: 64%;
+    color:#000;
   }
 
   .table-span-left {
     text-align: left;
     width: 36%;
     border-right: 1px solid #e6e6e6;
-    color: #999;
+    color: #666;
     background: #fafafa;
   }
 

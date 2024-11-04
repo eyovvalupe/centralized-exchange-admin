@@ -38,7 +38,7 @@
               <b class="split-line"></b>
               <span class="w-100 block"
                 :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
-                {{ scope.row['ratio'] * 100 }}%
+                {{ scope.row['ratio'] }}%
               </span>
             </span>
             <template v-else-if="item.prop === 'uid'">
@@ -63,9 +63,7 @@
               {{ scope.row['symbol'] }}
               <!-- <b class="split-line"></b>{{ scope.row['market'] }} -->
             </span>
-            <span v-else-if="item.prop === 'date'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+            
           
             <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
@@ -96,10 +94,13 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="minWidth" align="center">
+        <el-table-column label="操作" :min-width="165" align="center">
           <template #default="scope">
             <div class="w-full flex justify-between">
               <div class="flex-1 flex justify-center items-center">
+                <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showPriceDialog')">
+                  调整价格
+                </el-button>
                 <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showDialog')">
                   查看订单
                 </el-button>
@@ -125,6 +126,7 @@
       </el-table>
     </div>
   </div>
+  <Price :data="dialogType.info" v-if="dialogType.showPriceDialog" @close="closeDialogType" />
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <contractCtr v-if="dialogType.showCtrDialog" @close="closeDialogType" />
   <closePos v-if="dialogType.closePos" :dataInfo="dialogType.info" :orderNo="orderNo" @close="closeDialogType" />
@@ -141,6 +143,7 @@ import AddLock from './components/AddLock.vue'
 import closePos from './components/closePos.vue'
 import detailDialog from '/@/components/detailDialog/index.vue'
 import contractCtr from './components/contractCtr.vue'
+import Price from './components/Price.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import { Search, Plus } from '@element-plus/icons-vue'
@@ -173,10 +176,12 @@ const tabChange = ()=>{
   })
 }
 
+
 const dialogLoading = ref(false)
-const searchValue = ref('all')
-const searchStrbtn = ref('')
-const searchStr = ref('')
+const searchValue = ref(sessionStorage['futuresPosSearchValue'] || 'all')
+const searchStr = ref(sessionStorage['futuresPosSearchStr'] || '')
+const searchStrbtn = ref(searchStr.value)
+
 const tableData = computed(() => {
   let list = socketStore.futureOrderList || []
   if (searchValue.value !== 'all') {
@@ -192,6 +197,7 @@ const tableData = computed(() => {
 const dialogType = reactive({
   info: null,
   showInfoDialog: false,
+  showPriceDialog: false,
   showLockDialog: false,
   showCtrDialog: false,
   showDialog: false,
@@ -199,8 +205,8 @@ const dialogType = reactive({
 })
 const searchInput = ref(null)
 const getDataList = () => {
-
   searchStr.value = searchStrbtn.value;
+  sessionStorage['futuresPosSearchStr'] = searchStr.value
 }
 const transKeyName = (val, key) => {
   let str = val;
@@ -250,14 +256,14 @@ const columnBase = ref([
   { prop: 'name', label: '合约',minWidth, align: 'center' },
   { prop: 'offset', label: '开仓',minWidth: 165, align: 'center' },
   // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
-  { prop: 'unsold_volume', label: '可售张数', minWidth, align: 'center' },
+  { prop: 'unsold_volume', label: '可售张数', minWidth:90, align: 'center' },
   // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
   // { prop: 'profit', label: '收益/百分比',minWidth, align: 'center' },
   // { prop: 'unsold_volume', label: '持仓数量',minWidth, align: 'center' },
   { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', minWidth, align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth:165, align: 'center' },
   // { prop: 'ratio', label: '收益率',  minWidth,align: 'center' },
-  { prop: 'status', label: '状态', minWidth, align: 'center' },
+  { prop: 'status', label: '状态', minWidth:90, align: 'center' },
   { prop: 'date', label: '时间', minWidth, align: 'center' }
 ])
 
@@ -281,6 +287,7 @@ const closeDialogType = (item) => {
 }
 const changeSearch = (s) => {
   searchValue.value = s;
+  sessionStorage['futuresPosSearchValue'] = s
 
 }
 watch(() => socketStore.sokcetWS, (ws) => {
