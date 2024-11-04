@@ -1,53 +1,55 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2 reset-el-styte">
-      <div></div>
-      <div class="flex">
-        <div class="mr-5">
-          <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in options"
-            :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
+   <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2  justify-end">
+      
+      <div class="flex items-center">
+        <div class="w-[168px]">
+          <el-select v-model="searchForm.status" @change="changeSearch(searchForm.status)">
+            <el-option v-for="(item) in options"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
         </div>
-        <el-input v-model="searchForm.params" clearable placeholder="UID/用户名/备注" style="width: 200px;" />
-        <!-- <el-select v-model="searchForm.status" placeholder="" class="ml-2" style="width: 130px;">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名/备注" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
       </div>
+
+
     </div>
-    <div>
+    <div class="reset-el-style-v2 py-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span class="status-bg" v-if="item.prop == 'status'"
+            <span class="status" v-if="item.prop == 'status'"
               :class="scope.row[item.prop]" align="center">
               {{ transdata(scope.row[item.prop]) }}
             </span>
             <template v-else-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#165DFF]" @click="showDialog(scope.row, 'showUserDialog')"> {{ scope.row[item.prop] }}</span>
+              <span class="truncate cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showUserDialog')"> {{ scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <span v-else-if="item.prop == 'l2'">
-              <el-button link type="primary"
+              <el-button class="underline" link type="primary"
                 @click="showDialog({ ...scope.row, tab: 'img' }, 'showDialog')">查看照片</el-button>
             </span>
-            <span v-else-if="item.prop == 'created'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+           
             <span v-else>
               {{ scope.row[item.prop] }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column label="操作" :min-width="165" align="center">
           <template #default="scope">
-            <el-button link type="primary" @click="showDialog({ ...scope.row, tab: 'info' }, 'showDialog')">实名信息</el-button>
-            <el-button link :type="scope.row['status'] === 'success' ? 'info' : 'primary'"
+            <el-button class="underline" link type="primary" @click="showDialog({ ...scope.row, tab: 'info' }, 'showDialog')">实名信息</el-button>
+            <b class="split-line"></b>
+            <el-button class="underline" link :type="scope.row['status'] === 'success' ? 'info' : 'primary'"
               :disabled="scope.row['status'] === 'success'"
               @click="showDialog(scope.row, 'showEditDialog')">审核</el-button>
           </template>
@@ -56,6 +58,9 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="pb-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -76,6 +81,7 @@ import { ElMessage, dayjs } from 'element-plus'
 import Edit from './Edit.vue'
 import Info from './Info.vue'
 import userDetail from '/@/components/userDetail/index.vue'
+import { hex_md5 } from '/@/utils/md5'
 
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:kycList', () => {
@@ -107,30 +113,34 @@ const options = [
   },
 ]
 
+
 const searchForm = reactive({
-  params: '',
-  status: 'all',
+  params: sessionStorage['kycParams'] || '',
+  status: sessionStorage['kycStatus'] || 'all',
 })
 
 const tableData = ref([])
+const minWidth = 120
+
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center', width: 120 },
-  { prop: 'username', width: 130,label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'name', label: '姓名', align: 'center' },
-  { prop: 'idtype', label: '证件类型', align: 'center', width: 100 },
-  { prop: 'idnum', label: '证件号码', align: 'center' },
-  { prop: 'birthday', label: '生日', align: 'center' },
-  { prop: 'l2', label: '认证照片', align: 'center', width: 100 },
-  { prop: 'status', label: '状态', align: 'center', width: 90 },
-  { prop: 'created', label: '时间', align: 'center' }
+  { prop: 'uid', label: 'UID', align: 'center', minWidth },
+  { prop: 'username', minWidth,label: '用户名', align: 'center' },
+  { prop: 'father_username',minWidth, label: '代理', align: 'center' },
+  { prop: 'name',minWidth, label: '姓名', align: 'center' },
+  { prop: 'idtype', label: '证件类型', align: 'center', minWidth},
+  { prop: 'idnum', label: '证件号码', align: 'center',minWidth:220 },
+  { prop: 'birthday', label: '生日', align: 'center',minWidth },
+  { prop: 'l2', label: '认证照片', align: 'center', minWidth},
+  { prop: 'status', label: '状态', align: 'center', minWidth},
+  { prop: 'created', label: '时间', align: 'center',minWidth }
 ])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
-const transdata=(d)=>{
+const transdata = (d) =>{
   const obj= options.find(f => f.value ==d) || {label:'--'}
   return obj.label
 }
+
 const isLoading = ref(false)
 const showDialog = (data, type) => {
   if (data) {
@@ -144,7 +154,6 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -152,6 +161,23 @@ const getDataList = (page) => {
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  sessionStorage['kycParams'] =  searchForm.params
+  sessionStorage['kycStatus'] =  searchForm.status;
+  
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['kycSearch']){
+    const kycSearchCache = JSON.parse(sessionStorage['kycSearch'])
+    if(kycSearchCache.cacheKey == cacheKey){
+      tableData.value = kycSearchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -166,6 +192,13 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+
+      sessionStorage['kycSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
+
+
     })
     .finally(() => {
       isLoading.value = false

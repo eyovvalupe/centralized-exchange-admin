@@ -1,8 +1,8 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="认证审核" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
-      <el-form-item label="审核" required :label-width="formLabelWidth" prop="status">
+    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" class="pt-[10px]">
+      <el-form-item  label="审核" required :label-width="formLabelWidth" prop="status">
         <el-select v-model="form.status" class="w-full">
           <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -11,11 +11,11 @@
         <el-input v-model="form.remarks" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" />
       </el-form-item>
     </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+    <template #footer> 
+      <div class="pb-[10px] pr-[10px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

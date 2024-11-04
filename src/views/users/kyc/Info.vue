@@ -1,72 +1,62 @@
 <template>
-   <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" class="reset-el-styte" :loading="dialogLoading" width="480" title="实名信息"
+   <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" class="reset-el-styte" :loading="dialogLoading" width="500" title="实名信息"
     @close="closeDialogType">
-    <div v-loading="dialogLoading" class="order-con-ovderhide">
+    <div v-loading="dialogLoading" style="max-height:600px;" class="soll-list soll-list-y order-con-ovderhide">
       <template v-if="!dialogLoading">
-        <el-tabs v-model="activeName" type="border-card">
-          <el-tab-pane label="认证信息" name="info">
-            <div class="m-2">
-              <div v-for="(item, index) in column" :key="index"
-                class="table-list-order flex flex-nowrap justify-center">
-                <span class="table-span-left">{{ item.label }}</span>
-                <span class="table-span-right">
-                  <span class="status-bg" v-if="item.prop == 'status'"
-                    :class="detailData[item.prop]" align="center">
-                    {{ transdata(detailData[item.prop]) }}
-                  </span>
-                  <span v-else>
-                    {{ detailData[item.prop] }}
-                  </span>
+          <div class="title mt-[10px]">认证信息</div>
+          <div class="mt-[10px]">
+            <div v-for="(item, index) in column" :key="index"
+              class="table-list-order flex flex-nowrap justify-center">
+              <span class="table-span-left">{{ item.label }}</span>
+              <span class="table-span-right">
+                <span class="status-bg" v-if="item.prop == 'status'"
+                  :class="detailData[item.prop]" align="center">
+                  {{ transdata(detailData[item.prop]) }}
                 </span>
-              </div>
+                <span v-else>
+                  {{ detailData[item.prop] }}
+                </span>
+              </span>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="照片信息" name="img">
-            <div class="m-2">
-              <span class="left-tit">证件正面</span>
-              <div class="flex align-top">
+          </div>
+          <div class="title mt-[20px]">照片信息</div>
+          <div>
+            <div class="left-tit">证件正面</div>
+            <div class="pb-[10px]">
 
-                <div class="right-img">
-                  <el-image :src="detailData.idimg_1" :initial-index="0" :preview-src-list="srcList"
-                    @click="handleClickItem">
-                    <template #error>
-                      <div class="image-slot">
-                        <el-icon><icon-picture /></el-icon>
-                      </div>
-                    </template>
-                  </el-image>
-                </div>
-              </div>
-              <span class="left-tit">证件反面</span>
-              <div class="flex align-top  my-2">
-
-                <span class="right-img">
-                  <el-image :src="detailData.idimg_2" :initial-index="1" :preview-src-list="srcList"
-                    @click="handleClickItem">
-                    <template #error>
-                      <div class="image-slot">
-                        <el-icon><icon-picture /></el-icon>
-                      </div>
-                    </template>
-                  </el-image>
-                </span>
-              </div>
-              <span class="left-tit">手持面</span>
-              <div class="flex align-top">
-                <span class="right-img">
-                  <el-image :src="detailData.idimg_3" :initial-index="2" :preview-src-list="srcList"
-                    @click="handleClickItem">
-                    <template #error>
-                      <div class="image-slot">
-                        <el-icon><icon-picture /></el-icon>
-                      </div>
-                    </template>
-                  </el-image>
-                </span>
-              </div>
+                <el-image class="right-img" fit="contain" :src="detailData.idimg_1" :initial-index="0" :preview-src-list="srcList"
+                  @click="handleClickItem">
+                  <template #error>
+                    <div class="image-slot">
+                      <el-icon><icon-picture /></el-icon>
+                    </div>
+                  </template>
+                </el-image>
             </div>
-          </el-tab-pane>
-        </el-tabs>
+            <div class="left-tit">证件反面</div>
+            <div class="pb-[10px]">
+                <el-image class="right-img" fit="contain" :src="detailData.idimg_2" :initial-index="1" :preview-src-list="srcList"
+                  @click="handleClickItem">
+                  <template #error>
+                    <div class="image-slot">
+                      <el-icon><icon-picture /></el-icon>
+                    </div>
+                  </template>
+                </el-image>
+            </div>
+            <div class="left-tit">手持面</div>
+            <div class="pb-[10px]">
+                <el-image class="right-img" fit="contain" :src="detailData.idimg_3" :initial-index="2" :preview-src-list="srcList"
+                  @click="handleClickItem">
+                  <template #error>
+                    <div class="image-slot">
+                      <el-icon><icon-picture /></el-icon>
+                    </div>
+                  </template>
+                </el-image>
+            </div>
+          </div>
+         
       </template>
 
     </div>
@@ -156,26 +146,25 @@ showDialog();
 <style lang="scss" scoped>
 .order-con-ovderhide {
   min-height: 250px;
-
-  #pane-img {
-    max-height: 530px;
-    overflow: auto;
-
-    // .left-tit{
-    //   width: 70px;
-    // }
-    .right-img {
-      border: 1px dashed #165DFF;
-      border-radius: 10px;
-      width: 100%;
-      height: 158px;
-      overflow: hidden;
-
-      :deep(.el-image img) {
-        max-width: 99%;
-        height: 156px !important;
-      }
-    }
+  .title{
+    font-size: 16px;
+    color:#000;
+    line-height: 22px;
   }
+  .left-tit{
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color:#000;
+    font-weight: 600;
+  }
+  .right-img {
+    border: 1px dashed #165DFF;
+    border-radius: 8px;
+    width: 100%;
+    height: 288px;
+    overflow: hidden;
+  }
+  
 }
 </style>
