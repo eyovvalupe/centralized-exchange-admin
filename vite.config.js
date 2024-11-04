@@ -58,7 +58,7 @@ export default defineConfig(({ command, mode }) => {
       port: VITE_PORT || 9527,
       proxy : {
         '/api': {
-          target : "http://45.77.253.148:8303",
+          target : "http://146.70.86.14:8001",
           changeOrigin : true,
           rewrite : ( path ) => path.replace( /^\/api/, '' )
         },
