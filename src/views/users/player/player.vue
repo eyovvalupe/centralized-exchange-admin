@@ -145,7 +145,7 @@ import playerTxDialog from './playerTxDialog.vue'
 import { ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
 import userMoney from '/@/components/userDetail/money.vue'
-
+import { hex_md5 } from '/@/utils/md5'
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 
 Bus.on('update:Player', () => {
@@ -177,18 +177,19 @@ const dialogType = reactive({
   showParentDialog: false,
   showLinkDialog: false,
 })
+
 const condition = reactive({
   searchValue: '',
   role: 'user',
 })
 
-const role = ref('all')
+const role = ref(sessionStorage['playerSearchRole'] || 'all')
 const searchForm = reactive({
   start_time: '',
   end_time: ''
 })
 
-const searchValue = ref('')
+const searchValue = ref(sessionStorage['playerSearchValue'] || '')
 const currentPage = ref(1)
 const options = {
   money: '现金账户',
@@ -245,7 +246,6 @@ const getPlayerList = page => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = {
     page: currentLastPage.value,
   }
@@ -255,6 +255,23 @@ const getPlayerList = page => {
   if (role.value !== 'all') {
     send.role = role.value
   }
+
+
+  sessionStorage['playerSearchValue'] = searchValue.value
+  sessionStorage['playerSearchRole'] = role.value
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['playerSearch']){
+    const searchCache = JSON.parse(sessionStorage['playerSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   apiUserList(send)
     .then(res => {
       isLoading.value = false
@@ -271,7 +288,10 @@ const getPlayerList = page => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
-
+      sessionStorage['playerSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false

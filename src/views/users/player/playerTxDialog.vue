@@ -9,12 +9,12 @@
         </el-input>
       </el-form-item>
     </el-form>
-    <div class="text-xs text-gray-300">
+    <div class="text-xs text-[#999]">
       <span class="block mb-2">* 流水限制大于0时，用户无法提现 </span>
       <span>* 用户通过业务下单，增加流水金额，限制扣减为0时，恢复提现权限</span>
     </div>
     <template #footer>
-      <div class="p-[10px]">
+      <div class="p-[10px] pt-[30px]">
         <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
         <el-button type="primary" round class="w-[98px]" @click="submit" :loading="isLoading"> 确定 </el-button>
       </div>

@@ -1,7 +1,7 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改余额" :append-to-body="true">
     <div class="flex justify-between pt-[10px]">
-      <div class="w-7/12">
+      <div class="w-7/12 mr-[20px]">
         <el-form ref="ruleForm" label-position="top" :model="form" :rules="rules">
           <el-form-item label="账户" prop="currency" :label-width="formLabelWidth" required>
             <el-select v-model="form.currency" placeholder="请选择账户" @change="currencyChange" style="width: 100%;">
@@ -23,7 +23,7 @@
         </el-form>
         <div class="txt-tips my-2" v-if="form.action == 'withdraw'">提现金额不计入充值报表</div>
       </div>
-      <div class="w-5/12 ml-[20px]" v-loading="loading">
+      <div class="w-5/12" v-loading="loading">
         <div>
           <div class="table-list flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">账户余额</span>
