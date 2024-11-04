@@ -3,7 +3,7 @@
      <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" v-model="show" title="修改代理" :append-to-body="true">
       <el-form :model="form" ref="ruleForm" class="pt-[10px]" label-position="top" :rules="rules">
         <el-form-item label="代理UID" prop="father_uid" :label-width="formLabelWidth">
-          <el-input v-model="form.father_uid" placeholder="请输入代理商UID" />
+          <el-input v-model.number="form.father_uid" placeholder="请输入代理商UID" />
         </el-form-item>
       </el-form>
       <template #footer>

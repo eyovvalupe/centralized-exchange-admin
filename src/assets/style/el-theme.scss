@@ -5,6 +5,12 @@
     --el-dialog-padding-primary: 10px !important;
     --el-color-danger:#FF0004;
     --el-disabled-bg-color:#F5F5F5;
+    
+
+    .el-input.is-disabled.el-input-group--append{
+      --el-input-border-color:#ECECEC;
+    }
+
     .el-table{
       --el-table-header-text-color:#000;
       --el-table-text-color:#000;

@@ -1,11 +1,11 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="480"  class="reset-el-styte" title="重置密码" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
-    <el-form :model="form"  label-position="top"  :rules="rules" ref="ruleForm">
+    <el-form :model="form" class="pt-[10px]" label-position="top"  :rules="rules" ref="ruleForm">
       <el-form-item label="密码"  :label-width="formLabelWidth" prop="password">
         <div class="w-full flex justify-between content-center">
           <el-input v-model="form.password" disabled  autocomplete="off" class="pwd-last w-10/12" placeholder="重置初始登录密码">
           <template #append>
-            <el-icon  @click="copy(form.password)"><CopyDocument /></el-icon>
+            <el-icon color="#014CFA" size="18px"  @click="copy(form.password)"><CopyDocument /></el-icon>
           </template>
           </el-input>
         <el-button type="primary" class="ml-2" @click="setRandomPwd">重新生成</el-button>
@@ -13,10 +13,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit( 'close', false )">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle"  :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="py-[10px] pr-[10px]">
+        <el-button round class="w-[98px]"  @click="emit( 'close', false )">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle"  :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

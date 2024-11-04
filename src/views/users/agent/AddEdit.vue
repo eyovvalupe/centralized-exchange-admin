@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="!props.data?'新增':'修改'" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
-    <el-form :model="form"  :rules="rules" label-position="top" ref="ruleForm">
+    <el-form :model="form" class="pt-[10px]" :rules="rules" label-position="top" ref="ruleForm">
       <el-form-item label="用户名"  required  :label-width="formLabelWidth"  v-if="!props.data" prop="username">
         <el-input v-model="form.username" autocomplete="off" placeholder="登录用户名" />
       </el-form-item>
@@ -8,14 +8,14 @@
        <div class="w-full flex justify-between content-center">
         <el-input v-model="form.password" autocomplete="off" disabled class="pwd-last">
           <template #append>
-            <el-icon  @click="copy(form.password)"><CopyDocument /></el-icon>
+            <el-icon color="#014CFA" size="18px" @click="copy(form.password)"><CopyDocument /></el-icon>
           </template>
           </el-input>
         <el-button type="primary" class="ml-2" @click="setRandomPwd">重新生成</el-button>
        </div>
       </el-form-item>
       <el-form-item label="代理UID" :label-width="formLabelWidth"  prop="father_uid"  v-if="!props.data">
-        <el-input v-model="form.father_uid" autocomplete="off" placeholder="不填写则默认为根代理商" />
+        <el-input v-model.number="form.father_uid" autocomplete="off" placeholder="不填写则默认为根代理商" />
       </el-form-item>
       <el-form-item label="业务权限"  :label-width="formLabelWidth" prop="enabled">
           <el-select v-model="form.enabled" class="w-full">
@@ -31,15 +31,15 @@
         <el-input
           v-model="form.remarks"
           type="textarea"
-          placeholder="备注信息"
+          placeholder="请输入备注"
         />
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit( 'close', false )">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle"  :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="py-[10px] pr-[10px]">
+        <el-button  class="w-[98px]" round @click="emit( 'close', false )">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle"  :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

@@ -2,8 +2,8 @@
   <div class="reset-el-styte h-full">
     <div class="flex justify-between  p-2 pt-0 h-full">
       <div class="left-tree h-full">
-        <div class="input-item m-b-10"><el-input clearable :prefix-icon="Search" v-model="filterText"
-            placeholder="代理\备注关键词" /></div>
+        <el-input class="input-item m-b-10" clearable :prefix-icon="Search" v-model="filterText"
+            placeholder="代理\备注关键词" />
         <div class="left-tree-box">
           <el-tree ref="treeRef" accordion highlight-current :indent="10" class="filter-tree" :data="treeData"
             :filter-node-method="filterNode" node-key="id" :props="defaultProps" @nodeClick="treeNodeClick">
@@ -259,25 +259,29 @@ const closeDialogType = (isReload) => {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .left-tree {
-  padding: 10px;
-  background: #fafafa;
-  border-radius: 10px;
-  width: 220px;
+  padding: 20px;
+  background: #f5f5f5;
+  width: 280px;
   height: 100%;
   overflow: hidden;
 }
 
 .left-tree-box {
-  width: 220px;
+  width: 280px;
   overflow: auto;
   padding-right: 20px;
 }
 
 .input-item {
   margin-bottom: 10px;
+  :deep(.el-input__wrapper){
+    box-shadow: 0 0 0 rgba(255,255,255,0);
+    border-radius: 8px;
+  }
 }
+
 
 .left-tree .el-tree {
   background: #fafafa;

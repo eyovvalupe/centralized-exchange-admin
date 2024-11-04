@@ -125,7 +125,7 @@ const minWidth = 120
 const columnBase = ref([
   { prop: 'uid', label: 'UID', align: 'center', minWidth },
   { prop: 'username', minWidth,label: '用户名', align: 'center' },
-  { prop: 'father_username',minWidth, label: '代理', align: 'center' },
+  // { prop: 'father_username',minWidth, label: '代理', align: 'center' },
   { prop: 'name',minWidth, label: '姓名', align: 'center' },
   { prop: 'idtype', label: '证件类型', align: 'center', minWidth},
   { prop: 'idnum', label: '证件号码', align: 'center',minWidth:220 },

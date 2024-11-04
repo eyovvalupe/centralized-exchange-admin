@@ -1,9 +1,9 @@
 <template>
-  <div class="reset-el-styte h-full">
-    <div class="flex justify-between  p-2 pt-0 h-full">
+  <div class="h-full">
+    <div class="flex justify-between h-full">
       <div class="left-tree h-full">
-        <div class="input-item m-b-10"><el-input clearable :prefix-icon="Search" v-model="filterText"
-            placeholder="代理\备注关键词" /></div>
+        <el-input class="input-item m-b-10" clearable :prefix-icon="Search" v-model="filterText"
+            placeholder="代理\备注关键词" />
         <div class="left-tree-box">
           <el-tree ref="treeRef" accordion highlight-current :indent="10" class="filter-tree" :data="treeData"
             :filter-node-method="filterNode" node-key="id" :props="defaultProps" @nodeClick="treeNodeClick">
@@ -15,35 +15,30 @@
           </el-tree>
         </div>
       </div>
-      <div class="right-table h-full pt-2">
-        <div class="flex justify-between">
-          <div> <el-button type="primary"
-              @click="showDialog(null, 'showDialog')" :disabled="!checkAuthCode(10101)">
-               <!-- <el-icon>
-                <Plus />
-              </el-icon> -->
+      <div class="right-table h-full">
+        <div class="flex   reset-el-style-v2 justify-between">
+          <div>
+            <el-button class="w-[120px]" type="primary"
+              @click="showDialog(null, 'showDialog')" icon="plus" plain :disabled="!checkAuthCode(10101)">
               新增
               </el-button>
           </div>
           <div>
-            <div>
-              <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round
-                class="mr-2">
+              <!-- <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round>
                 {{ treeCurrInfo.username }}
-              </el-tag>
-              <el-input v-model="searchForm.params" class="mr-2" placeholder="UID/用户名/备注" style="width: 250px;" />
-              <el-button type="primary" class="ml-2" :icon="Search" @click="searchEvent"
-                :loading="isLoading">搜索</el-button>
-            </div>
+              </el-tag> -->
+              <el-input v-model="searchForm.params"  suffix-icon="search" placeholder="UID/用户名/备注" style="width: 264px;" />
+              <el-button type="primary" class="w-[120px] ml-[10px]" @click="searchEvent"
+                :loading="isLoading">查询</el-button>
           </div>
         </div>
-        <div class="mt-2">
+        <div class="py-[10px]  reset-el-style-v2">
           <el-table :data="tableData" border :class="tableData.length?'':'noborder'" v-loading="isLoading">
-            <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+            <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
               :align="item.align">
               <template #default="scope">
-                <span v-if="item.prop === 'enabled'" :class="scope.row[item.prop] ? 'status-bg success' : 'status-yellow'"
-                  class="status-bg cursor-pointer">
+                <span v-if="item.prop === 'enabled'" :class="scope.row[item.prop] ? '' : 'lock'"
+                  class="status">
                   {{ scope.row[item.prop] ? '正常' : '锁定' }}
                 </span>
                 <!-- <span v-else-if="item.prop === 'locked'" :class="!scope.row[item.prop] ? '' : 'status-yellow'"
@@ -65,15 +60,17 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="205" align="center">
+            <el-table-column label="操作" :min-width="200" align="center">
               <template #default="scope">
-                <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')"
+                <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showDialog')"
                   :disabled="!checkAuthCode(10101)"
                 >修改</el-button>
-                <el-button link type="primary" @click="showDialog(scope.row, 'showParentDialog')"
+                <b class="split-line"></b>
+                <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showParentDialog')"
                   :disabled="!checkAuthCode(10101)"
                 >修改代理</el-button>
-                <el-button link type="primary" @click="showDialog(scope.row, 'setPwdDialog')"
+                <b class="split-line"></b>
+                <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'setPwdDialog')"
                   :disabled="!checkAuthCode(10101)"
                 >重置密码</el-button>
               </template>
@@ -82,8 +79,9 @@
               <el-empty class="nodata" description="暂无数据" />
             </template>
           </el-table>
-          <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage"  />
+          
         </div>
+        <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage"  />
       </div>
     </div>
   </div>
@@ -133,16 +131,17 @@ const defaultProps = {
 const treeData = ref([])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
+const minWidth = 100
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center', width: 120 },
-  { prop: 'username', width: 150,label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '代理',width: 150, align: 'center' },
-  { prop: 'sub_net_users', label: '直推/网络', align: 'center', width: 80 },
-  { prop: 'deposit', label: '充值', align: 'center', width: 120 },
-  { prop: 'withdraw', label: '提现', align: 'center', width: 120 },
-  { prop: 'enabled', label: '业务权限', align: 'center', width: 85 },
-  // { prop: 'locked', label: '登录权限', align: 'center', width: 85 },
-  { prop: 'remarks', label: '备注', align: 'center' }])
+  { prop: 'uid', label: 'UID', align: 'center', minWidth },
+  { prop: 'username', minWidth,label: '用户名', align: 'center' },
+  { prop: 'father_username', label: '代理',minWidth, align: 'center' },
+  { prop: 'sub_net_users', label: '直推/网络', align: 'center',minWidth },
+  { prop: 'deposit', label: '充值', align: 'center', minWidth },
+  { prop: 'withdraw', label: '提现', align: 'center', minWidth },
+  { prop: 'enabled', label: '业务权限', align: 'center', minWidth },
+  // { prop: 'locked', label: '登录权限', align: 'center', minWidth },
+  { prop: 'remarks', label: '备注', align: 'center',minWidth:165 }])
 const isLoading = ref(false)
 const filterText = ref('')
 const showDialog = (data, type) => {
@@ -243,42 +242,61 @@ watch(filterText, (val) => {
   treeRef.value.filter(val)
 })
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .left-tree {
-  padding: 10px;
-  background: #fafafa;
-  border-radius: 10px;
-  width: 220px;
+  padding: 20px;
+  background: #f5f5f5;
+  width: 280px;
   height: 100%;
+  box-sizing: border-box;
   overflow: hidden;
-}
-
-.left-tree-box {
-  width: 220px;
-  overflow: auto;
-  padding-right: 20px;
-}
-
-.input-item {
-  margin-bottom: 10px;
+  :deep(.el-tree-node__content){
+    margin-top: 10px;
+    height: 32px;
+    font-size: 16px;
+    color:#000;
+  }
+  :deep(.el-tree > .el-tree-node + .el-tree-node){
+    border-top: 1px solid #ECECEC;
+    margin-top: 14px;
+    padding-top: 10px;
+  }
+  :deep(.el-tree-node.is-current>.el-tree-node__content){
+    background-color: #E1EAFF;
+  }
+  :deep(.el-tree-node__content>.el-tree-node__expand-icon){
+    font-size: 16px;
+    color:#000;
+    padding-right: 10px;
+  }
 }
 
 .left-tree .el-tree {
-  background: #fafafa;
+  background: none;
 
 }
 
-.el-tree {
-  min-width: 100%;
-  display: inline-block !important;
+.left-tree-box {
+  width: 240px;
+  overflow: auto;
+  background: none;
 }
 
-.el-tree-node>.el-tree-node__children {
-  overflow: visible;
+
+.input-item {
+  margin-bottom: 10px;
+  :deep(.el-input__wrapper){
+    box-shadow: 0 0 0 rgba(255,255,255,0);
+    border-radius: 8px;
+  }
 }
+
+
 
 .right-table {
-  width: calc(100% - 230px);
+  width: calc(100% - 280px);
   overflow-y: auto;
+  box-sizing: border-box;
+  padding: 10px 20px;
 }
 </style>

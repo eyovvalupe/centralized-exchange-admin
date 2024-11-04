@@ -181,13 +181,6 @@ th.el-table__cell.bg-color3,
   }
 }
 
-.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content,
-.el-menu--horizontal>.el-menu-item.is-active {
-  background: #fff !important;
-  color: #4377FE;
-  border: none !important;
-}
-
 *:focus-visible {
   outline-width: 0cap;
 }
@@ -682,7 +675,7 @@ th.el-table__cell.bg-color3,
 }
 
 .el-button+.el-button {
-  margin-left: 6px !important;
+  margin-left: 10px !important;
 }
 
 .table-list-order {
