@@ -99,6 +99,14 @@ export default [
         icon: 'OperatorData',
         meta: { title: '股票订单管理', auth: '201', noCache: true }
       },
+      {
+        path: '/orderIndex',
+        component: () => import('/@/views/order/index.vue'),
+        name: 'orderIndex',
+        icon: 'OperatorData',
+        meta: { title: '股票历史订单', auth: '201', noCache: true,hidden:true }
+      },
+      
 
       // {
       //   path: '/test1',
@@ -120,7 +128,14 @@ export default [
         name: 'contractPos',
         icon: 'heyue1',
         meta: { title: '合约订单管理', auth: '231', noCache: true, border: true }
-      },
+      }, 
+      {
+        path: '/contractSearch',
+        component: () => import('/@/views/contract/search.vue'),
+        name: 'contractSearch',
+        icon: 'heyue1',
+        meta: { title: '合约历史订单', auth: '231', noCache: true, hidden: true }
+      }, 
       
       {
         path: '/contractIndex',

@@ -225,6 +225,7 @@ const shortCut = ref([
   // { name: 'Console', text: 'Crash控制台', isRoute: true },
   // { name: 'Player', text: '玩家', isRoute: true },
 ])
+
 const showService = ref(false)
 // short cut click
 const onShortCut = item => {
@@ -403,8 +404,26 @@ function goGooglePage(){
 </script>
 
 <style lang="scss">
+
+.header-menus {
+  border:0px !important;
+  background: none !important;
+  top:70px !important;
+  .el-menu {
+    width: 200px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 5px 10px;
+    background: #fff;
+    
+  }
+
+}
+
+
 // 覆盖tab 样式
 .app-header {
+  --el-menu-bg-color:rgba(255,255,255,0);
   .line-top {
     border: 1px solid #C7C7C7;
     width: 1px;
@@ -412,6 +431,7 @@ function goGooglePage(){
     margin: 0 10px;
   }
 
+ 
 
   .top-sub-menu {
     padding: 0 34px 0 14px;

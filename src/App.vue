@@ -116,22 +116,7 @@ th.el-table__cell.bg-color3,
   margin: 2px 0;
 }
 
-.header-menus {
-  .el-menu {
-    width: 250px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border: 1px solid #e4e7ed;
-    padding: 5px 10px;
-    background: #fff;
 
-  }
-
-  .el-menu-item {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-}
 
 .no-menu-auth {
   color: #bfbfbf !important;
@@ -692,6 +677,10 @@ th.el-table__cell.bg-color3,
 
 .el-button+.el-button {
   margin-left: 10px !important;
+}
+
+.el-button--small+.el-button--small {
+  margin-left: 5px !important;
 }
 
 .table-list-order {
