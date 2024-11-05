@@ -1,21 +1,19 @@
 <template>
   <section class="app-header">
     <!-- 第一排 -->
-    <header class="header-bg h-[50px] w-full flex border-b text-sm pl-[10px]">
+    <header class="header-bg h-[70px] w-full flex text-sm pl-[30px]">
       <el-menu popper-class="header-menus" :default-active="activeIndex" :hide-timeout="100" :show-timeout="0"
-        :collapse-transition="false" class="h-[40px] flex-1" mode="horizontal" @select="handleSelect"
+        :collapse-transition="false" class="h-[70px] flex-1" mode="horizontal" @select="handleSelect"
         v-show="routesList.length">
         <template v-for="(item, index) in routesList" :key="index">
           <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''"
             v-if="!item.children || item.hiddenChild">
-            <SvgIcon class="mr-[8px]" size="16px" :name="item.icon" />
             {{ item.meta.title }}
           </el-menu-item>
           <el-sub-menu :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''" v-else
             class="top-sub-menu">
             <template #title>
-              <span class="flex items-center">
-                <SvgIcon :name="item.icon" class="mr-[8px]" size="16px" />{{ item.meta.title }}</span>
+              <span class="flex items-center">{{ item.meta.title }}</span>
             </template>
             <template v-for="(_item, _index) in item.children" :key="_index">
               <template v-if="!_item.subMenu && !_item.meta.hidden">
@@ -79,28 +77,37 @@
       <ul class="menu-two flex items-center">
         <li v-for="item in shortCut" :key="item.name" class="cursor-pointer flex items-center"
           @click="onShortCut(item)">
-          <span class="mr-[30px] flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
+          <span class="mr-[20px] flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
             <span class="badge-box">
-              <SvgIcon :name="item.icon || item.name" size="16px" class="mr-[5px]"/>
+              <img src="/images/menus/ServiceIcon.svg" class="mr-[6px]" v-if="item.icon == 'service'" />
+              <SvgIcon :name="item.icon || item.name" size="16px" v-else class="mr-[6px]"/>
               <span>{{ item.text }}</span>
               <el-badge :value="messageNumObj[item.badge]" v-if="messageNumObj[item.badge]"></el-badge>
             </span>
           </span>
         </li>
       </ul>
-      <div class="flex menu-three ml-[70px]">
-        <div class="flex items-center pr-[20px]">
+      <div class="flex menu-three">
+        <div class="menu-icon-btns">
+          <div class="menu-icon-btn" @click="sound=!sound;changeVoice(sound)">
+            <SvgIcon :name="sound ? 'voice' : 'mute'" size="16px" />
+          </div>
+          <div class="menu-icon-btn" @click="toggle()">
+            <SvgIcon :name="isFullscreen ? 'cancelFullscreen' : 'fullscreen'" size="16px" />
+          </div>
+        </div>
+        <!-- <div class="flex items-center pr-[20px]">
           <el-switch v-model="sound" @change="changeVoice" size="small" />
           <div class="ml-[5px]">声音</div>
-        </div>
-        <div class="flex items-center pr-[20px] cursor-pointer" @click="toggle()">
+        </div> -->
+        <!-- <div class="flex items-center pr-[20px] cursor-pointer" @click="toggle()">
           <img src="/images/menus/FullScreen.svg" v-if="isFullscreen" />
           <img v-else src="/images/menus/FullScreen2.svg" />
 
           <div class="ml-[5px]">全屏</div>
-        </div>
-        <el-dropdown class="p8 avatar-container right-menu-item hover-effect">
-          <div class="flex items-center pr-[20px]">
+        </div> -->
+        <el-dropdown class="avatar-container right-menu-item hover-effect">
+          <div class="flex items-center px-[16px]">
             <!-- <span class="mr-2">{{ userName }}</span> -->
             <!-- 顶部导航 用户名改成头像 -->
             <img src="/images/menus/nav-user.svg" />
@@ -115,19 +122,18 @@
                   <User style="width: 1em; height: 1em; margin-right: 8px;font-size: 20px;" />{{ userName }}
               </el-dropdown-item>
               <el-dropdown-item @click="goGooglePage">
-                <span class="flex justify-center align-middle" :class="{ 'no-menu-auth': googlebind }">
-                  <TopRight style="width: 1em; margin-right: 8px" />
-                  <span>绑定谷歌验证码</span>
+                <span class="flex justify-center align-middle underline" :class="{ 'no-menu-auth': googlebind }">
+                  绑定谷歌验证码
                 </span>
               </el-dropdown-item>
               <el-dropdown-item @click="showDialog('loginPassword')">
-                <Edit style="width: 1em; height: 1em; margin-right: 8px" />修改登录密码
+                <span class="underline">修改登录密码</span>
               </el-dropdown-item>
               <el-dropdown-item @click="showDialog('verifyPassword')">
-                <EditPen style="width: 1em; height: 1em; margin-right: 8px" />修改交易密码
+                <span class="underline">修改交易密码</span>
               </el-dropdown-item>
               <el-dropdown-item divided @click="logout">
-                <Close style="width: 1em; height: 1em; margin-right: 8px" />退出
+                <span class="underline">退出</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -408,34 +414,47 @@ function goGooglePage(){
 
 
   .top-sub-menu {
-    padding: 0 20px;
+    padding: 0 34px 0 14px;
+    --el-menu-text-color:#33353D;
+    
     > .el-sub-menu__title {
       padding: 0px !important;
-    }
-    .el-icon {
-      display: none;
+      font-size: 16px;
+      
     }
 
     &.is-active {
+      background-color: #EFF2F8;
       .el-sub-menu__title {
         color: var(--el-color-primary);
         border: none;
         font-size: 16px;
+        font-weight: 600;
       }
       svg path{
         fill:var(--el-color-primary);
       }
     }
+   
   }
   .el-menu-item{
+    padding: 0 24px;
+    font-size: 16px;
     &.is-active {
-      svg path{
-        fill:var(--el-color-primary);
-      }
+      background-color: #EFF2F8;
+      color:var(--el-color-primary);
+      font-weight: 600;
+      border-bottom: 0px !important;
     }
   }
- .el-sub-menu__title{
+  .el-sub-menu__title{
     border-bottom: 0px !important;
+  }
+
+  .el-sub-menu .el-sub-menu__icon-arrow{
+    right: -20px;
+    font-size: 14px;
+    margin-top: -7px;
   }
 }
 
@@ -444,31 +463,37 @@ function goGooglePage(){
   color: #000;
 }
 
+.menu-two{
+  border-left: 1px solid #EFF2F8;
+  padding-left: 16px;
+}
 .badge-box {
   position: relative;
-  background-color: #F0F0F0;
-  padding: 5px 10px;
-  height: 30px;
-  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 14px;
   transition: .3s;
+  color:#33353D;
   svg path{
-    transition: .3s;
+    fill:var(--el-color-primary); 
   }
   &:hover{
-    background-color: #F0F0F0;
     color:var(--el-color-primary);
-    svg path{
-      fill:var(--el-color-primary); 
-    }
   }
+ 
   .el-badge .el-badge__content{
-    border-radius: 6px 6px 6px 0px;
-    border:0px;
-    height: 16px;
+     font-size: 11px;
+     border-radius: 14px;
+      border:0px;
+      height: 14px;
+      min-width: 14px;
+      padding: 0 4px;
+      box-sizing: border-box;
+      line-height:14px;
+      position: relative;
+      top:-8px;
+      padding-top:2px;
   }
 
   .el-menu--horizontal .el-menu .el-menu-item,
@@ -532,36 +557,43 @@ function goGooglePage(){
   transform: translateY(30px);
   opacity: 0;
 }
+
 .custom-tab :deep(.el-tabs__nav){
-  border: 0px !important;
+  border-top: 0px !important;
+  height: 40px;
+  background: linear-gradient(0deg, rgba(239, 242, 248, 0.00) 0%, #EFF2F8 100%);
+  border-bottom: 1px solid #EFF2F8 !important;
 }
 .custom-tab :deep(.el-tabs__nav-wrap){
   margin-bottom: 0px;
 }
-
+.custom-tab :deep(.el-tabs__header){
+  border-bottom: 0px;
+}
 .custom-tab :deep(.el-tabs__header .el-tabs__item){
   margin:0px !important;
   padding: 0px !important;
   box-shadow: 0 0 0 #f5f5f5 !important;
   border:0px !important;
-  height: 32px !important;
-  border-radius: 4px;
+  height: 39px !important;
+  border-radius: 0px;
   font-weight: normal;
-  color:#666;
+  color:#65749C;
   > span{
-    padding:0 23px;
+    padding:0 35px;
   }
   .is-icon-close{
     position: absolute;
-    right:3px;
-    top:3px;
+    right:5px;
+    top:5px;
     opacity: 0;
   }
   &:hover .is-icon-close{
       opacity: 1;
   }
   &:hover {
-    color:var(--el-color-primary); 
+    color:var(--el-color-primary);
+    background:none;
   }
   &.is-active {
     padding: 0px;
@@ -573,8 +605,25 @@ function goGooglePage(){
    
   }
 }
-
-
+.menu-icon-btns{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 11px;
+  border-left: 1px solid #EFF2F8;
+  border-right: 1px solid #EFF2F8;
+}
+.menu-icon-btn{
+  width:30px;
+  height: 30px;
+  display: flex;
+  margin: 0 5px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #D0D8E2;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
 
 </style>(: string)(: { notArrow: any; name: any; isRoute: any; isDialog: any }): any(: any[])(: { children: any[] })(:
 { subMenu: any; children: any[] })(: any): string: any(: { paneName: any })(: any)(: any)(: any)

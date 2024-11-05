@@ -15,6 +15,10 @@
         <AgentIcon :color="color" v-else-if="name == 'agent'" />
         <RealnameOutlineIcon :color="color" v-else-if="name == 'realnameOutline'" />
         <LinkIcon :color="color" v-else-if="name == 'link'" />
+        <FullscreenIcon :color="color" v-else-if="name == 'fullscreen'" />
+        <CancelFullscreenIcon :color="color" v-else-if="name == 'cancelFullscreen'" />
+        <VoiceIcon :color="color" v-else-if="name == 'voice'" />
+        <MuteIcon :color="color" v-else-if="name == 'mute'" />
     </span>
 </template>
 <script setup>
@@ -33,6 +37,10 @@ import EditIcon from './EditIcon.vue'
 import AgentIcon from './AgentIcon.vue'
 import RealnameOutlineIcon from './RealnameOutlineIcon.vue'
 import LinkIcon from './LinkIcon.vue'
+import FullscreenIcon from './FullscreenIcon.vue'
+import CancelFullscreenIcon from './CancelFullscreenIcon.vue'
+import VoiceIcon from './VoiceIcon.vue'
+import MuteIcon from './MuteIcon'
 defineProps({
     name:String,
     color:String,

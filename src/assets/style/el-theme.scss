@@ -3,7 +3,7 @@
     --el-color-primary: #4377FE !important;
     --el-font-weight-primary: 400 !important;
     --el-dialog-padding-primary: 10px !important;
-    --el-color-danger:#FF0004;
+    --el-color-danger:#ED4043;
     --el-disabled-bg-color:#F5F5F5;
     
 
@@ -47,10 +47,17 @@
       --el-button-active-text-color:var(--el-color-primary);
     }
 
+    
     .el-select__wrapper{
       --el-border-radius-base:8px;
     }
     .el-input__wrapper{
+      --el-input-border-radius:8px;
+    }
+    .el-button--large{
+      --el-border-radius-base:8px;
+    }
+    .el-input-group__append, .el-input-group__prepend{
       --el-input-border-radius:8px;
     }
     .el-textarea{

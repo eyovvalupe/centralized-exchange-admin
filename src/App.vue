@@ -209,7 +209,6 @@ th.el-table__cell.bg-color3,
   line-height: 18px;
   color: #fff;
   font-size: 12px;
-
 }
 
 .el-card__header {
@@ -239,13 +238,6 @@ th.el-table__cell.bg-color3,
       background: #e0e9f7;
     }
   }
-
-  .el-badge {
-    right: -15px;
-    top: 0px;
-    z-index: 11;
-    position: absolute !important;
-  }
 }
 
 .pwd-last .el-input-group__append {
@@ -268,9 +260,16 @@ th.el-table__cell.bg-color3,
 }
 
 .operation_popover {
-  padding:0px;
+  padding:10px 0 !important;
+  .items-center{
+    padding:10px 0 10px 20px;
+  }
   .items-center:hover {
-    background: #f5f5f5;
+    background-color: #f5f5f5;
+    color:var(--el-color-primary);
+    svg path{
+      fill: var(--el-color-primary);
+    }
   }
 }
 
@@ -300,17 +299,19 @@ th.el-table__cell.bg-color3,
   .el-button--large,
   .el-input,
   .el-select .el-select__wrapper {
-    height: 40px !important;
-    min-height: 40px !important;
-    line-height: 40px !important;
+    height: 40px ;
+    min-height: 40px ;
+    line-height: 40px ;
   }
 
+  .btn-large,
   .el-input--large,
   .el-select--large .el-select__wrapper {
     height: 48px !important;
     min-height: 48px !important;
     line-height: 48px !important;
   }
+
 
   .el-select__placeholder{
     color:#000;
@@ -458,8 +459,7 @@ th.el-table__cell.bg-color3,
 }
 
 .el-button.is-disabled {
-  background: #e3e3e3 !important;
-  border-color: #e3e3e3 !important;
+  opacity: 0.7;
 }
 
 .txt-tips {
@@ -620,7 +620,7 @@ th.el-table__cell.bg-color3,
 .status-bg.review,
 .status-bg.waitpayment,
 .status-bg.sell {
-  background: #FFCC00;
+  background: #EF8401;
   color: #fff;
 }
 
@@ -991,6 +991,10 @@ small {
   min-height: 32px !important;
   border-radius: 8px;
 }
+.search-box .search-date-picker{
+  width: 100% !important;
+}
+
 .search-box .el-input__wrapper{
   background-color: #F5F5F5;
   box-shadow:0px 0px 0px rgba(255,255,255,0);
