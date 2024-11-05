@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="500"  @close="emit('close', false)" v-model="show" title="修改实名认证" :append-to-body="true" @open="open">
+   <el-dialog :close-on-click-modal="false" width="500"  class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改实名认证" :append-to-body="true" @open="open">
     <el-form :model="form" label-position="top" class="pt-[10px]" ref="ruleForm" :rules="rules">
       <el-form-item label="实名认证" prop="limit">
         <el-select v-model="form.kyc" placeholder="请选择认证方式" style="width: 100%;">

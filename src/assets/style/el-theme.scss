@@ -48,9 +48,13 @@
     }
 
     .el-select__wrapper{
-      --el-border-radius-base:4px;
+      --el-border-radius-base:8px;
     }
     .el-input__wrapper{
-      --el-input-border-radius:4px;
+      --el-input-border-radius:8px;
+    }
+    .el-textarea{
+      --el-input-border-radius:8px;
+      --el-input-text-color:#000;
     }
 }

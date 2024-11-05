@@ -11,6 +11,10 @@
         <WithdrawIcon :color="color" v-else-if="name == 'withdraw'" />
         <RealnameIcon :color="color" v-else-if="name == 'realname'" />
         <ServiceIcon :color="color" v-else-if="name == 'service'" />
+        <EditIcon :color="color" v-else-if="name == 'edit'" />
+        <AgentIcon :color="color" v-else-if="name == 'agent'" />
+        <RealnameOutlineIcon :color="color" v-else-if="name == 'realnameOutline'" />
+        <LinkIcon :color="color" v-else-if="name == 'link'" />
     </span>
 </template>
 <script setup>
@@ -25,6 +29,10 @@ import RechargeIcon from './RechargeIcon.vue'
 import WithdrawIcon from './WithdrawIcon.vue'
 import RealnameIcon from './RealnameIcon.vue'
 import ServiceIcon from './ServiceIcon.vue'
+import EditIcon from './EditIcon.vue'
+import AgentIcon from './AgentIcon.vue'
+import RealnameOutlineIcon from './RealnameOutlineIcon.vue'
+import LinkIcon from './LinkIcon.vue'
 defineProps({
     name:String,
     color:String,

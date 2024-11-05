@@ -30,9 +30,7 @@
             <span v-if="item.prop === 'kyc'">
               {{ ['未实名', 'L1认证', 'L2认证'][scope.row[item.prop]] || '-' }}
             </span>
-            <span v-else-if="item.prop === 'lastlogin'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
+            
             <span v-else-if="item.prop === 'uid'" class=" cursor-pointer" @click="copy(scope.row.uid)">
               {{ scope.row[item.prop] }}
             </span>
@@ -57,6 +55,7 @@
             <div class="w-full flex justify-between">
               <div class="flex-1 flex justify-center items-center">
                 <el-button size="default" class="data underline" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'showTxDialog')" :disabled="!checkAuthCode(11101)">提现限制</el-button>
+                <b class="split-line"></b>
                 <el-button size="default" class="data underline" link :type="checkAuthCode(11101)?'primary':'info'" @click="showDialog(scope.row, 'fundVisible')"  :disabled="!checkAuthCode(11101)">修改余额</el-button>
               </div>
 
@@ -67,25 +66,17 @@
                 </template>
                 <div class="flex flex-col cursor-pointer">
                   <p @click="showDialog(scope.row, 'modifyVisible')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
-                    <el-icon :size="20">
-                      <EditPen />
-                    </el-icon> <span class="ml-1">修改</span>
+                    <SvgIcon name="edit" size="16px" /><span class="ml-[10px]">修改</span>
                   </p>
                   <p @click="showDialog(scope.row, 'showIdDialog')" :class="{ disabled: !checkAuthCode(10201) }"
                     class="flex items-center py-2">
-                    <el-icon :size="20">
-                      <Postcard />
-                    </el-icon><span class="ml-1">修改实名认证</span>
+                    <SvgIcon name="realnameOutline" size="16px" /><span class="ml-[10px]">修改实名认证</span>
                   </p>
                   <p @click="showDialog(scope.row, 'showParentDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
-                    <el-icon :size="20">
-                      <Share />
-                    </el-icon><span class="ml-1">修改代理</span>
+                    <SvgIcon name="agent" size="16px" /><span class="ml-[10px]">修改代理</span>
                   </p>
                   <p @click="showDialog(scope.row, 'showLinkDialog')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2 border-b1">
-                    <el-icon :size="20">
-                      <Link />
-                    </el-icon><span class="ml-1">重置链接</span>
+                    <SvgIcon name="link" size="16px" /><span class="ml-[10px]">重置链接</span>
                   </p>
                 </div>
               </el-popover>
@@ -133,7 +124,8 @@ import {
 } from '/@/api/modules/business/player.api'
 // import { apiRoleList } from '/@/api/modules/system/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Search, Plus } from '@element-plus/icons-vue'
+import SvgIcon from '/@/components/icons/Index.vue'
+
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { copy } from '/@/utils'
 import playerParentDialog from '../playerParentDialog.vue'

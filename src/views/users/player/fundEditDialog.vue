@@ -1,7 +1,7 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改余额" :append-to-body="true">
-    <div class="flex justify-between pt-[10px]">
-      <div class="w-7/12 mr-[20px]">
+    <div class="flex justify-between pt-[10px]"  v-loading="loading">
+      <div class="w-[55%] mr-[20px]">
         <el-form ref="ruleForm" label-position="top" :model="form" :rules="rules">
           <el-form-item label="账户" prop="currency" :label-width="formLabelWidth" required>
             <el-select v-model="form.currency" placeholder="请选择账户" @change="currencyChange" style="width: 100%;">
@@ -10,10 +10,12 @@
           </el-form-item>
           <el-form-item label="金额" prop="amount" label-width="0" required>
             <div class="flex w-full">
-              <el-select v-model="form.action" class="mr-2" style="width: 120px;">
-                <el-option label="充值" value="deposit" />
-                <el-option label="提现" value="withdraw" />
-              </el-select>
+              <div class="w-[140px] mr-[10px]">
+                <el-select v-model="form.action">
+                  <el-option label="充值" value="deposit" />
+                  <el-option label="提现" value="withdraw" />
+                </el-select>
+              </div>
               <el-input v-model="form.amount" placeholder="请输入金额" style="width: 100%;" />
             </div>
           </el-form-item>
@@ -23,29 +25,25 @@
         </el-form>
         <div class="txt-tips my-2" v-if="form.action == 'withdraw'">提现金额不计入充值报表</div>
       </div>
-      <div class="w-5/12" v-loading="loading">
-        <div>
-          <div class="table-list flex flex-nowrap justify-between">
+      <div class="w-[45%]">
+          <div class="table-list table-list--large flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">账户余额</span>
             <span class="w-7/12 text-left status blue">{{ userDetail.amount }}</span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
+          <div class="table-list table-list--large flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">变更金额</span>
-            <!-- {{ form.action =='deposit'?'+':'-' }} -->
             <span class="w-7/12 text-left status blue">{{ form.amount || 0 }}</span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
+          <div class="table-list table-list--large flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">变更后金额</span>
             <span class="w-7/12 text-left status blue">{{ currMoney }}</span>
           </div>
-        </div>
       </div>
     </div>
     <template #footer>
-      <div class="p-[10px]">
+      <div class="p-[10px]" v-if="!loading">
         <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
-        <el-button type="primary" round class="w-[98px]" @click="showPwdDialog" :disabled="currMoney < 0"
-          :loading="isLoading">确定</el-button>
+        <el-button type="primary" round class="w-[98px]" @click="showPwdDialog" :disabled="currMoney < 0" :loading="isLoading">确定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -110,7 +108,7 @@ const options = ref([])
 
 const currencyChange = (currency) => {
   loading.value = true;
-  apiWalletBalance({ partyid: props.editInfo.partyid, currency }).then(res => {
+  apiWalletBalance({ partyid: props.editInfo.partyid, currency,account:'money' }).then(res => {
     userDetail.value = res ? res[0] : {};
     form.amount = ''
     ruleForm.value.clearValidate()

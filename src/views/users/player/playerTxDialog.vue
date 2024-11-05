@@ -2,9 +2,9 @@
    <el-dialog :close-on-click-modal="false" width="500"  @close="emit('close', false)" class="reset-el-styte" v-model="show" title="提现限制" :append-to-body="true" @open="open">
     <el-form :model="form" label-position="top" class="pt-[10px]" ref="ruleForm" :rules="rules">
       <el-form-item label="流水限制" prop="limit">
-        <el-input v-model="form.limit" placeholder="请输入限制金额">
+        <el-input v-model.number="form.limit" placeholder="请输入限制金额">
           <template #append>
-            {{ dataDetail.name  }}
+            USD
           </template>
         </el-input>
       </el-form-item>
@@ -43,7 +43,6 @@ const show = ref(true)
 const isLoading = ref(false)
 
 const ruleForm = ref()
-const dataDetail = ref({})
 const trigger = ['blur', 'change']
 const form = reactive({
   limit: ''
@@ -67,17 +66,12 @@ const submit = () => {
     }
   })
 }
-const getData = () => {
-  getGlobalWallet().then(res => {
-    dataDetail.value = res;
-  })
-}
+
 watch(
   () => props.visible,
   val => {
     show.value = val
     if (val) {
-      getData();
       form.limit = props.editInfo.limit
     }
   },

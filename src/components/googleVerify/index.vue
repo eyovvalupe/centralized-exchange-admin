@@ -21,7 +21,7 @@
     </div>
 
     <div class="form-center" style="margin-bottom: 20px">谷歌验证码</div> -->
-    <div class="form-left my-2" v-if="!props.noTitle">请验证你的谷歌验证码</div> 
+    <div class="form-left" v-if="!props.noTitle">请验证你的谷歌验证码</div> 
     <el-form-item class="mt-[10px] flex items-center input-items">
       <el-input class="flex-1" type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
       <el-input class="flex-1" type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
@@ -188,6 +188,7 @@ onMounted(()=>{
 }
 .form-left{
   margin: 10px 0 0 0;
+  color:#000;
 }
 .form-center {
   text-align: center;
