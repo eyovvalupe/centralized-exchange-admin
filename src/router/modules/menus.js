@@ -97,15 +97,9 @@ export default [
         component: () => import('/@/views/order/pos.vue'),
         name: 'orderPositions',
         icon: 'OperatorData',
-        meta: { title: '股票持仓单', auth: '201', noCache: true }
+        meta: { title: '股票订单管理', auth: '201', noCache: true }
       },
-      {
-        path: '/orderIndex',
-        component: () => import('/@/views/order/index.vue'),
-        name: 'orderIndex',
-        icon: 'FundsFlow',
-        meta: { title: '股票历史订单', auth: '201', noCache: true }
-      },
+
       // {
       //   path: '/test1',
       //   component: Layout,
@@ -125,15 +119,9 @@ export default [
         component: () => import('/@/views/contract/pos.vue'),
         name: 'contractPos',
         icon: 'heyue1',
-        meta: { title: '合约持仓单', auth: '231', noCache: true, border: true }
+        meta: { title: '合约订单管理', auth: '231', noCache: true, border: true }
       },
-      {
-        path: '/contractSearch',
-        component: () => import('/@/views/contract/search.vue'),
-        name: 'contractSearch',
-        icon: 'FundsFlow',
-        meta: { title: '合约历史订单', auth: '231', noCache: true }
-      },
+      
       {
         path: '/contractIndex',
         component: () => import('/@/views/contract/index.vue'),
@@ -200,14 +188,14 @@ export default [
         component: () => import('/@/views/statistics/index.vue'),
         name: 'whithdrawDeposit',
         icon: 'cttj',
-        meta: { title: '平台充提统计', auth: '301', noCache: true, }
+        meta: { title: '平台充提报表', auth: '301', noCache: true, }
       },
       {
         path: '/statisticsAgent',
         component: () => import('/@/views/statistics/agent.vue'),
         name: 'statisticsAgent',
         icon: 'AgentData',
-        meta: { title: '代理商充提统计', auth: '302', noCache: true, }
+        meta: { title: '代理商充提报表', auth: '302', noCache: true, }
       },
       // {
       //   path: '/statisticsAgent2',
@@ -227,7 +215,7 @@ export default [
         component: () => import('/@/views/statistics/agentUser.vue'),
         name: 'statisticsAgentUser',
         icon: 'AgentData',
-        meta: { title: '用户数据', auth: '303', noCache: true, }
+        meta: { title: '用户数据报表', auth: '303', noCache: true, }
       },
       {
         path: '/amount',
@@ -258,18 +246,25 @@ export default [
       //   meta: { title: '系统配置', noCache: true, notopen: true }
       // },
       {
+        path: '/Agent4',
+        name: 'Agent4',
+        icon: 'skzh',
+        meta: { title: '提现手续费', noCache: true, notopen: true }
+      },
+      {
         path: '/cryptoList',
         component: () => import('/@/views/finance/crypto/index.vue'),
         name: 'cryptoList',
         icon: 'BetRecord',
         meta: { title: '平台充值地址', auth: '402' }
       },
-      // {
-      //   path: '/Agent4',
-      //   name: 'Agent4',
-      //   icon: 'skzh',
-      //   meta: { title: '提现手续费', noCache: true, notopen: true }
-      // },
+      {
+        path: '/cryptocurrency',
+        component: () => import('/@/views/finance/crypto/index.vue'),
+        name: 'cryptocurrency',
+        icon: 'Cryptocurrency',
+        meta: { title: '支持的加密货币', noCache: true, notopen: true }
+      },
       {
         path: '/exchange',
         component: () => import('/@/views/system/exchange/index.vue'),
@@ -306,6 +301,14 @@ export default [
         name: 'aiConfig',
         icon: 'ParamsSet',
         meta: { title: '交易机器人', auth: '404' },
+      },
+      {
+        path: '/foreignExchange',
+        component: Layout,
+        component: () => import('/@/views/aiConfig/manage.vue'),
+        name: 'foreignExchange',
+        icon: 'foreignExchange',
+        meta: { title: '外汇', noCache: true, notopen: true  },
       },
       // {
       //   path: '/aiTimeConfig',

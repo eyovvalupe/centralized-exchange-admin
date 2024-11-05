@@ -1,13 +1,13 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="`${detailData.username || ''}个人详细信息`" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <div v-loading="dialogLoading" style="min-height: 400px;" class=" mt-[10px]">
-      <template v-if="!dialogLoading">
-        <el-tabs v-model="activeName" type="border-card">
-          <el-tab-pane label="财务数据" name="first">
-            <div style="max-height:600px;" class="soll-list soll-list-y">
-              <div class="border p-[20px] bg-slate-50">
-                <div class="flex search-box">
+    <div  class="py-[10px]">
+      <el-tabs v-model="activeName" type="border-card">
+        <el-tab-pane label="财务数据" name="first">
+          <div style="max-height:600px;" class="soll-list soll-list-y"  v-loading="dialogLoading">
+            <div class="border p-[20px] bg-slate-50">
+              <div class="flex search-box">
+                <div class="w-[400px]">
                   <el-date-picker
                     class="search-date-picker"
                     v-model="daterange"
@@ -19,100 +19,101 @@
                     date-format="YYYY/MM/DD"
                     @change="daterangeChange"
                   />
-                  <el-button type="primary" class="rounded-[8px] ml-[10px] w-[80px]" @click="handleSearch"> 查询 </el-button>
                 </div>
-                <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">充提合计(USDT)</div>
-                <div v-for="(item, index2) in columnBase" :key="index2"
-                  class="table-list flex flex-nowrap justify-between">
-                  <span class="text-center">{{ item.label }}</span>
-                  <span class="w-7/12 text-center" style="color:#000;">{{ detailData.fund[item.prop] }}</span>
+                <el-button type="primary" class="rounded-[8px] ml-[10px] w-[80px]" @click="handleSearch"> 查询 </el-button>
+              </div>
+              <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">充提合计(USDT)</div>
+              <div v-for="(item, index2) in columnBase" :key="index2"
+                class="table-list flex flex-nowrap justify-between">
+                <span class="text-center" style="color:#666;">{{ item.label }}</span>
+                <span class="w-7/12 text-center" style="color:#000;">{{ detailData.fund[item.prop] }}</span>
+              </div>
+            </div>
+            <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">业务账户（USDT计价）</div>
+            <div style="color:#000;">
+                <div class="table-list flex items-center">
+                  <span class="w-0 flex-1 text-center bor-r bg-slate-50">账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">现金账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">外汇账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">合约账户</span>
+                  <span class="w-0 flex-1 text-center bor-r">股票账户</span>
+                  <span class="w-0 flex-1 text-center">大宗账户</span>
+                </div>
+                <div class="table-list flex">
+                  <span class="w-0 flex-1 text-center bor-r bg-slate-50">金额</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['money']  ? detailData.fund['money'] || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['forex'] && detailData.fund['forex'][0] ? detailData.fund['forex'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['futures'] && detailData.fund['futures'][0] ? detailData.fund['futures'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['stock'] && detailData.fund['stock'][0] ? detailData.fund['stock'][0].amount || 0 : '--'}}</span>
+                  <span class="w-0 flex-1 text-center">{{detailData.fund['blocktrade'] && detailData.fund['blocktrade'][0] ? detailData.fund['blocktrade'][0].amount || 0 : '--'}}</span>
                 </div>
               </div>
-              <div class="text-sm mt-[20px] mb-[10px]" style="color:#000;">业务账户（USDT计价）</div>
-              <div style="color:#000;">
-                  <div class="table-list flex items-center">
-                    <span class="w-0 flex-1 text-center bor-r bg-slate-50">账户</span>
-                    <span class="w-0 flex-1 text-center bor-r">现金账户</span>
-                    <span class="w-0 flex-1 text-center bor-r">外汇账户</span>
-                    <span class="w-0 flex-1 text-center bor-r">合约账户</span>
-                    <span class="w-0 flex-1 text-center bor-r">股票账户</span>
-                    <span class="w-0 flex-1 text-center">大宗账户</span>
-                  </div>
-                  <div class="table-list flex">
-                    <span class="w-0 flex-1 text-center bor-r bg-slate-50">金额</span>
-                    <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['money']  ? detailData.fund['money'] || 0 : '--'}}</span>
-                    <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['forex'] && detailData.fund['forex'][0] ? detailData.fund['forex'][0].amount || 0 : '--'}}</span>
-                    <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['futures'] && detailData.fund['futures'][0] ? detailData.fund['futures'][0].amount || 0 : '--'}}</span>
-                    <span class="w-0 flex-1 text-center bor-r">{{detailData.fund['stock'] && detailData.fund['stock'][0] ? detailData.fund['stock'][0].amount || 0 : '--'}}</span>
-                    <span class="w-0 flex-1 text-center">{{detailData.fund['blocktrade'] && detailData.fund['blocktrade'][0] ? detailData.fund['blocktrade'][0].amount || 0 : '--'}}</span>
-                  </div>
-                </div>
 
-              <div class="mt-[20px] reset-el-style-v2">
-                
-                <div class="flex justify-between items-center">
-                  <el-radio-group v-model="account">
-                    <el-radio-button label="wallet">现金账户</el-radio-button>
-                    <el-radio-button label="forex">外汇账户</el-radio-button>
-                    <el-radio-button label="futures">合约账户</el-radio-button>
-                    <el-radio-button label="stock">股票账户</el-radio-button>
-                    <el-radio-button label="blocktrade">大宗账户</el-radio-button>
-                  </el-radio-group>
-                  <div>
-                    <span class="mr-[10px] text-[13px]">隐藏0余额</span>
-                    <el-switch v-model="showZero" size="small" />
-                  </div>
+            <div class="mt-[20px] reset-el-style-v2">
+              
+              <div class="flex justify-between items-center">
+                <el-radio-group v-model="account">
+                  <el-radio-button label="wallet">现金账户</el-radio-button>
+                  <el-radio-button label="forex">外汇账户</el-radio-button>
+                  <el-radio-button label="futures">合约账户</el-radio-button>
+                  <el-radio-button label="stock">股票账户</el-radio-button>
+                  <el-radio-button label="blocktrade">大宗账户</el-radio-button>
+                </el-radio-group>
+                <div>
+                  <span class="mr-[10px] text-[13px]">隐藏0余额</span>
+                  <el-switch v-model="showZero" size="small" />
                 </div>
-                <div class="table-list flex bg-slate-50 mt-[10px]" style="color:#000;">
-                  <span class="flex-1 w-0 text-center">货币</span>
-                  <span class="flex-1 w-0 text-center">金额</span>
-                </div>
-                <template v-if="detailData.fund[account] && detailData.fund[account].length && (!accountAllZero || !showZero)">
-                  <div class="table-list flex" v-for="child in detailData.fund[account]" :key="child.currency" v-show="!(showZero && child.amount == 0)" style="color:#000;">
+              </div>
+              <div class="table-list flex bg-slate-50 mt-[10px]" style="color:#000;">
+                <span class="flex-1 w-0 text-center">货币</span>
+                <span class="flex-1 w-0 text-center">金额</span>
+              </div>
+              <template v-if="detailData.fund[account] && detailData.fund[account].length && (!accountAllZero || !showZero)">
+                <template v-for="child in detailData.fund[account]" :key="child.currency">
+                  <div class="table-list flex" v-if="!(showZero && child.amount == 0)" style="color:#000;">
                     <span class="flex-1 w-0 text-center">{{ child.name }}</span>
                     <span class="flex-1 w-0 text-center">{{ child.amount }}</span>
                   </div>
                 </template>
-                <div class="table-list flex" v-else>
-                  <span class="flex-1 w-0 text-center" style="color:#666;">暂无货币</span>
+              </template>
+              <div class="table-list flex" v-else>
+                <span class="flex-1 w-0 text-center" style="color:#666;">暂无货币</span>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="基础数据" name="second">
+          <div style="max-height:600px;" class="soll-list soll-list-y">
+            <div v-for="(item, index) in columnInfo" :key="index" class="table-list flex flex-nowrap justify-between">
+              <span class="w-4/12 bg-slate-50">{{ item.label }}</span>
+              <span class="w-8/12" v-if="item.prop === 'kyc'">
+                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'lock'">
+                  {{ ['未实名', 'L1认证', 'L2认证'][detailData.base[item.prop]] }}
+                </span>
+              </span>
+              <span class="w-8/12" v-else-if="item.prop === 'limit'">
+                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] ? 'status-yellow' : 'status-green'">
+                  {{ detailData.base['limit'] ? detailData.base['limit'] : '未限制' }}
+                </span>
+              </span>
+              <span class="w-8/12" v-else-if="item.prop === 'role'">
+                {{ roleName(detailData.base[item.prop]) }}
+              </span>
+              <span class="w-8/12" v-else>
+                <div class="status" v-if="item.prop === 'locked'"
+                  :class="!detailData.base[item.prop] ? '' : 'status-yellow'">
+                  {{ detailData.base[item.prop] ? '限制' : '正常' }}
                 </div>
-              </div>
-
+                <div class="status" v-else
+                  :class="detailData.base[item.prop] || detailData.base[item.prop] == null ? '' : 'status-yellow'">
+                  {{ typeof (detailData.base[item.prop]) === 'boolean' ? (detailData.base[item.prop] ? '正常' : '限制') :
+                    detailData.base[item.prop] }}
+                </div>
+              </span>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="基础数据" name="second">
-            <div style="max-height:600px;" class="soll-list soll-list-y">
-              <div v-for="(item, index) in columnInfo" :key="index" class="table-list flex flex-nowrap justify-between">
-                <span class="w-4/12 bg-slate-50">{{ item.label }}</span>
-                <span class="w-8/12" v-if="item.prop === 'kyc'">
-                  <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'lock'">
-                    {{ ['未实名', 'L1认证', 'L2认证'][detailData.base[item.prop]] }}
-                  </span>
-                </span>
-                <span class="w-8/12" v-else-if="item.prop === 'limit'">
-                  <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] ? 'status-yellow' : 'status-green'">
-                    {{ detailData.base['limit'] ? detailData.base['limit'] : '未限制' }}
-                  </span>
-                </span>
-                <span class="w-8/12" v-else-if="item.prop === 'role'">
-                  {{ roleName(detailData.base[item.prop]) }}
-                </span>
-                <span class="w-8/12" v-else>
-                  <div class="status" v-if="item.prop === 'locked'"
-                    :class="!detailData.base[item.prop] ? '' : 'status-yellow'">
-                    {{ detailData.base[item.prop] ? '限制' : '正常' }}
-                  </div>
-                  <div class="status" v-else
-                    :class="detailData.base[item.prop] || detailData.base[item.prop] == null ? '' : 'status-yellow'">
-                    {{ typeof (detailData.base[item.prop]) === 'boolean' ? (detailData.base[item.prop] ? '正常' : '限制') :
-                      detailData.base[item.prop] }}
-                  </div>
-                </span>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </template>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </el-dialog>
 </template>
@@ -166,18 +167,17 @@ const roleOptions = [
 const account = ref("wallet")
 
 const accountAllZero = computed(()=>{
-  let result = false
-  if(!detailData.fund[account]){
+  let result = true
+  if(!detailData.fund[account.value]){
     return true
   }
-  detailData.fund[account].map(item=>{
+  detailData.fund[account.value].map(item=>{
     if(item.amount > 0){
-      result = true
+      result = false
     }
   })
   return result
 })
-
 
 const roleName = (key) => {
   const obj = roleOptions.find(f => f.value === key);

@@ -50,7 +50,7 @@
             <span v-else>{{ scope.row[item.prop] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="150" align="center">
+        <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
             <div class="w-full flex justify-between">
               <div class="flex-1 flex justify-center items-center">
@@ -66,7 +66,7 @@
                 </template>
                 <div class="flex flex-col cursor-pointer">
                   <p @click="showDialog(scope.row, 'modifyVisible')" :class="{ disabled: !checkAuthCode(10201) }" class="flex items-center py-2">
-                    <SvgIcon name="edit" size="16px" /><span class="ml-[10px]">修改</span>
+                    <SvgIcon name="edit" size="15px" /><span class="ml-[10px]">修改</span>
                   </p>
                   <p @click="showDialog(scope.row, 'showIdDialog')" :class="{ disabled: !checkAuthCode(10201) }"
                     class="flex items-center py-2">
@@ -189,18 +189,20 @@ const options = {
   futures: '合约账户',
   forex: '外汇账户'
 }
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
 
-const minWidth = 100
 const column = reactive([
-  { prop: 'uid', label: 'UID', minWidth, align: 'center' },
-  { prop: 'username',minWidth, label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center',minWidth, },
-  // { prop: 'father_username', label: '代理', align: 'center',minWidth },
-  { prop: 'kyc', label: '实名认证', minWidth, align: 'center' },
-  { prop: 'wallet', label: '账户余额', align: 'center', minWidth },
-  { prop: 'limit', label: '流水限制', minWidth, align: 'center' },
-  { prop: 'lastlogin', label: '最后登录', minWidth, align: 'center' },
-  { prop: 'remarks', label: '备注',minWidth:150, align: 'center' },
+  { prop: 'uid', label: 'UID', minWidth:gw(110), align: 'center' },
+  { prop: 'username',minWidth:gw(140), label: '用户名', align: 'center' },
+  { prop: 'role', label: '角色', align: 'center',minWidth:gw(200), },
+  { prop: 'father_username', label: '代理', align: 'center',minWidth:gw(200) },
+  { prop: 'kyc', label: '实名认证', minWidth:gw(170), align: 'center' },
+  { prop: 'wallet', label: '账户余额', align: 'center', minWidth:gw(140)},
+  { prop: 'limit', label: '流水限制', minWidth:gw(140), align: 'center' },
+  { prop: 'lastlogin', label: '最后登录', minWidth:gw(170), align: 'center' },
+  { prop: 'remarks', label: '备注',minWidth:gw(410), align: 'center' },
 ])
 const columnWallet = ref([])
 const isLoading = ref(false)

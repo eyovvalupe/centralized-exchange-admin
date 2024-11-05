@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte"  @close="emit('close', false)" v-model="show" title="修改余额" :append-to-body="true">
-    <div class="flex justify-between pt-[10px]"  v-loading="loading">
+    <div class="flex justify-between pt-[10px]" >
       <div class="w-[55%] mr-[20px]">
         <el-form ref="ruleForm" label-position="top" :model="form" :rules="rules">
           <el-form-item label="账户" prop="currency" :label-width="formLabelWidth" required>
@@ -23,9 +23,9 @@
         <el-input type="password" show-password v-model="form.safeword" placeholder="请输入交易密码" />
       </el-form-item> -->
         </el-form>
-        <div class="txt-tips my-2" v-if="form.action == 'withdraw'">提现金额不计入充值报表</div>
+        <div class="mt-[10px] status error text-xs" v-if="form.action == 'withdraw'">提现金额不计入充值报表</div>
       </div>
-      <div class="w-[45%]">
+      <div class="w-[45%]" v-loading="loading">
           <div class="table-list table-list--large flex flex-nowrap justify-between">
             <span style="font-weight: normal;" class="text-right">账户余额</span>
             <span class="w-7/12 text-left status blue">{{ userDetail.amount }}</span>
@@ -41,30 +41,22 @@
       </div>
     </div>
     <template #footer>
-      <div class="p-[10px]" v-if="!loading">
+      <div class="p-[10px]">
         <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
-        <el-button type="primary" round class="w-[98px]" @click="showPwdDialog" :disabled="currMoney < 0" :loading="isLoading">确定</el-button>
+        <el-button  type="primary" round class="w-[98px]" @click="showPwdDialog" :disabled="currMoney < 0 || loading" :loading="isLoading">确定</el-button>
       </div>
     </template>
   </el-dialog>
-   <el-dialog :close-on-click-modal="false" v-model="showPwd" class="reset-el-styte" width="350" title="交易密码验证" :append-to-body="true">
-      <el-form class="pt-[10px]">
-        <el-input type="password" autocomplete="off" show-password v-model="form.safeword" placeholder="请输入交易密码" />
-      </el-form>
-      <template #footer>
-        <div class="p-10">
-          <el-button  round class="w-[98px]" @click="emit('close')">取消</el-button>
-          <el-button type="primary" round class="w-[98px]" @click="handleInnerDialog">确定</el-button>
-        </div>
-      </template>
-  </el-dialog>
+
+  <Safeword v-model="showPwd" @submit="handleInnerDialog" />
+   
 </template>
 
 <script setup>
 import { ElMessage } from 'element-plus'
 import { ref, reactive, watch, computed } from 'vue'
 import { apiCurrency, apiWalletBalance, apiUserWallet } from '/@/api/modules/business/player.api'
-
+import Safeword from '/@/components/safeword/index.vue'
 
 const props = defineProps({
   visible: {
@@ -137,9 +129,10 @@ const showPwdDialog = () => {
   })
 }
 // 显示弹框
-const handleInnerDialog = () => {
+const handleInnerDialog = (safeword) => {
   showPwd.value = false;
   isLoading.value = true
+  form.safeword = safeword
   apiUserWallet({
     partyid: props.editInfo.partyid,
     ...form

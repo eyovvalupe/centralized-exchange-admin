@@ -24,10 +24,10 @@
               </el-button>
           </div>
           <div>
-              <!-- <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round>
+              <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round>
                 {{ treeCurrInfo.username }}
-              </el-tag> -->
-              <el-input v-model="searchForm.params"  suffix-icon="search" placeholder="UID/用户名/备注" style="width: 264px;" />
+              </el-tag>
+              <el-input class="ml-[10px]" v-model="searchForm.params"  suffix-icon="search" placeholder="UID/用户名/备注" style="width: 264px;" />
               <el-button type="primary" class="w-[120px] ml-[10px]" @click="searchEvent"
                 :loading="isLoading">查询</el-button>
           </div>
@@ -60,7 +60,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" :min-width="200" align="center">
+            <el-table-column label="操作" :min-width="gw(280)" align="center">
               <template #default="scope">
                 <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row, 'showDialog')"
                   :disabled="!checkAuthCode(10101)"
@@ -128,20 +128,23 @@ const defaultProps = {
   children: 'children',
   label: 'label',
 }
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const treeData = ref([])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
-const minWidth = 100
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center', minWidth },
-  { prop: 'username', minWidth,label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '代理',minWidth, align: 'center' },
-  { prop: 'sub_net_users', label: '直推/网络', align: 'center',minWidth },
-  { prop: 'deposit', label: '充值', align: 'center', minWidth },
-  { prop: 'withdraw', label: '提现', align: 'center', minWidth },
-  { prop: 'enabled', label: '业务权限', align: 'center', minWidth },
-  // { prop: 'locked', label: '登录权限', align: 'center', minWidth },
-  { prop: 'remarks', label: '备注', align: 'center',minWidth:165 }])
+  { prop: 'uid', label: 'UID', align: 'center', minWidth:gw(110) },
+  { prop: 'username', minWidth:gw(200),label: '用户名', align: 'center' },
+  { prop: 'father_username', label: '代理',minWidth:gw(200), align: 'center' },
+  { prop: 'sub_net_users', label: '直推/网络', align: 'center',minWidth:gw(150) },
+  { prop: 'deposit', label: '充值', align: 'center', minWidth:gw(150) },
+  { prop: 'withdraw', label: '提现', align: 'center', minWidth:gw(150) },
+  { prop: 'enabled', label: '业务权限', align: 'center', minWidth:gw(150) },
+  // { prop: 'locked', label: '登录权限', align: 'center', minWidth:gw(150) },
+  { prop: 'remarks', label: '备注', align: 'center',minWidth:gw(218) }])
 const isLoading = ref(false)
 const filterText = ref('')
 const showDialog = (data, type) => {

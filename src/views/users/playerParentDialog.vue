@@ -13,7 +13,7 @@
         </div>
       </template>
     </el-dialog>
-     <el-dialog :close-on-click-modal="false" title="操作者验证" class="reset-el-styte" v-model="showGoogle" width="320">
+     <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
         <GoogleVerify @confirm="handleSubmit" @close="emit('close', false)" v-if="showGoogle" />
       </el-dialog>
   </div>

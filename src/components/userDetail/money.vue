@@ -1,7 +1,7 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="账户余额" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <div v-loading="dialogLoading" style="min-height: 400px;" class=" mt-[10px]">
+    <div v-loading="dialogLoading" class="py-[10px]" style="min-height:200px;">
       <template v-if="!dialogLoading">
           <div style="max-height:600px;" class="soll-list soll-list-y">
             
@@ -45,10 +45,12 @@
                 <span class="flex-1 w-0 text-center">金额</span>
               </div>
               <template v-if="detailData.fund[account] && detailData.fund[account].length && (!accountAllZero || !showZero)">
-                <div class="table-list flex" v-for="child in detailData.fund[account]" :key="child.currency" v-show="!(showZero && child.amount == 0)" style="color:#000;">
+                <template v-for="child in detailData.fund[account]" :key="child.currency">
+                <div class="table-list flex" v-if="!(showZero && child.amount == 0)" style="color:#000;">
                   <span class="flex-1 w-0 text-center">{{ child.name }}</span>
                   <span class="flex-1 w-0 text-center">{{ child.amount }}</span>
                 </div>
+                </template>
               </template>
               <div class="table-list flex" v-else>
                 <span class="flex-1 w-0 text-center" style="color:#666;">暂无货币</span>
@@ -79,13 +81,13 @@ const props = defineProps({
 const account = ref("wallet")
 
 const accountAllZero = computed(()=>{
-  let result = false
-  if(!detailData.fund[account]){
+  let result = true
+  if(!detailData.fund[account.value]){
     return true
   }
-  detailData.fund[account].map(item=>{
+  detailData.fund[account.value].map(item=>{
     if(item.amount > 0){
-      result = true
+      result = false
     }
   })
   return result

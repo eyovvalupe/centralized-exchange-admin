@@ -8,7 +8,7 @@
             <el-icon color="#014CFA" size="18px"  @click="copy(form.password)"><CopyDocument /></el-icon>
           </template>
           </el-input>
-        <el-button type="primary" class="ml-2" @click="setRandomPwd">重新生成</el-button>
+          <el-button type="primary" class="ml-[10px] btn-large" @click="setRandomPwd">重新生成</el-button>
         </div>
       </el-form-item>
     </el-form>

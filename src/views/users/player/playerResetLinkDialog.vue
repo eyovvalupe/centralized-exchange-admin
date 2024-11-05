@@ -15,12 +15,12 @@
           <span class="txt-gray">30分钟内有效</span>
         </el-form-item>
         <template  v-else>
-          <GoogleVerify @confirm="update" v-if="showGoogle" @close="show = false" class="linkGoole" />
+          <GoogleVerify  @confirm="update" input-size="large" v-if="showGoogle" @close="show = false" class="linkGoole" />
         </template>
       </el-form>
 
-      <template #footer>
-        <div class="p-[10px]" v-if="!showGoogle">
+      <template v-if="!showGoogle" #footer>
+        <div class="p-[10px]">
           <el-button round class="w-[98px]" @click="show = false"> 取消 </el-button>
           <el-button round class="w-[98px]" type="primary" @click="handleReset" :loading="isLoading"> 重置链接 </el-button>
         </div>
