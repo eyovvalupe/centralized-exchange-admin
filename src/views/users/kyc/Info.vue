@@ -1,69 +1,18 @@
 <template>
-   <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" class="reset-el-styte" :loading="dialogLoading" width="500" title="实名信息"
+   <el-dialog :close-on-click-modal="false" v-model="dialogType.showDialog" class="reset-el-styte" :loading="dialogLoading" width="700" title="实名认证"
     @close="closeDialogType">
     <div v-loading="dialogLoading" style="max-height:600px;" class="soll-list soll-list-y order-con-ovderhide">
       <template v-if="!dialogLoading">
-          <div class="title mt-[10px]">认证信息</div>
-          <div class="mt-[10px]">
-            <div v-for="(item, index) in column" :key="index"
-              class="table-list-order flex flex-nowrap justify-center">
-              <span class="table-span-left">{{ item.label }}</span>
-              <span class="table-span-right">
-                <span class="status-bg" v-if="item.prop == 'status'"
-                  :class="detailData[item.prop]" align="center">
-                  {{ transdata(detailData[item.prop]) }}
-                </span>
-                <span v-else>
-                  {{ detailData[item.prop] }}
-                </span>
-              </span>
-            </div>
-          </div>
-          <div class="title mt-[20px]">照片信息</div>
-          <div>
-            <div class="left-tit">证件正面</div>
-            <div class="pb-[10px]">
-
-                <el-image class="right-img" fit="contain" :src="detailData.idimg_1" :initial-index="0" :preview-src-list="srcList"
-                  @click="handleClickItem">
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-            </div>
-            <div class="left-tit">证件反面</div>
-            <div class="pb-[10px]">
-                <el-image class="right-img" fit="contain" :src="detailData.idimg_2" :initial-index="1" :preview-src-list="srcList"
-                  @click="handleClickItem">
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-            </div>
-            <div class="left-tit">手持面</div>
-            <div class="pb-[10px]">
-                <el-image class="right-img" fit="contain" :src="detailData.idimg_3" :initial-index="2" :preview-src-list="srcList"
-                  @click="handleClickItem">
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-            </div>
-          </div>
-         
+         <RealnameInfo :src-list="srcList" :detail-data="detailData" />
       </template>
-
+      
     </div>
+    
   </el-dialog>
 </template>
 
 <script setup>
+import RealnameInfo from './components/RealnameInfo'
 import { apiEdit, getDetail } from '/@/api/modules/business/kyc.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
@@ -76,40 +25,11 @@ const props = defineProps({
 const emit = defineEmits('close')
 const detailData = ref({})
 const srcList = ref([])
-const activeName = ref(props.info.tab)
 const dialogLoading = ref(false)
 
 const dialogType = reactive({
   showDialog: true
 })
-
-const statusOptions = [
-  {
-    value: 'review',
-    label: '审核中',
-  },
-  {
-    value: 'success',
-    label: '通过',
-  },
-  {
-    value: 'failure',
-    label: '拒绝',
-  },
-]
-const transdata=(d)=>{
-  const obj= statusOptions.find(f => f.value ==d) || {label:'--'}
-  return obj.label
-}
-const column = reactive([
-  { prop: 'name', label: '姓名' },
-  // { prop: 'status', label: '状态' },
-  // { prop: 'remarks', label: '备注' },
-  // { prop: 'idtype', label: '证件类型' },
-  { prop: 'idnum', label: '证件号码' },
-  { prop: 'birthday', label: '生日' },
-  // { prop: 'created', label: '提交时间' }
-])
 
 const showDialog = () => {
   dialogType.showDialog = true;
@@ -124,28 +44,13 @@ const showDialog = () => {
 const closeDialogType = () => {
   emit('close');
 }
-// 关闭el-image遮罩层
-const handleClickItem = () => {
-  setTimeout(() => {
-        // 获取遮罩层dom
-    let domImageMask = document.querySelectorAll('.el-image-viewer__mask')
-    if (!domImageMask) {
-      return
-    }
-    domImageMask.forEach((item, index) => {
-      item.addEventListener('click', () => {
-        // 点击遮罩层时调用关闭按钮的 click 事件
-        let closeBtn = document.querySelectorAll('.el-image-viewer__close')
-        closeBtn[index].click()
-      })
-    })
-  }, 500);
-}
+
 showDialog();
+
 </script>
 <style lang="scss" scoped>
 .order-con-ovderhide {
-  min-height: 250px;
+  min-height: 300px;
   .title{
     font-size: 16px;
     color:#000;
@@ -159,12 +64,75 @@ showDialog();
     font-weight: 600;
   }
   .right-img {
-    border: 1px dashed #165DFF;
-    border-radius: 8px;
+    border-radius: 15px;
     width: 100%;
-    height: 288px;
+    height: 134px;
     overflow: hidden;
+  } 
+}
+.realname-info{
+  background-color: #F5F7FC;
+  padding: 11px 20px;
+  border-radius: 16px;
+  margin-top: 20px;
+  &__name{
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
   }
-  
+  &__text{
+    color:#999;
+    font-size: 14px;
+    margin-top: 8px;
+    line-height: 20px;
+  }
+}
+
+.realname-status{
+  padding-top:20px;
+  &__icon{
+    width: 60px;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+  }
+  &__title{
+    color: #061023;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-top: 10px;
+    text-align: center;
+  }
+  &__desc{
+    color: #999;
+    text-align: center;
+    margin-top:10px;
+    font-size: 14px;
+  }
+}
+.photo-list{
+  display: flex;
+  margin-left: -15px;
+  margin-top:10px;
+}
+.photo-item{
+  flex: 1;
+  margin-left: 15px;
+  position: relative;
+}
+.magnifier{
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  left:50%;
+  top:50%;
+  margin-left: -14px;
+  margin-top: -14px;
+  z-index: 1;
+  cursor: pointer;
 }
 </style>

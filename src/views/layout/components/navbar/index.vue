@@ -559,13 +559,13 @@ function goGooglePage(){
 }
 
 .custom-tab :deep(.el-tabs__nav){
-  border-top: 0px !important;
-  height: 40px;
-  background: linear-gradient(0deg, rgba(239, 242, 248, 0.00) 0%, #EFF2F8 100%);
-  border-bottom: 1px solid #EFF2F8 !important;
+  border: 0px !important;
 }
 .custom-tab :deep(.el-tabs__nav-wrap){
   margin-bottom: 0px;
+  height: 40px;
+  background: linear-gradient(0deg, rgba(239, 242, 248, 0.00) 0%, #EFF2F8 100%);
+  border-bottom: 1px solid #EFF2F8 !important;
 }
 .custom-tab :deep(.el-tabs__header){
   border-bottom: 0px;

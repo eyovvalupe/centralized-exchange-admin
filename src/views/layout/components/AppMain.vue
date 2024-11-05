@@ -53,7 +53,7 @@ ws.on('futures_control_list', ({ data, code }) => {
     socketStore.setDataList('futureList', data)
   }
 })
-const height = ref('calc( 100vh - 90px)')
+const height = ref('calc( 100vh - 110px)')
 defineOptions({
   name: 'AppMain',
 })

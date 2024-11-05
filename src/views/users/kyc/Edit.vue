@@ -1,17 +1,24 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="认证审核" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="认证审核" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" class="pt-[10px]">
-      <el-form-item  label="审核" required :label-width="formLabelWidth" prop="status">
-        <el-select v-model="form.status" class="w-full">
-          <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="拒绝原因" v-if="form.status == 'failure'" :label-width="formLabelWidth" prop="remarks">
-        <el-input v-model="form.remarks" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" />
-      </el-form-item>
-    </el-form>
-    <template #footer> 
+    <div v-loading="dialogLoading" style="max-height:700px;min-height:500px;" class="soll-list soll-list-y">
+      <template v-if="!dialogLoading">
+          <RealnameInfo :detail-data="detailData" :src-list="srcList" />
+          <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" class="pt-[10px]">
+            <el-form-item  label="审核" required :label-width="formLabelWidth" prop="status">
+              <el-select v-model="form.status" class="w-full">
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="拒绝原因" v-if="form.status == 'failure'" :label-width="formLabelWidth" prop="remarks">
+              <el-input v-model="form.remarks" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" />
+            </el-form-item>
+          </el-form>
+          
+      </template>
+    </div>
+
+    <template v-if="!dialogLoading" #footer> 
       <div class="pb-[10px] pr-[10px]">
         <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
         <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
@@ -21,7 +28,8 @@
 </template>
 
 <script setup>
-import { apiEdit } from '/@/api/modules/business/kyc.api'
+import RealnameInfo from './components/RealnameInfo'
+import { apiEdit,getDetail } from '/@/api/modules/business/kyc.api'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -31,6 +39,10 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+const detailData = ref({})
+const srcList = ref([])
+const dialogLoading = ref(false)
 
 const ruleForm = ref(null)
 
@@ -80,6 +92,21 @@ const handleGoogle = () => {
     }
   })
 }
+
+
+
+const showDialog = () => {
+  dialogLoading.value = true;
+  getDetail({ id: props.info.id }).then(res => {
+    detailData.value = Object.assign(res, props.info);
+    srcList.value = [res.idimg_1, res.idimg_2, res.idimg_3];
+  }).finally(() => {
+    dialogLoading.value = false;
+  })
+}
+
+showDialog();
+
 
 const submit = async () => {
   // 发送请求

@@ -587,8 +587,8 @@ th.el-table__cell.bg-color3,
 }
 
 .status-bg {
-  border-radius: 10px;
-  line-height: 20px;
+  border-radius: 14px;
+  line-height: 24px;
   padding: 0 10px;
 }
 
@@ -617,10 +617,13 @@ th.el-table__cell.bg-color3,
 
 .status-yellow,
 .status-bg.none,
-.status-bg.review,
 .status-bg.waitpayment,
 .status-bg.sell {
   background: #EF8401;
+  color: #fff;
+}
+.status-bg.review{
+  background: #4377FE;
   color: #fff;
 }
 

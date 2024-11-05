@@ -24,7 +24,7 @@
         <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span class="status" v-if="item.prop == 'status'"
+            <span class="status-bg" v-if="item.prop == 'status'"
               :class="scope.row[item.prop]" align="center">
               {{ transdata(scope.row[item.prop]) }}
             </span>
@@ -45,7 +45,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="165" align="center">
+        <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
             <el-button class="underline" link type="primary" @click="showDialog({ ...scope.row, tab: 'info' }, 'showDialog')">实名信息</el-button>
             <b class="split-line"></b>
@@ -120,19 +120,23 @@ const searchForm = reactive({
 })
 
 const tableData = ref([])
-const minWidth = 120
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center', minWidth },
-  { prop: 'username', minWidth,label: '用户名', align: 'center' },
-  // { prop: 'father_username',minWidth, label: '代理', align: 'center' },
-  { prop: 'name',minWidth, label: '姓名', align: 'center' },
-  { prop: 'idtype', label: '证件类型', align: 'center', minWidth},
-  { prop: 'idnum', label: '证件号码', align: 'center',minWidth:220 },
-  { prop: 'birthday', label: '生日', align: 'center',minWidth },
-  { prop: 'l2', label: '认证照片', align: 'center', minWidth},
-  { prop: 'status', label: '状态', align: 'center', minWidth},
-  { prop: 'created', label: '时间', align: 'center',minWidth }
+  { prop: 'uid', label: 'UID', align: 'center', minWidth:gw(110) },
+  { prop: 'username', minWidth:gw(200),label: '用户名', align: 'center' },
+  // { prop: 'father_username',minWidth:gw(200), label: '代理', align: 'center' },
+  { prop: 'name',minWidth:gw(200), label: '姓名', align: 'center' },
+  { prop: 'idtype', label: '证件类型', align: 'center', minWidth:gw(200)},
+  { prop: 'idnum', label: '证件号码', align: 'center',minWidth:gw(378) },
+  { prop: 'birthday', label: '生日', align: 'center',minWidth:gw(200) },
+  // { prop: 'l2', label: '认证照片', align: 'center', minWidth:gw(200)},
+  { prop: 'status', label: '状态', align: 'center', minWidth:gw(200)},
+  { prop: 'created', label: '时间', align: 'center',minWidth:gw(200) }
 ])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
