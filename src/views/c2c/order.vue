@@ -1,12 +1,58 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2">
-      <div>
-        <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/备注 " style="width: 250px;" />
-      <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
+ <div class="px-[30px] py-[10px]">
+    <div class="flex justify-between reset-el-style-v2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="c2cOrderWs">未处理订单</el-radio-button>
+          <el-radio-button label="c2cOrder">历史订单</el-radio-button>
+        </el-radio-group>
       </div>
+      <div class="flex items-center">
+        
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名/备注" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>
+
     </div>
-    <div>
+    <div class="py-[10px]  reset-el-style-v2"> 
+      <div class="order-list">
+        <div class="w-3/12 float-left" v-for="(item,i) in tableData" :key="i">
+          <div class="order-item">
+            <div class="flex order-item-bt">
+              <div class="order-item-left">
+                UID:{{item.uid}}
+              </div>
+              <div class="order-item-right">
+                <div class="flex justify-between">
+                  <div>{{item.order_no}}</div>
+                  <div>{{ statusObj[item.status] }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="order-item-left">
+                <div>用户名</div>
+                <div class="mt-[6px]"><span class="cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showInfoDialog')">125151@qq.com</span></div>
+              </div>
+              <div class="order-item-right">
+                <div class="flex justify-between">
+                  <div>
+                    <div class="order-item-right__buy flex items-center">买入 {{item.crypto}}<img class="w-[16px] h-[16px] ml-[6px] rounded" :src="`/images/crypto/${item.crypto.toUpperCase()}.png`" :alt="item.crypto.toUpperCase()"></div>
+                    <div class="mt-[3px]">价格 {{item.price}} {{item.currency}}</div>
+                    <div class="mt-[3px]">数量 {{item.volume}} {{item.crypto}}</div>
+                  </div>
+                  <div  class="order-item-right__amount">{{item.offset == 'buy' ? '-' : '+'}}{{item.totalprice}} <span>{{item.currency}}</span></div>
+                </div>
+              </div>
+            </div> 
+            
+          </div>
+        </div>
+
+      </div>
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
@@ -65,7 +111,10 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+     
+    </div>
+    <div class="pb-[10px]">
+       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
@@ -87,7 +136,16 @@ import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useAppStore } from '/@/store'
 import { useRouter } from 'vue-router'
 import OrderInfo from './components/OrderInfo.vue'
+import { hex_md5 } from '/@/utils/md5'
 const router = useRouter()
+
+const tabPosition = ref('c2cOrder')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 const appStore = useAppStore()
 const offsetObj = {
   buy: '买入',
@@ -175,3 +233,52 @@ const getDataList = (page) => {
 }
 getDataList()
 </script>
+
+<style lang="scss" scoped>
+.order-list{
+  margin-left: -20px;
+}
+.order-item{
+  background-color: #F5F7FC;
+  border-radius: 16px;
+  margin:10px 0 10px 20px;
+}
+.order-item-left,
+.order-item-right{
+  color:#666D80;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.order-item-left{
+  width: 30%;
+  border-right: 1px solid #ECECEC;
+  box-sizing: border-box;
+}
+.order-item-right{
+  flex: 1;
+  &__buy{
+    font-size: 16px;
+    font-weight: 600;
+    color:#061023;
+  }
+  &__amount{
+    font-size: 18px;
+    color:#061023;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    span{
+      font-size: 12px;
+      margin-left: 5px;
+      font-weight: normal;
+      position: relative;
+      top:2px;
+    }
+  }
+}
+.order-item-bt{
+  border-bottom: 1px solid #ECECEC;
+}
+</style>

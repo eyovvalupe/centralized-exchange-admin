@@ -1,13 +1,24 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2">
-      <div>
-        <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/订单号 " style="width: 250px;" />
-        <el-button type="primary" class="ml-4" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+ <div class="px-[30px] py-[10px]">
+    <div class="flex justify-between reset-el-style-v2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="c2cOrderWs">未处理订单</el-radio-button>
+          <el-radio-button label="c2cOrder">历史订单</el-radio-button>
+        </el-radio-group>
       </div>
+      <div class="flex items-center">
+        
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名/备注" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>
+
     </div>
-    <div>
+    <div class="py-[10px]  reset-el-style-v2"> 
+     
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
@@ -92,6 +103,12 @@ const router = useRouter()
 const appStore = useAppStore()
 const socketStore = useSocketStore()
 
+const tabPosition = ref('c2cOrderWs')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
 
 const offsetObj = {
   buy: '买入',
