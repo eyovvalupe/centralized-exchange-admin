@@ -1,7 +1,7 @@
 <template>
   <el-dialog :close-on-click-modal="false" class="reset-el-styte" width="480" title="增加地址" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm">
+    <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm" class="pt-[10px]">
       <el-form-item label="币种" required prop="currency">
         <!-- <el-input v-model="form.currency" disabled /> -->
         <el-select v-model="form.currency" class="w-full" @change="currencyChange">
@@ -19,10 +19,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

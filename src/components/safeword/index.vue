@@ -7,7 +7,7 @@
         </el-form>
         <template #footer>
             <div class="p-[10px]">
-                <el-button @click="onClose" round class="w-[98px]">取消</el-button>
+                <el-button @click="onClose();emit('cancel')" round class="w-[98px]">取消</el-button>
                 <el-button type="primary" round class="w-[98px]" @click="handleSubmit">确定 </el-button>
             </div>
         </template>
@@ -21,7 +21,7 @@ const props = defineProps({
 const form = reactive({
   safeword: ''
 })
-const emit = defineEmits(['submit','update:modelValue'])
+const emit = defineEmits(['submit','cancel','update:modelValue'])
 const trigger = ['blur', 'change']
 const rules = {
   safeword: [{ required: true, message: '', trigger }]

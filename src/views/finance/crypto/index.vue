@@ -1,58 +1,49 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-between p-2 reset-el-styte">
-      <div>
-        <el-button type="primary" @click="showDialog(null, 'showDialog')">增加地址</el-button>
-        <el-button type="primary" plain @click="showDialog(null, 'showConfigDialog')">币种配置</el-button>
+  <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="RechargeOrder">充值订单</el-radio-button>
+          <el-radio-button label="cryptoList">平台充值地址</el-radio-button>
+        </el-radio-group>
+        
       </div>
-      <div class="flex">
-      
-      </div>
+      <el-button type="primary" plain icon="plus" class="ml-[10px]" @click="showDialog(null, 'showDialog')">增加地址</el-button>
+      <el-button type="info" plain @click="showDialog(null, 'showConfigDialog')">币种配置</el-button>
     </div>
-    <div>
+   
+    <div class="py-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop == 'created'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
-            <template v-else-if="item.prop === 'uid'">
-              <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
-                scope.row[item.prop] }}</span>
-            </template>
-            <template v-else-if="item.prop === 'order_no'">
-              <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
-                <span v-if="scope.row[item.prop]"> ...{{
-                  scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
-              </el-tooltip>
-            </template>
-            <span v-else-if="item.prop == 'currency'" align="center">
+            <span v-if="item.prop == 'currency'" align="center">
               {{ scope.row[item.prop] == 'main' ? '交易账户' : scope.row[item.prop] }}
             </span>
             <span v-else-if="item.prop == 'status'" class="status-bg"
               :class="scope.row[item.prop] == 'success' ? 'close' : 'status-yellow'">
               {{ options.find(f => f.value == scope.row[item.prop]).label }}
             </span>
-            <template v-else-if="item.prop === 'address'">
-              <span v-html="transName(scope.row[item.prop])"></span>
-            </template>
+            
             <span v-else>
               {{ scope.row[item.prop] }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link type="danger" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button link type="danger" class="underline" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+     
+    </div>
+    <div class="pb-[10px]">
+       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
   <Config v-if="dialogType.showConfigDialog" :data="dialogType.info" @close="closeDialogType" />
@@ -76,6 +67,18 @@ import { ElMessage, ElMessageBox, dayjs } from 'element-plus'
 import Config from './Config.vue'
 import Edit from './Edit.vue'
 
+import { hex_md5 } from '/@/utils/md5'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tabPosition = ref('cryptoList')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
+
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:cryptoList', () => {
@@ -90,11 +93,15 @@ const showGoogle = ref(false);
 const currentLastPage = ref(1)
 const currentPage = ref(1)
 const status = ref('')
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = reactive([
-  { prop: 'currency', label: '货币', align: 'center', },
-  { prop: 'network', label: '网络', align: 'center' },
-  { prop: 'address', label: '地址', align: 'center' },
-  // { prop: 'status', label: '状态', width: 90, align: 'center' },
+  { prop: 'currency', label: '货币',minWidth:gw(300), align: 'center', },
+  { prop: 'network', label: '网络',minWidth:gw(300), align: 'center' },
+  { prop: 'address', label: '地址',minWidth:gw(1140), align: 'center' },
+  // { prop: 'status', label: '状态', minWidth:gw(300), align: 'center' },
 ])
 const options = [
   {
@@ -110,9 +117,7 @@ const options = [
     label: '已处理'
   },
 ]
-const transName=(adr)=>{
-  return `<span class="status blue">${adr.substring(0,4)}</span><span>${adr.substring(4,adr.length-4)}</span><span class="status blue">${adr.substring(adr.length-4)}</span>`;
-}
+
 const isLoading = ref(false)
 const showDialog = (data, type) => {
   if (data) {
@@ -126,11 +131,23 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (status.value) {
     send.status = status.value;
   }
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['cryptoListSearch']){
+    const searchCache = JSON.parse(sessionStorage['cryptoListSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -144,6 +161,10 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
+      sessionStorage['cryptoListSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
       tableData.value = res || []
     })
     .finally(() => {
@@ -160,10 +181,9 @@ const closeDialogType = (item) => {
 }
 let curid;
 const handleDelete = (row) => {
-  ElMessageBox.confirm(`确定删除吗？`, `确认删除`, {
+  ElMessageBox.confirm(`确定删除吗？`, `提示`, {
     confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
+    cancelButtonText: '取消'
   }).then(() => {
     curid = row.id;
     showGoogle.value = true;

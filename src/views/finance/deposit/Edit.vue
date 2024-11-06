@@ -1,7 +1,52 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="540" class="reset-el-styte" title="订单处理" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm" v-loading="loading">
+    <div v-loading="loading" style="min-height:350px;">
+      <template v-if="dataInfo">
+        <div class="status-info">
+          <div class="status-info__icon">
+              <img src="/@/assets/images/success.svg" v-if="dataInfo.status == 'success'" />
+              <img src="/@/assets/images/fail.svg" v-else-if="dataInfo.status == 'failure'" />
+              <img src="/@/assets/images/reviewing.svg" v-else />
+          </div>
+          <div class="status-info__title" v-if="dataInfo.status == 'success'">审核通过</div>
+          <div class="status-info__title" v-else-if="dataInfo.status == 'failure'">审核拒绝</div>
+          <div class="status-info__title" v-else>审核中</div>
+        </div>
+        <div class=" mt-[20px]">
+          <div class="table-list-order flex">
+            <span class="table-span-left">币种</span>
+            <span  class="table-span-right flex items-center">
+              <img class="w-[16px] h-[16px] mr-[10px]" :src="`/images/crypto/${dataInfo.currency.toUpperCase()}.png`" :alt="dataInfo.currency.toUpperCase()"> {{ dataInfo.currency }}
+            </span>
+          </div>
+          <div class="table-list-order flex">
+            <span class="table-span-left">网络</span>
+            <span class="table-span-right">
+              {{ dataInfo.network }}
+              </span>
+          </div>
+          <div class="table-list-order flex">
+            <span class="table-span-left">充值金额</span>
+            <span class="table-span-right">
+              <span class="text-red text-base"> {{ data.amount }}</span>
+             
+              </span>
+          </div>
+          <div class="table-list-order flex">
+            <span class="table-span-left">地址</span>
+            <!-- @click="openLink" -->
+            <span  class="table-span-right cursor-pointer" @click="copy(addressText)">
+                <!-- <a class="status success"> {{  networkArr[0]  }}</a>
+                <a class="status close"> {{  networkArr[1]  }}</a>
+                <a class="status blue"> {{  networkArr[2]  }}</a> -->
+                {{ dataInfo.address }}
+            </span>
+          </div>
+        </div>
+    </template>
+
+    <el-form :model="form" label-position="top" :rules="rules" class="pt-[20px]" ref="ruleForm">
       <el-form-item label="状态" :label-width="formLabelWidth" required prop="status">
         <el-select v-model="form.status" class="w-full" placeholder="请选择状态">
           <el-option label="通过" value="success" />
@@ -12,33 +57,29 @@
         <el-input v-model="form.remarks" :autosize="{ minRows: 2, maxRows: 3 }" type="textarea" />
       </el-form-item>
     </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="showPwdEvent" :loading="isLoading">确定 </el-button>
-      </span>
+  
+    </div>
+    <template v-if="!loading" #footer>
+       <div class="p-[10px]">
+        <el-button @click="emit('close', false)"  class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="showPwdEvent" :loading="isLoading">确定 </el-button>
+      </div>
+      
     </template>
+  
   </el-dialog>
-   <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="交易密码" v-model="showPwd">
-    <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm2" v-loading="loading">
-      <el-form-item label="交易密码" required :label-width="formLabelWidth" prop="safeword">
-        <el-input v-model="form.safeword" type="password" autocomplete="off" placeholder="请输入交易密码" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="showPwd=false">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
-    </template>
-  </el-dialog>
+
+  <Safeword v-model="showPwd" @submit="submit"  @cancel="show=false;" />
+ 
 </template>
 
 <script setup>
-import { apiDepositCheck } from '/@/api/modules/business/recharge-order.api'
+import { apiDepositCheck,apiAddress } from '/@/api/modules/business/recharge-order.api'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getSessionToken } from '/@/api/modules/base.api'
+
+import Safeword from '/@/components/safeword/index.vue'
 
 const props = defineProps({
   data: { // 行数据
@@ -48,13 +89,25 @@ const props = defineProps({
 })
 
 const ruleForm = ref(null)
-const ruleForm2 = ref(null)
 const formLabelWidth = ref(100)
 const loading = ref(false)
 const isLoading = ref(false)
 const showPwd = ref(false)
 const show = ref(true)
 
+const dataInfo = ref(null)
+const addressText = ref('')
+
+const getData = ()=>{
+  loading.value = true
+  apiAddress({order_no:props.data.order_no}).then(res=>{
+    dataInfo.value = res;
+    addressText.value = res.address;
+    loading.value = false
+  })
+}
+
+getData();
 const form = reactive({
   order_no: '',
   status: '',
@@ -78,16 +131,10 @@ const rules = {
 }
 
 const emit = defineEmits(['close', 'success'])
-// 新增
-const handleSubmit = async () => {
-  ruleForm2.value.validate(valid => {
-    if (valid) {
-      submit()
-    }
-  })
-}
 
-const submit = async () => {
+
+const submit = async (safeword) => {
+  form.safeword = safeword
   showPwd.value = false;
   // 发送请求
   isLoading.value = true
@@ -115,3 +162,24 @@ const showPwdEvent=()=>{
 
 }
 </script>
+<style  lang="scss" scoped>
+
+.status-info{
+  padding-top:10px;
+  &__icon{
+    width: 60px;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+  }
+  &__title{
+    color: #061023;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-top: 10px;
+    text-align: center;
+  }
+}
+</style>
