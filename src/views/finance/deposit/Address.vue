@@ -1,30 +1,30 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="820" class="reset-el-styte" title="充值地址" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="充值地址" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-     <div class="text-center" style="min-height: 100px;" v-loading="loading">
+     <div class="py-[10px]" style="min-height: 100px;" v-loading="loading">
       <template v-if="dataInfo">
-        <div class="table-list flex">
-              <span>币种</span>
-              <span  class="w-7/12 text-center">
-                {{ dataInfo.currency }}
-                </span>
-            </div>
-            <div class="table-list flex">
-              <span>网络</span>
-              <span  class="w-7/12 text-center">
-                {{ dataInfo.network }}
-                </span>
-            </div>
-            <div class="table-list flex">
-              <span>地址</span>
-              <!-- @click="openLink" -->
-              <span  class="w-7/12 text-center cursor-pointer" @click="copy(addressText)">
-                  <a class="status success"> {{  networkArr[0]  }}</a>
-                  <a class="status close"> {{  networkArr[1]  }}</a>
-                  <a class="status blue"> {{  networkArr[2]  }}</a>
-                  <!-- {{ dataInfo.address }} -->
+          <div class="table-list-order flex">
+            <span class="table-span-left">币种</span>
+            <span  class="table-span-right flex items-center">
+              <img class="w-[16px] h-[16px] mr-[10px]" :src="`/images/crypto/${dataInfo.currency.toUpperCase()}.png`" :alt="dataInfo.currency.toUpperCase()"> {{ dataInfo.currency }}
+            </span>
+          </div>
+          <div class="table-list-order flex">
+            <span class="table-span-left">网络</span>
+            <span class="table-span-right">
+              {{ dataInfo.network }}
               </span>
-            </div>
+          </div>
+          <div class="table-list-order flex">
+            <span class="table-span-left">地址</span>
+            <!-- @click="openLink" -->
+            <span  class="table-span-right cursor-pointer" @click="copy(addressText)">
+                <!-- <a class="status success"> {{  networkArr[0]  }}</a>
+                <a class="status close"> {{  networkArr[1]  }}</a>
+                <a class="status blue"> {{  networkArr[2]  }}</a> -->
+                {{ dataInfo.address }}
+            </span>
+          </div>
       </template>
      </div>
   </el-dialog>

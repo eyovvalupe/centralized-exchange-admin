@@ -684,12 +684,15 @@ th.el-table__cell.bg-color3,
 }
 
 .table-list-order {
-  border: 1px solid #e6e6e6;
+  border: 1px solid #ECECEC;
   border-bottom: none;
 
   .table-span-left,
   .table-span-right {
-    padding: 13px 20px;
+    padding: 10px 20px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
   }
 
   .table-span-right {
@@ -701,13 +704,13 @@ th.el-table__cell.bg-color3,
   .table-span-left {
     text-align: left;
     width: 36%;
-    border-right: 1px solid #e6e6e6;
+    border-right: 1px solid #ECECEC;
     color: #666;
     background: #fafafa;
   }
 
   &:last-child {
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #ECECEC;
   }
 
 }
@@ -774,6 +777,26 @@ th.el-table__cell.bg-color3,
       color: #fff;
       position: absolute;
     }
+  }
+}
+
+
+.status-info{
+  padding-top:10px;
+  &__icon{
+    width: 60px;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+  }
+  &__title{
+    color: #061023;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-top: 10px;
+    text-align: center;
   }
 }
 
@@ -884,6 +907,51 @@ small {
     float: left
   }
 }
+.el-message-box{
+  padding: 0px !important;
+   .el-message-box__title {
+    color: #000;
+    font-size: 18px;
+  }
+  .el-message-box__header{
+    height: 50px;
+    border-bottom: 1px solid #ECECEC;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    .el-message-box__headerbtn{
+      top:5px;
+      right:10px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .el-message-box__close{
+      font-size: 22px;
+      color:#000;
+    }
+  }
+  .el-message-box__message{
+    color:#000;
+  }
+  .el-message-box__content{
+    padding: 20px;
+  }
+  .el-message-box__btns{
+    padding: 20px;
+    .el-button{
+      border-radius: 50px;
+      width: 98px;
+      
+    }
+    .el-button:not(.el-button--primary){
+      border: 1px solid #4377FE;
+      background: #E1EAFF;
+      color:#4377FE;
+    }
+  }
+}
 
 .el-transfer__buttons {
   width: 60px;
@@ -936,7 +1004,7 @@ small {
   display: none;
 }
 .text-red{
-  color: #f56c6c;
+  color: #FF0004;
 }
 .address-code{
   width: 100%;

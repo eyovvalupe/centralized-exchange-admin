@@ -18,7 +18,7 @@ export default [
         meta: { title: '首页统计', auth: 0, noCache: true, }
       },
     ],
-  },
+  }, 
   {
     path: '/users',
     component: Layout,
@@ -59,7 +59,7 @@ export default [
         path: '/withdrawlOrder',
         component: () => import('/@/views/finance/withdrawl/index.vue'),
         name: 'withdrawlOrder',
-        icon: 'tx',
+        icon: 'withdrawl',
         meta: { title: '提现订单', auth: '112', noCache: true }
       },
       // {
@@ -72,15 +72,22 @@ export default [
         path: '/c2cOrder',
         component: () => import('/@/views/c2c/order.vue'),
         name: 'c2cOrder',
-        icon: 'VIP',
-        meta: { title: '买币历史订单', auth: '121'}
+        icon: 'c2cOrder',
+        meta: { title: '买币历史订单', auth: '121',hidden:true}
       },
       {
         path: '/c2cOrderWs',
         component: () => import('/@/views/c2c/orderWs.vue'),
         name: 'c2cOrderWs',
-        icon: 'VIP',
-        meta: { title: '买币未处理订单', auth: '121'}
+        icon: 'c2cOrder',
+        meta: { title: '买币订单', auth: '121',border: true}
+      },
+      {
+        path: '/marketActivity',
+        component: () => import('/@/views/c2c/orderWs.vue'),
+        name: 'marketActivity',
+        icon: 'marketActivity',
+        meta: { title: '市场活动配置',notopen:true, border: true}
       },
       
     ]
@@ -106,22 +113,6 @@ export default [
         icon: 'OperatorData',
         meta: { title: '股票历史订单', auth: '201', noCache: true,hidden:true }
       },
-      
-
-      // {
-      //   path: '/test1',
-      //   component: Layout,
-      //   name: 'order',
-      //   icon: 'FundsFlow',
-      //   meta: { title: '量化交易订单', auth: '211', icon: 'devices', notopen: true, border: true },
-      // },
-      // {
-      //   path: '/test2',
-      //   component: Layout,
-      //   name: 'order',
-      //   icon: 'FundsFlow',
-      //   meta: { title: '量化场控', auth: '212', icon: 'devices', notopen: true },
-      // },
       {
         path: '/contractPos',
         component: () => import('/@/views/contract/pos.vue'),
@@ -156,14 +147,28 @@ export default [
         component: () => import('/@/views/ai/search.vue'),
         name: 'aiSearch',
         icon: 'oder2',
-        meta: { title: '交易机器人订单查询', auth: '231', noCache: true }
+        meta: { title: '交易机器人订单查询', auth: '231', noCache: true,hidden:true }
       },
       {
         path: '/aiIndex',
         component: () => import('/@/views/ai/index.vue'),
         name: 'aiIndex',
-        icon: 'PlayerData',
+        icon: 'Console',
         meta: { title: '交易机器人场控', auth: '231', noCache: true, }
+      },
+      {
+        path: '/foreignOrder',
+        component: () => import('/@/views/ai/pos.vue'),
+        name: 'foreignOrder',
+        icon: 'foreignOrder',
+        meta: { title: '外贸订单管理', notopen:true,  noCache: true, border: true }
+      },
+      {
+        path: '/foreignControl',
+        component: () => import('/@/views/ai/search.vue'),
+        name: 'foreignControl',
+        icon: 'Console',
+        meta: { title: '外贸场控', notopen:true, noCache: true }
       },
     ]
   },
@@ -212,24 +217,19 @@ export default [
         icon: 'AgentData',
         meta: { title: '代理商充提报表', auth: '302', noCache: true, }
       },
-      // {
-      //   path: '/statisticsAgent2',
-      //   name: 'statisticsAgent2',
-      //   icon: 'AgentData',
-      //   meta: { title: '用户数据', auth: '303', notopen: true, }
-      // },
+
       {
         path: '/statisticsAgentMy',
         component: () => import('/@/views/statistics/agentMy.vue'),
         name: 'statisticsAgentMy',
-        icon: 'AgentData',
+        icon: 'AgentData2',
         meta: { title: '代理商(我的)业绩', auth: '304', noCache: true, }
       },
       {
         path: '/statisticsAgentUser',
         component: () => import('/@/views/statistics/agentUser.vue'),
         name: 'statisticsAgentUser',
-        icon: 'AgentData',
+        icon: 'AgentUserData',
         meta: { title: '用户数据报表', auth: '303', noCache: true, }
       },
       {
@@ -241,25 +241,13 @@ export default [
       },
     ]
   },
-  // {
-  //   path: '/business',
-  //   component: Layout,
-  //   name: 'business',
-  //   icon: 'yewu',
-  //   meta: { title: '财务' },
-  //   children: [ ]
-  // },
+
   {
     component: Layout,
     icon: 'setting',
     meta: { title: '配置' },
     children: [
-      // {
-      //   path: '/Agent3',
-      //   name: 'Agent3',
-      //   icon: 'Agent',
-      //   meta: { title: '系统配置', noCache: true, notopen: true }
-      // },
+
       {
         path: '/Agent4',
         name: 'Agent4',
@@ -277,7 +265,7 @@ export default [
         path: '/cryptocurrency',
         component: () => import('/@/views/finance/crypto/index.vue'),
         name: 'cryptocurrency',
-        icon: 'Cryptocurrency',
+        icon: 'zhichi',
         meta: { title: '支持的加密货币', noCache: true, notopen: true }
       },
       {
@@ -314,7 +302,7 @@ export default [
         component: Layout,
         component: () => import('/@/views/aiConfig/manage.vue'),
         name: 'aiConfig',
-        icon: 'ParamsSet',
+        icon: 'Robots',
         meta: { title: '交易机器人', auth: '404' },
       },
       {
@@ -322,7 +310,7 @@ export default [
         component: Layout,
         component: () => import('/@/views/aiConfig/manage.vue'),
         name: 'foreignExchange',
-        icon: 'foreignExchange',
+        icon: 'foreignOrder',
         meta: { title: '外汇', noCache: true, notopen: true  },
       },
       // {
@@ -337,14 +325,14 @@ export default [
         path: '/c2cMerchant',
         component: () => import('/@/views/c2c/merchant.vue'),
         name: 'c2cMerchant',
-        icon: 'UserData',
+        icon: 'c2cMerchant',
         meta: { title: '买币商户', auth: '121',border: true  }
       },
       {
         path: '/c2cAd',
         component: () => import('/@/views/c2c/ad.vue'),
         name: 'c2cAd',
-        icon: 'RewardRecord',
+        icon: 'c2cAd',
         meta: { title: '买币广告', auth: '121'}
       },
     ]

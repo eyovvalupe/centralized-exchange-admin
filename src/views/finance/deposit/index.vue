@@ -1,42 +1,51 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2 reset-el-styte">
-      <div></div>
-      <div class="flex">
-        <div class="mr-5">
-          <el-button :type="status == item.value ? 'success' : 'default'" v-for="(item) in options2" :key="item.value"
-          @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        </div>
-        <el-input v-model="searchValue" clearable placeholder="UID/用户名/备注" style="width: 200px;" />
-        <!-- <el-select v-model="searchForm.status" placeholder="" class="ml-2" style="width: 130px;">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2  justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="RechargeOrder">充值订单</el-radio-button>
+          <el-radio-button label="cryptoList">平台充值地址</el-radio-button>
+        </el-radio-group>
+        
       </div>
+      <div class="flex items-center">
+        <div class="w-[168px]">
+          <el-select v-model="status" @change="changeSearch(status)">
+            <el-option v-for="(item) in options2"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchValue" ref="searchInput" suffix-icon="search" placeholder="UID/用户名/备注" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>
+
     </div>
-    <div>
+    
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop == 'created'">
-              {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
-            </span>
-            <template v-else-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showUserDialog')"> {{
-                scope.row[item.prop] }}</span>
+           
+            <template v-if="item.prop === 'username'">
+              <span class="truncate cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showUserDialog')"> {{ scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'uid' || item.prop === 'order_no'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'currency'">
-              <div class="money-class">
+              <div class="money-class ">
                 <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
                 <span>{{ scope.row[item.prop] }}</span>
               </div>
+            </template>
+            <template v-else-if="item.prop == 'amount'">
+              <span class="text-[#FF0004] text-sm">{{ scope.row[item.prop] }}</span>
             </template>
             <!-- 订单号展示 -->
             <!-- <template v-else-if="item.prop === 'order_no'">
@@ -52,7 +61,7 @@
              {{   scope.row[item.prop]=='crypto'?'加密货币':'手动操作'}}
             </span>
             <span v-else-if="item.prop == 'status'" class="status-bg"
-              :class="scope.row[item.prop] == 'unknown' ? 'status-yellow':scope.row[item.prop]">
+              :class="scope.row[item.prop] == 'unknown' ? 'review' : scope.row[item.prop]">
               {{ options2.find(f => f.value == scope.row[item.prop]).label }}
             </span>
             <span v-else>
@@ -60,17 +69,21 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="220" align="center">
+        <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
-            <el-button link  :type="scope.row.status == 'success'?'info':'primary'"  :disabled="scope.row.status == 'success'"
+            <el-button link  class="underline" :type="scope.row.status == 'success'?'info':'primary'"  :disabled="scope.row.status == 'success'"
               @click="showDialog(scope.row, 'showDialog')">充值审核</el-button>
-              <el-button link type="primary"  v-if="scope.row['channel']=='crypto'" @click="showDialog(scope.row, 'showAddressDialog')">充值地址</el-button>
+              <b class="split-line" v-if="scope.row['channel']=='crypto'" ></b>
+              <el-button link type="primary"  class="underline" v-if="scope.row['channel']=='crypto'" @click="showDialog(scope.row, 'showAddressDialog')">充值地址</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -92,6 +105,17 @@ import userDetail from '/@/components/userDetail/index.vue'
 
 import Edit from './Edit.vue'
 import Address from './Address.vue'
+import { hex_md5 } from '/@/utils/md5'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tabPosition = ref('RechargeOrder')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -108,20 +132,26 @@ const dialogType = reactive({
 })
 const currentLastPage = ref(1)
 const currentPage = ref(1)
-const status = ref('')
+const status = ref(sessionStorage.rechargeOrderStatus || '')
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = reactive([
-  { prop: 'order_no', label: '订单号',width: 200,  align: 'center' },
-  { prop: 'uid', label: 'UID', width: 120, align: 'center' },
-  { prop: 'username', label: '用户名', align: 'center', width: 180 },
-  { prop: 'father_username', label: '代理', width: 180, align: 'center' },
-  { prop: 'channel', label: '渠道', width: 80, align: 'center' },
-  { prop: 'currency', label: '币种', width: 90, align: 'center' },
-  { prop: 'amount', label: '充值金额', width: 120, align: 'center' },
-  { prop: 'remarks', label: '失败原因',align: 'center' },
-  { prop: 'created', label: '时间', width: 120, align: 'center' },
-  { prop: 'status', label: '状态', width: 70, align: 'center' },
+  { prop: 'order_no', label: '订单号',minWidth: gw(300),  align: 'center' },
+  { prop: 'uid', label: 'UID', minWidth: gw(110), align: 'center' },
+  { prop: 'username', label: '用户名', align: 'center', minWidth: gw(200) },
+  // { prop: 'father_username', label: '代理', minWidth: gw(170), align: 'center' },
+  { prop: 'channel', label: '渠道', minWidth: gw(170), align: 'center' },
+  { prop: 'currency', label: '币种',minWidth: gw(170), align: 'center' },
+  { prop: 'amount', label: '充值金额', minWidth: gw(170), align: 'center' },
+  { prop: 'remarks', label: '失败原因',minWidth: gw(210),align: 'center' },
+  { prop: 'created', label: '时间', minWidth: gw(170), align: 'center' },
+  { prop: 'status', label: '状态', minWidth: gw(170), align: 'center' },
 ])
-const searchValue = ref('')
+
+const searchValue = ref(sessionStorage.rechargeOrderSearchValue || '')
 const options2 = [
 {
     value: '',
@@ -140,12 +170,7 @@ const options2 = [
     label: '通过'
   },
 ]
-if (searchValue.value) {
-  send.params = searchValue.value;
-}
-if (status.value) {
-  send.status = status.value;
-}
+
 const isLoading = ref(false)
 const showDialog = (data, type) => {
   if (data) {
@@ -160,7 +185,6 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchValue.value) {
     send.params = searchValue.value;
@@ -168,6 +192,22 @@ const getDataList = (page) => {
   if (status.value) {
     send.status = status.value;
   }
+  sessionStorage.rechargeOrderStatus = status.value;
+  sessionStorage.rechargeOrderSearchValue = searchValue.value;
+  
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['rechargeOrderSearch']){
+    const searchCache = JSON.parse(sessionStorage['rechargeOrderSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+
   apiDepositRecord(send)
     .then(res => {
       isLoading.value = false
@@ -181,6 +221,10 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
+      sessionStorage['rechargeOrderSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
       tableData.value = res || []
     })
     .finally(() => {
