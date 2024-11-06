@@ -21,15 +21,7 @@
                 <el-menu-item :hide-timeout="100" :show-timeout="0" :index="_item.name || ''"
                   :class="{ 'no-menu-auth': _item.meta.notopen || !checkAuthCode(_item.meta.auth) }"
                   v-if="_item.hidden === undefined">
-                  <el-image :src="`/images/menus/${_item.icon}.svg`" class="w-4 h-4 mr-2">
-                    <template #error>
-                      <div class="image-slot">
-                        <el-icon>
-                          <Picture />
-                        </el-icon>
-                      </div>
-                    </template>
-                  </el-image>
+                  <img :src="`/images/menus/${_item.icon}.svg`" class="w-[16px] h-[16px] mr-2" />
                   {{ _item.meta.title }}
                 </el-menu-item>
               </template>
@@ -75,7 +67,7 @@
       </el-menu>
       <!-- 第二排 -->
       <ul class="menu-two flex items-center">
-        <li v-for="item in shortCut" :key="item.name" class="cursor-pointer flex items-center"
+        <li v-for="item in shortCut" :class="{'disabled':!checkAuthCode(item.auth)}" :key="item.name" class="cursor-pointer flex items-center"
           @click="onShortCut(item)">
           <span class="mr-[20px] flex items-center" :style="{ color: appStore.curTab === item.name ? '#165DFF' : '' }">
             <span class="badge-box">
@@ -117,12 +109,12 @@
             </el-icon>
           </div>
           <template #dropdown>
-            <el-dropdown-menu :size="'large'">
+            <el-dropdown-menu class="user-dropdown-menu" :size="'large'">
               <el-dropdown-item disabled>
-                  <User style="width: 1em; height: 1em; margin-right: 8px;font-size: 20px;" />{{ userName }}
+                  <div class="username">{{ userName }}</div>
               </el-dropdown-item>
-              <el-dropdown-item @click="goGooglePage">
-                <span class="flex justify-center align-middle underline" :class="{ 'no-menu-auth': googlebind }">
+              <el-dropdown-item divided @click="goGooglePage">
+                <span class="underline" :class="{ 'no-menu-auth': googlebind }">
                   绑定谷歌验证码
                 </span>
               </el-dropdown-item>
@@ -132,8 +124,9 @@
               <el-dropdown-item @click="showDialog('verifyPassword')">
                 <span class="underline">修改交易密码</span>
               </el-dropdown-item>
+               <div class="dropdown-split-line"></div>
               <el-dropdown-item divided @click="logout">
-                <span class="underline">退出</span>
+                <span class="underline text-[#999]">退出</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -216,20 +209,16 @@ const dialogVisible = ref(false)
 const sound = ref(useService.playVoice)
 const messageNumObj = computed(() => useService.messageNumObj)
 const shortCut = ref([
-  { name: 'RechargeOrder', icon: "recharge", badge: 'deposit', text: '充值', type: 'badge' },
-  { name: 'withdrawlOrder', icon: "withdraw", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false },
-  { name: 'kycList', icon: "realname", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false },
-  { name: 'notice', icon: "service", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false },
-  // { name: 'service', text: '客服', type: 'arrow', isDialog: true },
-  // { name: 'service', text: '客服', isDialog: true },
-  // { name: 'Console', text: 'Crash控制台', isRoute: true },
-  // { name: 'Player', text: '玩家', isRoute: true },
+  { name: 'RechargeOrder', icon: "recharge", badge: 'deposit', text: '充值', type: 'badge',auth:'111' },
+  { name: 'withdrawlOrder', icon: "withdraw", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false,auth:'112' },
+  { name: 'kycList', icon: "realname", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false,auth:'103' },
+  { name: 'notice', icon: "service", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false,auth:'601' }
 ])
 
 const showService = ref(false)
 // short cut click
 const onShortCut = item => {
-  if (checkAuthCode(601)) {
+  if (checkAuthCode(item.auth)) {
     if (item.isDialog) {
       // console.log('客服')
       showService.value = !showService.value
@@ -413,9 +402,14 @@ function goGooglePage(){
     width: 200px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background: #fff;
     
+    .menu-border{
+      margin: 10px 0;
+      border-color: #ECECEC;
+    }
+
   }
 
 }
@@ -486,6 +480,17 @@ function goGooglePage(){
 .menu-two{
   border-left: 1px solid #EFF2F8;
   padding-left: 16px;
+  .disabled{
+     span{
+      color:#bfbfbf;
+      svg path{
+        fill: #bfbfbf;
+      }
+     }
+     .el-badge .el-badge__content{
+      background-color: #ccc;
+     }
+  }
 }
 .badge-box {
   position: relative;
@@ -644,6 +649,29 @@ function goGooglePage(){
   box-sizing: border-box;
   border-radius: 50%;
 }
+
+.username{
+  text-align: center;
+  color:#000 !important;
+}
+
+.user-dropdown-menu{
+  width: 180px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  
+  :deep(.el-dropdown-menu__item){
+    padding: 10px 0;
+    line-height: 20px;
+    justify-content: center;
+    align-items: center;
+    color:#000;
+  }
+  :deep(.el-dropdown-menu__item--divided){
+    margin:10px 0;
+  }
+}
+
 
 </style>(: string)(: { notArrow: any; name: any; isRoute: any; isDialog: any }): any(: any[])(: { children: any[] })(:
 { subMenu: any; children: any[] })(: any): string: any(: { paneName: any })(: any)(: any)(: any)

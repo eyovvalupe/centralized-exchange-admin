@@ -9,7 +9,7 @@
         
       </div>
       <el-button type="primary" plain icon="plus" class="ml-[10px]" @click="showDialog(null, 'showDialog')">增加地址</el-button>
-      <el-button type="info" plain @click="showDialog(null, 'showConfigDialog')">币种配置</el-button>
+      <!-- <el-button type="info" plain @click="showDialog(null, 'showConfigDialog')">币种配置</el-button> -->
     </div>
    
     <div class="py-[10px] reset-el-style-v2">
@@ -18,7 +18,8 @@
         <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop == 'currency'" align="center">
+            <span v-if="item.prop == 'currency'" class="flex items-center" align="center">
+              <img class="w-[16px] h-[16px] mr-[10px] rounded-full" :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
               {{ scope.row[item.prop] == 'main' ? '交易账户' : scope.row[item.prop] }}
             </span>
             <span v-else-if="item.prop == 'status'" class="status-bg"
@@ -103,6 +104,7 @@ const columnBase = reactive([
   { prop: 'address', label: '地址',minWidth:gw(1140), align: 'center' },
   // { prop: 'status', label: '状态', minWidth:gw(300), align: 'center' },
 ])
+
 const options = [
   {
     value: '',

@@ -162,24 +162,3 @@ const showPwdEvent=()=>{
 
 }
 </script>
-<style  lang="scss" scoped>
-
-.status-info{
-  padding-top:10px;
-  &__icon{
-    width: 60px;
-    height: 60px;
-    display: block;
-    margin: 0 auto;
-  }
-  &__title{
-    color: #061023;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    margin-top: 10px;
-    text-align: center;
-  }
-}
-</style>

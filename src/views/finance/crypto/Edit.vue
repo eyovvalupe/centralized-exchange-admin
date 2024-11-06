@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="地址" required prop="address">
-        <el-input v-model="form.address" />
+        <el-input v-model="form.address" placeholder="请输入地址" />
       </el-form-item>
     </el-form>
     <template #footer>
