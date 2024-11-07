@@ -55,7 +55,7 @@ class Service {
         console.log('连接断开')
       })
       this.socketNum.on('receive', message => {
-        console.log(message)
+        console.log(message, Date.now())
         const { channel, type, num } = message.data
         let msg = ''
         if (channel === 'deposit') {

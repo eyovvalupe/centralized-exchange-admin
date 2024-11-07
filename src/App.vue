@@ -44,7 +44,7 @@ html {
   border-bottom: 1px solid #dfe1e4;
 }
 #app {
-  font-size: 13px;
+  font-size: 13px !important;
   min-width: 1600px;
   .noborder {
     .el-table__inner-wrapper::before {
@@ -52,7 +52,6 @@ html {
     }
   }
 }
-
 
 th.el-table__cell.bg-white2 {
   background: #dee8ff !important;
