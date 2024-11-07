@@ -57,11 +57,11 @@ export default defineConfig(({ command, mode }) => {
     server: {
       port: VITE_PORT || 9527,
       proxy : {
-        '/api': {
-          target : "http://146.70.86.141:8001",
-          changeOrigin : true,
-          rewrite : ( path ) => path.replace( /^\/api/, '' )
-        },
+        // '/api': {
+        //   target : "http://146.70.86.141:8001",
+        //   changeOrigin : true,
+        //   rewrite : ( path ) => path.replace( /^\/api/, '' )
+        // },
         // '/ws': {
         //   target : "ws://62.112.10.184:8303",
         //   changeOrigin : true,

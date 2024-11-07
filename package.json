@@ -5,7 +5,11 @@
   "description": "sungame admin",
   "scripts": {
     "dev": "cross-env --max_old_space_size=4096 vite --host 0.0.0.0",
+    "test":"cross-env --max_old_space_size=4096 vite --host 0.0.0.0 --mode testing",
+    "demo":"cross-env --max_old_space_size=4096 vite --host 0.0.0.0 --mode demo",
     "build": "rimraf dist && cross-env vite build",
+    "build:test": "rimraf dist && cross-env vite build --mode testing",
+    "build:demo": "rimraf dist && cross-env vite build --mode demo",
     "build:dev": "rimraf dist && cross-env vite build --mode dev",
     "build:staging": "rimraf dist && cross-env vite build --mode staging",
     "report": "rimraf dist && cross-env vite build",
