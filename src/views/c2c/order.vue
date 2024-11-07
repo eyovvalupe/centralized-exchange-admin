@@ -18,99 +18,10 @@
 
     </div>
     <div class="py-[10px]  reset-el-style-v2"> 
-      <div class="order-list">
-        <div class="w-3/12 float-left" v-for="(item,i) in tableData" :key="i">
-          <div class="order-item">
-            <div class="flex order-item-bt">
-              <div class="order-item-left">
-                UID:{{item.uid}}
-              </div>
-              <div class="order-item-right">
-                <div class="flex justify-between">
-                  <div>{{item.order_no}}</div>
-                  <div>{{ statusObj[item.status] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="flex">
-              <div class="order-item-left">
-                <div>用户名</div>
-                <div class="mt-[6px]"><span class="cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showInfoDialog')">125151@qq.com</span></div>
-              </div>
-              <div class="order-item-right">
-                <div class="flex justify-between">
-                  <div>
-                    <div class="order-item-right__buy flex items-center">买入 {{item.crypto}}<img class="w-[16px] h-[16px] ml-[6px] rounded" :src="`/images/crypto/${item.crypto.toUpperCase()}.png`" :alt="item.crypto.toUpperCase()"></div>
-                    <div class="mt-[3px]">价格 {{item.price}} {{item.currency}}</div>
-                    <div class="mt-[3px]">数量 {{item.volume}} {{item.crypto}}</div>
-                  </div>
-                  <div  class="order-item-right__amount">{{item.offset == 'buy' ? '-' : '+'}}{{item.totalprice}} <span>{{item.currency}}</span></div>
-                </div>
-              </div>
-            </div> 
-            
-          </div>
-        </div>
-
-      </div>
-      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
-        v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
-          :align="item.align">
-          <template #default="scope">
-            <template v-if="item.prop === 'uid'">
-              <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
-                scope.row[item.prop] }}</span>
-            </template>
-            <template v-else-if="item.prop === 'offset'">
-              <span class="status-bg" :class="scope.row[item.prop]">
-                {{ offsetObj[scope.row[item.prop]] }}
-              </span>
-            </template>
-            <template v-else-if="item.prop === 'crypto'">
-              <div class="money-class">
-                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
-                <span>{{ scope.row[item.prop] }}</span>
-              </div>
-            </template>
-            <template v-else-if="item.prop === 'currency'">
-              <div class="money-class">
-                <img :src="`/images/crypto/FIAT_${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
-                <span>{{ scope.row[item.prop] }}</span>
-              </div>
-            </template>
-            <template v-else-if="item.prop === 'totalprice'">
-              <span class="text-red">
-                {{ scope.row[item.prop] }}
-              </span>
-            </template>
-            <span v-else-if="item.prop === 'username'">
-              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showInfoDialog')">{{
-                scope.row[item.prop] }}
-              </span>
-            </span>
-            <span v-else-if="item.prop === 'status'" class="status-bg"
-              :class="scope.row['status'] == 'done' ? 'buy' : scope.row['status']">
-              {{ statusObj[scope.row[item.prop]] }}
-            </span>
-            <span v-else>
-              {{ scope.row[item.prop] }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
-          <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <!-- :disabled="scope.row['status']=='done'" -->
-              <el-button link :type="scope.row['status'] !== 'done' && checkAuthCode(12101) ? 'primary' : ''"
-                :disabled="!checkAuthCode(12101)" @click="showDialog(scope.row, 'showOrderInfo')">业务操作</el-button>
-            </span>
-          </template>
-        </el-table-column>
-        <template v-slot:empty>
-          <el-empty class="nodata" description="暂无数据" />
-        </template>
-      </el-table>
+      <OrderList v-loading="isLoading" :tableData="tableData" :showDialog="showDialog" />
+       
+      <el-empty class="nodata" v-if="!isLoading && !tableData.length" description="暂无数据" />
+      
      
     </div>
     <div class="pb-[10px]">
@@ -132,6 +43,7 @@ import { Plus } from '@element-plus/icons-vue'
 import { copy } from '/@/utils'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
+import OrderList from './components/OrderList.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useAppStore } from '/@/store'
 import { useRouter } from 'vue-router'
@@ -151,12 +63,7 @@ const offsetObj = {
   buy: '买入',
   sell: '卖出'
 }
-const statusObj = {
-  'waitpayment': '等待付款',
-  'waitconfirm': '等待确认',
-  'done': '已完成',
-  'cancel': '已取消'
-}
+
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:c2corder', () => {
@@ -173,19 +80,6 @@ const searchForm = reactive({
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 
-const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'order_no', label: '订单号', align: 'center', width: 180 },
-  { prop: 'username', label: '用户名', align: 'center', width: 130 },
-  { prop: 'offset', label: '方向', align: 'center' },
-  { prop: 'crypto', label: '加密货币', align: 'center' },
-  { prop: 'currency', label: '计价法币', align: 'center' },
-  { prop: 'price', label: '价格', align: 'center' },
-  { prop: 'volume', label: '数量', align: 'center' },
-  { prop: 'totalprice', label: '总价', align: 'center' },
-  { prop: 'status', label: '状态', align: 'center' },
-  { prop: 'date', label: '时间', align: 'center' },
-])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
   if (data) {
@@ -212,6 +106,7 @@ const getDataList = (page) => {
   if (searchForm.params) {
     send.params = searchForm.params;
   }
+ 
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -233,52 +128,3 @@ const getDataList = (page) => {
 }
 getDataList()
 </script>
-
-<style lang="scss" scoped>
-.order-list{
-  margin-left: -20px;
-}
-.order-item{
-  background-color: #F5F7FC;
-  border-radius: 16px;
-  margin:10px 0 10px 20px;
-}
-.order-item-left,
-.order-item-right{
-  color:#666D80;
-  padding: 10px 16px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-.order-item-left{
-  width: 30%;
-  border-right: 1px solid #ECECEC;
-  box-sizing: border-box;
-}
-.order-item-right{
-  flex: 1;
-  &__buy{
-    font-size: 16px;
-    font-weight: 600;
-    color:#061023;
-  }
-  &__amount{
-    font-size: 18px;
-    color:#061023;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    span{
-      font-size: 12px;
-      margin-left: 5px;
-      font-weight: normal;
-      position: relative;
-      top:2px;
-    }
-  }
-}
-.order-item-bt{
-  border-bottom: 1px solid #ECECEC;
-}
-</style>
