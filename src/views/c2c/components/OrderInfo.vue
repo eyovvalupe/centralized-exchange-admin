@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="订单详情" v-model="show" :append-to-body="true" @close="closeDialog">
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="订单详情" v-model="show" :append-to-body="true" @close="closeDialog">
     <div class="order-info">
       <div class="flex tab el-tabs__nav is-top w-100">
         <span class="el-tabs__item is-top" :class="activeName === 'first' ? 'is-active' : ''"
@@ -10,7 +10,7 @@
           <b class="unread" v-if="form.unread">{{ form.unread }}</b>
         </span>
       </div>
-      <el-tabs v-model="activeName" class="w-100">
+      <el-tabs v-model="activeName" class="w-full">
         <el-tab-pane name="first" v-loading="loading">
           <!-- <div class="p-2 mt-2 flex justify-between">
             <div>{{ form.username }} <span class="status-bg" :class="form.offset">{{ offsetObj[form.offset] }}</span>
