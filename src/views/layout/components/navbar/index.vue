@@ -232,6 +232,9 @@ const onShortCut = item => {
     }
   }
 }
+Bus.on("navbarShortCut",(item)=>{
+  onShortCut(item)
+})
 const changeVoice = (val: any) => {
   useService.setPlayVoice(val);
 }

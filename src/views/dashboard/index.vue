@@ -1,157 +1,64 @@
 <template>
-  <div class="dashboard-container reset-el-styte p-2">
-    <div class="flex justify-end p-2">
-      <div></div>
-      <div>
-        <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
-        <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
-          @click="changeSearch(1)">上月</el-button>
-        <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-          end-placeholder="请选择结束时间" style="width: 280px;" @change="changeSearch(2)" />
-      </div>
-    </div>
-    <!-- 数据卡片 -->
-    <el-row :gutter="10" class="m-2">
-      <el-col :span="8">
-        <el-card shadow="never" class="card-bg-1">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <span class="font-title2">充值</span>
+  <div class="dashboard-container px-[30px] py-[20px]">
+    <el-row :gutter="30" class="reset-el-style-v2">
+      <el-col :span="16">
+          <div class="index-card">
+            <div class="flex justify-between index-card-header">
+              <div class="font-title2 flex items-center">充值统计</div>
+              <div class="flex items-center">
+
+                <el-radio-group v-model="currLast" @change="changeSearch(currLast)">
+                  <el-radio-button :label="0">本月数据</el-radio-button>
+                  <el-radio-button :label="1">上月数据</el-radio-button>
+                </el-radio-group>
+
+                <el-date-picker class="ml-[10px]"  v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
+                  end-placeholder="请选择结束时间" style="width: 400px;" @change="changeSearch(2)" />
+              </div>
             </div>
-          </template>
-          <div class="flex items-center justify-between">
-            <div class="top-title text-right flex items-center">
-              <span><img src="/@/assets/imgs/d-icon1.png" width="50"></span>
-              <span class="font-title font-sans ml-3"> {{ totalInfo.deposit_main }}USDT</span>
-            </div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mt-5 text-sm text-[var(--el-text-color-secondary)]">
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/USD.png"
-                      width="20"></span><span>USD</span></p>
-                <div>余额 <b>{{ totalInfo.deposit_usd }}</b>
-                </div>
+            <div class="flex items-center justify-between py-[40px] pr-[20px]">
+              <div class="card-blue card-bg">
+                <img class="group-img" src="../../assets/images/group-blue.png" alt="">
+                <div class="group-text">充值（USDT）</div>
+                <div class="group-price">{{ totalInfo.deposit }}</div>
+                <div class="group-btn">明细</div>
               </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/USDT.png"
-                      width="20"></span><span>USDT</span></p>
-                <div>余额 <b>{{ totalInfo.deposit_usdt }}</b>
-                </div>
+              <div class="card-green card-bg">
+                <img class="group-img" src="../../assets/images/group-green.png" alt="">
+                <div class="group-text">提现（USDT）</div>
+                <div class="group-price">{{ totalInfo.withdraw }}</div>
+                <div class="group-btn">明细</div>
               </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/BTC.png"
-                      width="20"></span><span>BTC</span></p>
-                <div>余额 <b>{{ totalInfo.deposit_btc }}</b>
-                </div>
-              </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/ETH.png"
-                      width="20"></span><span>ETH</span></p>
-                <div>余额 <b>{{ totalInfo.deposit_eth }}</b>
-                </div>
+              <div class="card-orange card-bg">
+                <img class="group-img" src="../../assets/images/group-orange.png" alt="">
+                <div class="group-text">充提差额（USDT）</div>
+                <div class="group-price">{{ totalInfo.balance }}</div>
+                <div class="group-btn">明细</div>
               </div>
             </div>
           </div>
-        </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card shadow="never" class="card-bg-2">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <span class="font-title2">提现</span>
-            </div>
-          </template>
-          <div class="flex items-center justify-between">
-            <div class="top-title text-right flex items-center">
-              <span><img src="/@/assets/imgs/d-icon2.png" width="50"></span>
-              <span class="font-title font-sans ml-3"> {{ totalInfo.withdraw_main }}USDT</span>
-            </div>
+        <div class="index-card" v-if="isAdmin">
+          <div class="flex justify-between index-card-header">
+            <div class="font-title2  flex items-center">任务提醒</div>
           </div>
-          <div>
-            <div class="flex items-center justify-between mt-5 text-sm text-[var(--el-text-color-secondary)]">
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/USD.png"
-                      width="20"></span><span>USD</span></p>
-                <div>余额 <b>{{ totalInfo.withdraw_usd }}</b>
-                </div>
+          <div class="px-[30px] pb-[20px]">
+            <div class="rg-item flex justify-between items-center" @click="onShortCut(item)" v-for="item in shortCut" :key="item.name" :class="{'disabled':!checkAuthCode(item.auth)}">
+              <div class="rg-item-left flex items-center">
+                <span>{{item.text}}</span>
               </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/USDT.png"
-                      width="20"></span><span>USDT</span></p>
-                <div>余额 <b>{{ totalInfo.withdraw_usdt }}</b>
-                </div>
-              </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/BTC.png"
-                      width="20"></span><span>BTC</span></p>
-                <div>余额 <b>{{ totalInfo.withdraw_btc }}</b>
-                </div>
-              </div>
-              <div>
-                <p class="flex items-center"><span class="mr-2"><img src="/@/assets/images/ETH.png"
-                      width="20"></span><span>ETH</span></p>
-                <div>余额 <b>{{ totalInfo.withdraw_eth }}</b>
-                </div>
+              <div class="rg-item-rg">
+                <div class="item-rg-price">{{messageNumObj[item.badge] || 0}}</div>
+                <div class="item-rg-text">{{item.name == 'notice' ? '未读消息' : '待处理'}}</div>
               </div>
             </div>
           </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="never" class="card-bg-3">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <span class="font-title2">充提差额</span>
-            </div>
-          </template>
-          <div class="flex items-center justify-between">
-            <div class="top-title text-right flex items-center">
-              <span><img src="/@/assets/imgs/d-icon3.png" width="50"></span>
-              <span class="font-title font-sans ml-3"> {{ totalInfo.balance }}USDT</span>
-            </div>
-          </div>
-        </el-card>
+          
+        </div>
       </el-col>
     </el-row>
-    <template v-if="isAdmin">
-      <ul class="py-2 dashboard menu-two flex text-sm">
-        <li v-for="item in shortCut" :key="item.name" class="cursor-pointer flex items-center"
-          @click="onShortCut(item)">
-          <span class="px-2 mr-4 flex items-center" :class="activeName === item.name ? 'active' : ''">
-            <span class="badge-box">
-              <el-image :src="`/images/menus/${item.icon || item.name}.svg`" class="w-5 h-5 mr-1">
-                <template #error>
-                  <span class="image-slot"> </span>
-                </template>
-              </el-image>
-              <span>{{ item.text }}</span>
-              <el-badge :value="messageNumObj[item.badge]" v-if="messageNumObj[item.badge]"></el-badge>
-            </span>
-          </span>
-        </li>
-      </ul>
-      <kyc @showUserDialog="userDialog" v-if="activeName === 'kycList'" />
-      <whithdrawl @showUserDialog="userDialog" v-else-if="activeName === 'RechargeOrder'" />
-      <deposit @showUserDialog="userDialog" v-else />
-    </template>
-    <template v-else>
-      <el-row :gutter="10">
-        <el-col :span="16">
-          <div class="dashboard-title">我的代理</div>
-          <agent @showUserDialog="userDialog" />
-        </el-col>
-        <el-col :span="8">
-          <div class="dashboard-title">我的推荐码</div>
-          <div class="tjcode-box">
-             <span class="code-title">  {{ userInfo.uid || '无' }} </span>
-          </div>
-        </el-col>
-      </el-row>
-    </template>
-    <div class="dashboard-title">安全日志</div>
-    <safe :times="timeRanges" />
-    <userDetail v-if="showDialog" :partyid="partyid" @close="closeDialogType" />
+
   </div>
 </template>
 
@@ -160,13 +67,8 @@ export default { name: 'Dashboard' };
 </script>
 <script setup lang="ts">
 import { getglobalTotal } from '/@/api/modules/base.api'
-import whithdrawl from './components/whithdrawl.vue'
-import agent from './components/agent.vue'
-import safe from './components/safe.vue'
-import kyc from './components/kyc.vue'
-import deposit from './components/deposit.vue'
+import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useUserStore, useServiceStore } from '/@/store'
-import userDetail from '/@/components/userDetail/index.vue'
 import { computed, ref, getCurrentInstance, watch } from "vue";
 import { ServiceChat } from '../layout/components/service/components/common/ServiceChat'
 import { dayjs } from 'element-plus'
@@ -178,26 +80,27 @@ const userStore = useUserStore()
 const isAdmin = computed(() => !userStore.userInfo.role?.includes('agent'))
 const userInfo = computed(() => userStore.userInfo)
 const messageNumObj = computed(() => useService.messageNumObj)
-const activeName = ref('RechargeOrder')
+
 const shortCut = ref([
-  { name: 'RechargeOrder', icon: "RechargeOrder", badge: 'deposit', text: '充值订单', type: 'badge' },
-  { name: 'DepositOrder', icon: "tx", badge: 'withdraw', text: '提现订单', type: 'badge', notArrow: false },
-  { name: 'kycList', icon: "smrz", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false },
+  { name: 'RechargeOrder',  badge: 'deposit', text: '充值订单', auth:'111' },
+  { name: 'withdrawlOrder', badge: 'withdraw', text: '提现订单',  notArrow: false,auth:'112' },
+  { name: 'kycList',  badge: 'kyc', text: '实名审核',  notArrow: false,auth:'103' },
+  { name: 'notice', badge: 'support', text: '客服消息',  isDialog: true, notArrow: false,auth:'601' }
 ])
-const showDialog = ref(false);
+
 const currLast = ref(0);
-const partyid = ref('');
-const totalInfo = ref({});
+const totalInfo = ref({
+  deposit:'0',
+  withdraw:'0',
+  balance:'0'
+});
 const timeRanges = ref([])
 
-const userDialog = (data) => {
-  partyid.value = data.partyid;
-  showDialog.value = true;
+const onShortCut = (item)=>{
+  Bus.emit("navbarShortCut",item)
 }
-const closeDialogType = () => {
-  showDialog.value = false;
-  partyid.value = '';
-}
+
+
 const init = (time_arr) => {
   const send = { start_time: '', end_time: '', page: 1 };
   if (time_arr[0]) {
@@ -206,16 +109,14 @@ const init = (time_arr) => {
   if (time_arr[1]) {
     send.end_time = dayjs(time_arr[1]).format('YYYY-MM-DD')
   }
-  // Promise.all([getglobalDate({ page: 1 }), getglobalTotal({ page: 1 }), getagentList({ page: 1 })]).then(res => {
+ 
   getglobalTotal(send).then(res => {
     totalInfo.value = res;
   })
   console.log('重新链接ws')
   ServiceChat.initNum()
 }
-const onShortCut = (item) => {
-  activeName.value = item.name;
-}
+
 const changeSearch = (num) => {
   currLast.value = num;
   let arr = [];
@@ -245,53 +146,189 @@ changeSearch(0);
 .dashboard-container {
   position: relative;
 
-  .dashboard-title {
-    font-size: 15px;
-    margin: 10px 5px;
-  }
-  .tjcode-box{
-    background: #f5f5f5;
-    height: 90%;
-    border-radius: 10px;
-    position: relative;
-    .code-title{
-      width: 100%;
-      font-size: 22px;
-      text-align: center;
-      position: absolute;
-      // left: 10px;
-      // right: 0;
-      // bottom: 0;
-      top: 30px;
-      // margin: auto;
-    }
-  }
-
   .font-title {
     font-size: 22px;
   }
 
   .font-title2 {
-    font-size: 16px;
-    color: #666;
+    font-size: 20px;
+    font-weight: 600;
+    color: #33353D;
   }
 
-  .el-card {
-    height: 200px;
-    border: none;
-    border-radius: 10px;
+
+  .index-card{
+    border: 1px solid #EFF2F8;
+    border-radius: 20px;
+  }
+  .index-card-header{
+    height: 60px;
+    border-bottom: 1px solid #EFF2F8;
+    padding: 0 20px 0 24px;
+    position: relative;
+    &::before{
+      content:'';
+      width: 10px;
+      height:28px;
+      border-radius: 0px 10px 10px 0px;
+      background: #4377FE;
+      position: absolute;
+      left:0;
+      top:50%;
+      margin-top: -14px;
+    }
+  }
+  
+
+
+  .card-bg {
+    width: 100%;
+    height: 400px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    border-radius: 20px;
+    margin-left: 20px;
+    padding: 0 30px;
+    .group-img {
+      margin-top: -20px;
+      margin-left: -20px;
+      height: 153px;
+      margin-bottom: 30px;
+    }
+
+    .group-text {
+      color: #33353D;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 16px;
+      text-align: left;
+    }
+
+    .group-price {
+      color: #000000;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 40px;
+      text-align: left;
+      font-family: Rubik;
+      padding: 27px 0 43px 0;
+    }
+
+    .group-btn {
+      width: 160px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      border-radius: 50px;
+      opacity: 0px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
   }
 
-  .card-bg-1 {
-    background: #f1f7ff;
+  .card-blue {
+    background-image: url(../../assets/images/mask-blue.png);
+    background-color: #D4DFFC;
+    .group-btn {
+      background-color: #4377FE;
+    }
   }
 
-  .card-bg-2 {
-    background: #fff7e0;
+  .card-green {
+    background-image: url(../../assets/images/mask-green.png);
+    background-color: #D0F4E9;
+
+    .group-btn {
+      background-color: #17C290;
+    }
   }
 
-  .card-bg-3 {
-    background: #ffeee1;
+  .card-orange {
+    background-image: url(../../assets/images/mask-orange.png);
+    background-color: #FFE8E1;
+
+    .group-btn {
+      background-color: #F8734A;
+    }
+  }
+
+  .rg-item {
+    border-radius: 20px;
+    background-color: #EFF2F8;
+    margin-top: 16px;
+    height: 98px;
+    overflow: hidden;
+    cursor: pointer;
+    .rg-item-left {
+      position: relative;
+      padding-left: 30px;
+      &::before {
+        content: '';
+        width: 10px;
+        height: 76px;
+        background-color: #4377FE;
+        border-radius: 10px;
+        margin-right: 23px;
+        position: absolute;
+        left:0;
+        top:50%;
+        margin-top: -38px;
+      }
+
+      span {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+        text-align: left;
+        color: #33353D;
+      }
+    }
+
+    .rg-item-rg {
+      padding-right: 30px;
+      line-height: 1;
+      .item-rg-price {
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 35.55px;
+        text-align: right;
+        color: #F0383B;
+        margin-bottom: 9px;
+      }
+
+      .item-rg-text {
+        font-size: 16px;
+        font-weight: 500;
+        text-align: right;
+        color: #65749C;
+      }
+    }
+
+    &:active{
+      background-color: #e7ecf7;
+    }
+  }
+}
+.rg-item.disabled{
+  .rg-item-left {
+    
+    &::before{
+      background-color: rgba(0,0,0,0.1);
+    }
+    span{
+      color:rgba(0,0,0,0.3);
+    }
+  }
+  .rg-item-rg{
+    .item-rg-price{
+      color:rgba(0,0,0,0.4);
+    }
+    .item-rg-text{
+      color:rgba(0,0,0,0.2);
+    }
   }
 }
 </style>
