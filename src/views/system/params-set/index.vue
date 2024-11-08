@@ -1,26 +1,30 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex justify-between p-2">
-      <div> </div>
-      <div class="flex">
-        <el-input v-model="searchValue" class="ml-4" placeholder="参数名称" />
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
-      </div>
+   <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-end">
+
+       <div class="flex items-center">
+       
+        <div class="w-[264px] ml-2">
+          <el-input v-model="searchValue" ref="searchInput" suffix-icon="search" placeholder="参数名称" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>      
+     
     </div>
-    <div>
+    <div class="py-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length?'':'noborder'" v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span>
+            <div class="w-full break-words text-center">
               {{ scope.row[item.prop] }}
-            </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link :type="scope.row['modify']?'primary':''" :disabled="!scope.row['modify']" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+            <el-button size="default" link class="underline" :type="scope.row['modify']?'primary':''" :disabled="!scope.row['modify']" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
@@ -40,9 +44,9 @@ export default { name: 'ParamsSet' };
 <script setup>
 import { getList } from '/@/api/modules/system/info.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import Edit from './Edit.vue'
+import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -55,14 +59,19 @@ const dialogType = reactive({
   showResetDialog: false,
   info: null
 })
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const currentPage = ref(1)
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'left',width:200 },
-  // { prop: 'code', label: '代码', align: 'center' },
-  { prop: 'value', label: '值', align: 'left',width:250  },
-  { prop: 'remark', label: '说明', align: 'left' },
+  { prop: 'name', label: '名称', align: 'left',minWidth:gw(300) },
+  // { prop: 'code', label: '代码', align: 'center',minWidth:gw(200) },
+  { prop: 'value', label: '值', align: 'left',minWidth:gw(500)  },
+  { prop: 'remark', label: '说明', align: 'left',minWidth:gw(940) },
 ])
-const searchValue = ref('')
+const searchValue = ref(sessionStorage.paramsSetSearchValue || '')
 const isLoading = ref(false)
 const googleLoading = ref(false)
 const showDialog = (data, type) => {
@@ -77,15 +86,33 @@ const getDataList = (page) => {
   if (page) {
     currentPage.value = page
   }
-  isLoading.value = true
   const send = {};
   if(searchValue.value){
     send.name = searchValue.value;
   }
+
+  sessionStorage.paramsSetSearchValue = searchValue.value || ''
+  
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['paramsSetSearch']){
+    const searchCache = JSON.parse(sessionStorage['paramsSetSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   getList(send)
     .then(res => {
       isLoading.value = false
       tableData.value = res || []
+      sessionStorage['paramsSetSearch'] = JSON.stringify({
+        cacheKey,
+        data:tableData.value
+      })
     })
     .finally(() => {
       isLoading.value = false
@@ -99,18 +126,6 @@ const closeDialogType = (item) => {
     getDataList();
   }
 }
-// const handleDelete = (row) => {
-//   ElMessageBox.confirm(`确定要退出系统吗？`, '提示', {
-//     confirmButtonText: '确定',
-//     cancelButtonText: '取消',
-//     type: 'warning'
-//   }).then(() => {
-//     apiDel({roleid}).then(data => {
-//       ElMessage.success('删除成功')
-//       getDataList()
-//     })
-//   })
-// }
 const googleSubmit=(googlecode)=>{
   googleLoading.value = true;
   const { roleid } = dialogType.info;

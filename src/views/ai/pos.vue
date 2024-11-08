@@ -1,18 +1,30 @@
 <template>
-  <div class="player reset-el-styte">
-    <div class="flex justify-between p-2">
-      <div>
-        <el-button type="primary" @click="showDialog(null, 'showCtrDialog')">添加场控</el-button>
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="aiPos">交易机器人持仓单</el-radio-button>
+          <el-radio-button label="aiSearch">交易机器人订单查询</el-radio-button>
+          <el-radio-button label="aiIndex">交易机器人场控</el-radio-button>
+        </el-radio-group>
+        <el-button class="ml-[10px]" plain icon="plus" type="primary" @click="showDialog(null, 'showCtrDialog')">添加场控</el-button>
       </div>
-      <div>
-        <el-button :type="searchValue == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-          :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        <el-input v-model="searchStrbtn" class="mx-2" placeholder="UID/用户名" style="width: 200px;" />
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+      <div class="flex items-center">
+        <div class="w-[168px]">
+          <el-select v-model="searchValue" @change="changeSearch(searchValue)">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
       </div>
+
     </div>
-    <div class="">
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" :border="tableData.length > 0" :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
@@ -27,9 +39,7 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <template v-else-if="item.prop === 'endtime'">
-             {{ dayjs(scope.row[item.prop]).format('HH:mm:ss') }} 
-            </template>
+            
             <span v-else-if="item.prop === 'username'">
               <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showInfoDialog')">{{
                 scope.row[item.prop] }}
@@ -37,7 +47,6 @@
             </span>
             <span v-else-if="item.prop === 'symbol'">
               {{ scope.row['symbol'] }}
-              <!-- <b class="split-line"></b>{{ scope.row['market'] }} -->
             </span>
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
@@ -102,6 +111,17 @@ import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useSocketStore } from '/@/store'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tabPosition = ref('aiPos')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
+
 const socketStore = useSocketStore()
 const optionStatus = [
   {

@@ -1,25 +1,26 @@
 <template>
-  <el-dialog :close-on-click-modal="false"  class="reset-el-styte" width="420" title="修改登录密码" v-model="show" :append-to-body="true"
+  <el-dialog :close-on-click-modal="false"  class="reset-el-styte" width="500" title="修改登录密码" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
+    <el-form :model="form" class="pt-[10px]" :rules="rules" label-position="top" ref="ruleForm">
       <el-form-item label="密码" required :label-width="formLabelWidth" prop="password">
         <div class="w-full flex justify-between content-center">
           <el-input v-model="form.password" autocomplete="off" disabled class="pwd-last">
             <template #append>
-              <el-icon @click="copy(form.password)">
+              <div class="absolute left-0 top-0 w-full h-full" @click="copy(form.password)"></div>
+              <el-icon color="#014CFA" size="18px">
                 <CopyDocument />
               </el-icon>
             </template>
           </el-input>
-          <el-button type="primary" class="ml-2" @click="randomPwd">重新生成</el-button>
+          <el-button type="primary" class="ml-[10px]" @click="randomPwd">重新生成</el-button>
         </div>
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round  @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

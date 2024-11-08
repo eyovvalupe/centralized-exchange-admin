@@ -1,23 +1,33 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-end p-2">
-      <div>
-        <el-button :type="searchForm.role == item.value ? 'success' : 'default'" v-for="(item) in option"
-          :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        <el-input v-model="searchForm.params" class="mx-2" placeholder="UID/用户名/用户备注" style="width: 200px;" />
-        <!-- <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-        end-placeholder="请选择结束时间" style="width: 280px;" /> -->
-        <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
-          <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="aiPos">交易机器人持仓单</el-radio-button>
+          <el-radio-button label="aiSearch">交易机器人订单查询</el-radio-button>
+          <el-radio-button label="aiIndex">交易机器人场控</el-radio-button>
+        </el-radio-group>
+        <el-button class="ml-[10px]" plain icon="plus" type="primary" @click="showDialog(null, 'showCtrDialog')">添加场控</el-button>
       </div>
+      <div class="flex items-center">
+        <div class="w-[168px]">
+          <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
+            <el-option v-for="(item) in option"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+      </div>
+      
     </div>
-    <div class="">
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <template v-if="item.prop === 'uid'">
@@ -52,11 +62,17 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
+  
+  <EditPrice v-if="dialogType.showCtrDialog" :data="dialogType.info"  @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
     @close="closeDialogType" />
+    
   <!-- <detailDialog v-if="dialogType.showDialog" :contract="true" :orderNo="orderNo" @close="closeDialogType" /> -->
 </template>
 
@@ -64,12 +80,22 @@
 export default { name: 'aiSearch' };
 </script>
 <script setup>
+import EditPrice from './components/EditPrice.vue'
 import { apiQueryList } from '/@/api/modules/ai'
 import { copy } from '/@/utils'
 // import detailDialog from '/@/components/detailDialog/index.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tabPosition = ref('aiSearch')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -130,9 +156,11 @@ const option = [
   }
 ]
 const dialogType = reactive({
+  info: null,
   showDialog: false,
   showInfoDialog: false,
   showLockDialog: false,
+  showCtrDialog: false,
   title: ''
 })
 const optionsTime = [
@@ -150,17 +178,22 @@ const searchForm = reactive({
 const currentLastPage = ref(1)
 const currentPage = ref(1)
 
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
+
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', width: 80, align: 'center' },
-  { prop: 'username', label: '用户名', width: 130, align: 'center' },
-  { prop: 'role', label: '角色', width: 100, align: 'center' },
-  // { prop: 'father_username', label: '代理', width: 110, align: 'center' },
-  { prop: 'name', label: '名称', align: 'center' },
-  { prop: 'offset', label: '开仓', width: 110, align: 'center' },
-  { prop: 'lever', label: '网格', width: 90, align: 'center' },
-  { prop: 'time', label: '时间区间', width: 110, align: 'center' },
-  { prop: 'amount', label: '投资金额', align: 'center' },
-  { prop: 'profit', label: '盈亏金额',  align: 'center' },
+  { prop: 'uid', label: 'UID', minWidth: gw(205), align: 'center' },
+  { prop: 'username', label: '用户名', minWidth: gw(205), align: 'center' },
+  { prop: 'role', label: '角色', minWidth: gw(205), align: 'center' },
+  // { prop: 'father_username',minWidth: gw(205), label: '代理', width: 110, align: 'center' },
+  { prop: 'name', label: '名称', align: 'center',minWidth: gw(205) },
+  { prop: 'offset', label: '开仓',  align: 'center',minWidth: gw(205) },
+  { prop: 'lever', label: '网格', minWidth: gw(205), align: 'center' },
+  { prop: 'time', label: '时间区间', minWidth: gw(205), align: 'center' },
+  { prop: 'amount', label: '投资金额',minWidth: gw(205), align: 'center' },
+  { prop: 'profit', label: '盈亏金额',minWidth: gw(205), align: 'center' },
 ])
 const isLoading = ref(false)
 const orderNo = ref('')

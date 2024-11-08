@@ -5,12 +5,12 @@
       <template v-if="dataInfo">
         <div class="status-info">
           <div class="status-info__icon">
-              <img src="/@/assets/images/success.svg" v-if="dataInfo.status == 'success'" />
-              <img src="/@/assets/images/fail.svg" v-else-if="dataInfo.status == 'failure'" />
+              <img src="/@/assets/images/success.svg" v-if="data.status == 'success'" />
+              <img src="/@/assets/images/fail.svg" v-else-if="data.status == 'failure'" />
               <img src="/@/assets/images/reviewing.svg" v-else />
           </div>
-          <div class="status-info__title" v-if="dataInfo.status == 'success'">审核通过</div>
-          <div class="status-info__title" v-else-if="dataInfo.status == 'failure'">审核拒绝</div>
+          <div class="status-info__title" v-if="data.status == 'success'">审核通过</div>
+          <div class="status-info__title" v-else-if="data.status == 'failure'">审核拒绝</div>
           <div class="status-info__title" v-else>审核中</div>
         </div>
         <div class=" mt-[20px]">

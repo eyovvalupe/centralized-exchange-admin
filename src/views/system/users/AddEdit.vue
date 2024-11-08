@@ -1,11 +1,11 @@
 <template>
-  <el-dialog :close-on-click-modal="false" width="820" class="reset-el-styte" :title="!props.data ? '新增' : '修改'"
+  <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="!props.data ? '新增' : '修改'"
     v-model="show" :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
-      <el-form-item label="角色名" required :label-width="formLabelWidth" prop="rolename">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
+      <el-form-item label="角色名" required prop="rolename">
         <el-input v-model="form.rolename" autocomplete="off" placeholder="请输入角色名" />
       </el-form-item>
-      <el-form-item label="权限" :label-width="formLabelWidth" required prop="authtree_ids">
+      <el-form-item label="权限" required prop="authtree_ids">
         <div class="w-full">
           <el-transfer v-model="form.authtree_ids" :data="allAuthList" :titles="['可分配', '已分配']" :format="{
             noChecked: ' ',
@@ -15,15 +15,15 @@
               label: 'label',
             }">
             <template #left-footer>
-              <el-button class="mb-1" size="small" @click="transData('left')">
-                <el-icon>
+              <el-button class="w-[48px] mb-1" size="small" @click="transData('left')">
+                <el-icon color="#000" size="16px">
                   <DArrowLeft />
                 </el-icon>
               </el-button>
             </template>
             <template #right-footer>
-              <el-button class="mb-1" size="small" @click="transData('right')">
-                <el-icon>
+              <el-button class="w-[48px] mb-1" size="small" @click="transData('right')">
+                <el-icon color="#000" size="16px">
                   <DArrowRight />
                 </el-icon>
               </el-button>
@@ -32,15 +32,15 @@
           <div class="clearfix"></div>
         </div>
       </el-form-item>
-      <el-form-item label="备注" :label-width="formLabelWidth">
-        <el-input v-model="form.remarks" :autosize="{ minRows: 2, maxRows: 3 }" type="textarea" placeholder="备注信息" />
+      <el-form-item label="备注">
+        <el-input v-model="form.remarks" placeholder="备注信息" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button class="w-[98px]" round  @click="emit('close', false)">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round  @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
@@ -163,4 +163,6 @@ const transData = (type) => {
   }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

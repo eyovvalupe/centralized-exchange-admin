@@ -283,15 +283,15 @@ th.el-table__cell.bg-color3,
   }
 
   .btn-large,
-  .el-input--large,
+  .el-input--large + .el-button--large,
+  .el-input--large:not(.el-textarea),
   .el-select--large .el-select__wrapper {
     height: 48px !important;
     min-height: 48px !important;
     line-height: 48px !important;
   }
-
-  .el-select__placeholder {
-    color: #000;
+  .el-select__placeholder{
+    color:#000;
   }
 
   .el-button--primary.is-plain {
@@ -660,7 +660,7 @@ th.el-table__cell.bg-color3,
   }
 }
 
-.el-button + .el-button {
+.el-button+.el-button {
   margin-left: 10px !important;
 }
 
