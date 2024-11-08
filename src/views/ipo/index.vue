@@ -15,7 +15,7 @@
           :loading="isLoading">搜索</el-button>
       </div>
     </div>
-    <div>
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"

@@ -1,24 +1,28 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-between p-2">
-      <div>
-        <el-button type="primary" @click="showDialog(null, 'showDialog')">
-          <el-icon>
-            <Plus />
-          </el-icon>
-          新建
-        </el-button>
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="aiPos">交易机器人持仓单</el-radio-button>
+          <el-radio-button label="aiSearch">交易机器人订单查询</el-radio-button>
+          <el-radio-button label="aiIndex">交易机器人场控</el-radio-button>
+        </el-radio-group>
+        <el-button class="ml-[10px]" plain icon="plus" type="primary" @click="showDialog(null, 'showDialog')">添加场控</el-button>
       </div>
-      <div class="flex">
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="名称/代码" style="width: 250px;" />
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+      <div class="flex items-center">
+       
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
       </div>
+
     </div>
-    <div>
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <template v-if="item.prop === 'uid'">
@@ -47,29 +51,34 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button class="underline" size="default" link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+              </div>
+              <el-dropdown class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleSubmit(scope.row)">
-                      <el-icon :size="20">
-                        <DeleteFilled />
+                       <el-icon :size="18">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -90,8 +99,17 @@ import { Plus } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import EditPrice from './components/EditPrice.vue'
 import { copy } from '/@/utils'
-
 import userDetail from '/@/components/userDetail/index.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tabPosition = ref('aiIndex')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:ai', () => {
@@ -124,17 +142,21 @@ const optionStatus = [
   }
 ]
 const options={
-      long: '买涨',
-      short: '买跌'
-    };
+  long: '买涨',
+  short: '买跌'
+};
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'username', label: '用户名', align: 'center' },
-  { prop: 'role', label: '角色', align: 'center' },
-  // { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'name', label: '合约', align: 'center' },
-  { prop: 'offset', label: '方向', align: 'center' },
-  { prop: 'winrate', label: '盈亏比率', align: 'center' },
+  { prop: 'uid', label: 'UID',minWidth: gw(140), align: 'center' },
+  { prop: 'username', label: '用户名',minWidth: gw(140), align: 'center' },
+  { prop: 'role', label: '角色', align: 'center',minWidth: gw(364) },
+  // { prop: 'father_username', label: '代理', align: 'center',minWidth: gw(364) },
+  { prop: 'name', label: '合约', align: 'center',minWidth: gw(364), },
+  { prop: 'offset', label: '方向', align: 'center',minWidth: gw(364), },
+  { prop: 'winrate', label: '盈亏比率', align: 'center',minWidth: gw(364), },
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
