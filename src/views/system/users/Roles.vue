@@ -1,37 +1,39 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-between p-2">
-      <div> <el-button type="primary" class="ml-2" @click="showDialog(null, 'showDialog')">新增</el-button>
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div>
+        <el-button type="primary" icon="plus" class="w-[120px]" plain @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
     </div>
-    <div>
+    <div class="pt-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop == 'auths'">
-              <span class="status-bg lock mr-1" v-for="(item, idx) in scope.row[item.prop].split(',')" :key="idx">
+            <div class="role-tag-list" v-if="item.prop == 'auths'">
+              <span class="role-tag-bg lock mr-1" v-for="(item, idx) in scope.row[item.prop].split(',')" :key="idx">
                 {{ item }}
               </span>
-            </span>
-            <span v-else>
+            </div>
+            <div v-else>
               {{ scope.row[item.prop] }}
-            </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width='150' align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <!-- <el-button link type="danger" @click="showDialog(scope.row,'showGoogle')">删除</el-button> -->
-            <div class="flex justify-center">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative" v-if="!scope.row['preset']">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button class="underline" size="default" link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+              </div>
+             <el-dropdown class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="showDialog(scope.row, 'showGoogle')">
-                      <el-icon :size="20">
-                        <DeleteFilled />
+                      <el-icon :size="18">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -44,13 +46,16 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
   <AddEdit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
-   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="dialogType.showGoogle" width="350" @close="closeDialogType">
+   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="dialogType.showGoogle" width="350" @close="closeDialogType" v-if="dialogType.showGoogle">
     <div v-loading="googleLoading">
-      <GoogleVerify class="agentGoogle" @confirm="googleSubmit" v-if="dialogType.showGoogle" />
+      <GoogleVerify class="agentGoogle" @close="dialogType.showGoogle=false;" @confirm="googleSubmit"  />
     </div>
   </el-dialog>
 </template>
@@ -64,7 +69,7 @@ import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { Search, Plus, Loading } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import AddEdit from './AddEdit.vue'
-
+import { hex_md5 } from '/@/utils/md5'
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:Roles', () => {
@@ -77,11 +82,17 @@ const dialogType = reactive({
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
+
 const columnBase = ref([
-  // { prop: 'roleid', label: '角色ID', align: 'center' },
-  { prop: 'rolename', label: '角色名', align: 'center',width:150 },
-  { prop: 'auths', label: '权限', align: 'center' },
-  { prop: 'remarks', label: '备注', align: 'center' }])
+  // { prop: 'roleid', label: '角色ID', align: 'center',minWidth:gw(300) },
+  { prop: 'rolename', label: '角色名', align: 'center',minWidth:gw(300) },
+  { prop: 'auths', label: '权限', align: 'center',minWidth:gw(1140) },
+  { prop: 'remarks', label: '备注', align: 'center',minWidth:gw(300) }])
 const isLoading = ref(false)
 const googleLoading = ref(false)
 const showDialog = (data, type) => {
@@ -96,8 +107,20 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['rolesSearch']){
+    const searchCache = JSON.parse(sessionStorage['rolesSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -112,6 +135,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['rolesSearch'] = JSON.stringify({
+        cacheKey,
+        data:tableData.value
+      })
     })
     .finally(() => {
       isLoading.value = false
@@ -153,8 +180,18 @@ const googleSubmit = (googlecode) => {
 }
 getDataList();
 </script>
-<style>
+<style lang="scss" scoped>
 .el-transfer__buttons .el-transfer__button:nth-child(2){
   margin: 0 !important;
+}
+
+.role-tag-bg{
+  line-height: 28px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: var(--el-color-primary);
+  color:#fff;
+  display: inline-block;
+  margin:5px;
 }
 </style>

@@ -289,14 +289,13 @@ th.el-table__cell.bg-color3,
   }
 
   .btn-large,
-  .el-input--large,
+  .el-input--large + .el-button--large,
+  .el-input--large:not(.el-textarea),
   .el-select--large .el-select__wrapper {
     height: 48px !important;
     min-height: 48px !important;
     line-height: 48px !important;
   }
-
-
   .el-select__placeholder{
     color:#000;
   }
@@ -674,8 +673,13 @@ th.el-table__cell.bg-color3,
   }
 }
 
-.el-button+.el-button {
-  margin-left: 10px !important;
+body .el-button+.el-button {
+  margin-left: 10px;
+}
+
+.el-transfer__buttons > .el-button.is-disabled{
+  background-color: #E3E3E3;
+  border-color:#E3E3E3;
 }
 
 .el-button--small+.el-button--small {

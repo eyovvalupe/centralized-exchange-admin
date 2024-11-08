@@ -81,7 +81,6 @@
                 </div>
               </el-popover>
             </div>
-           
             
           </template>
         </el-table-column>

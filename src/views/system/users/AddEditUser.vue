@@ -1,10 +1,10 @@
 <template>
-   <el-dialog :close-on-click-modal="false" class="reset-el-styte" width="520" :title="!props.data?'新增':'修改'" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
-    <el-form :model="form" :rules="rules" ref="ruleForm" v-loading="loading">
-      <el-form-item label="用户名"  required  :label-width="formLabelWidth"  prop="username"  v-if="!props.data">
+   <el-dialog :close-on-click-modal="false" class="reset-el-styte" width="500" :title="!props.data?'新增':'修改'" v-model="show" :append-to-body="true" @close="emit( 'close', false )">
+    <el-form :model="form" :rules="rules"  label-position="top" ref="ruleForm" class="pt-[10px]" v-loading="loading">
+      <el-form-item label="用户名"  required  prop="username"  v-if="!props.data">
         <el-input v-model="form.username" autocomplete="off" placeholder="请输入角色名" />
       </el-form-item>
-      <el-form-item label="密码"  :label-width="formLabelWidth" v-if="!props.data">
+      <el-form-item label="密码"  v-if="!props.data">
         <!-- <el-input v-model="form.password" disabled autocomplete="off" placeholder="生成密码">
           <template #append>
             <el-button link class="btn-last-txt" @click="randomPwd">重新生成</el-button>
@@ -19,30 +19,30 @@
         <el-button type="primary" class="ml-2" @click="randomPwd">重新生成</el-button>
        </div>
       </el-form-item>
-      <el-form-item label="角色" :label-width="formLabelWidth" required prop="roleid">
+      <el-form-item label="角色" required prop="roleid">
           <el-select v-model="form.roleid" class="w-full"  placeholder="请选择角色" >
             <el-option v-for="item in allRoleList" :key="item.roleid" :label="item.rolename" :value="item.roleid" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" required prop="locked">
+        <el-form-item label="状态" required prop="locked">
           <el-select v-model="form.locked" class="w-full"  placeholder="请选择状态" >
             <el-option v-for="(item,index) in statusOptions" :key="index" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-      <el-form-item label="备注"  :label-width="formLabelWidth" >
+      <el-form-item label="备注"  >
         <el-input
           v-model="form.remarks"
-          :autosize="{ minRows: 2, maxRows: 3 }"
+          :rows="3"
           type="textarea"
           placeholder="备注信息"
         />
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit( 'close', false )">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle"  :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px] pt-[20px]">
+        <el-button @click="emit( 'close', false )" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle"  :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">

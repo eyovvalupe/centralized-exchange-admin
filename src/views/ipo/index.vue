@@ -1,6 +1,6 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex justify-between p-2">
+<div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
       <div></div>
       <div class="flex">
         <div class="mr-5">
