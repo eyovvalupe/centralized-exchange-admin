@@ -2,10 +2,10 @@
   <div class="relative">
     <NavBar />
     <AppMain />
-    <ReceiveMessageAlert :numobj="messageNumObj['deposit']" :isOpen="openReceiveMsgNotifi1" :type="'deposit'"/>
-    <ReceiveMessageAlert :numobj="messageNumObj['kyc']" :isOpen="openReceiveMsgNotifi2" :type="'verify'"/>
-    <ReceiveMessageAlert :numobj="messageNumObj['support']" :isOpen="openReceiveMsgNotifi3" :type="'service'"/>
-    <ReceiveMessageAlert :numobj="messageNumObj['withdraw']" :isOpen="openReceiveMsgNotifi4" :type="'withdraw'"/>
+    <ReceiveMessageAlert :numobj="messageNumObj['deposit']" :type="'deposit'" :isOpen="openReceiveMsgNotifi1" v-if="isRender1"/>
+    <ReceiveMessageAlert :numobj="messageNumObj['kyc']" :type="'verify'" :isOpen="openReceiveMsgNotifi2" v-if="isRender2"/>
+    <ReceiveMessageAlert :numobj="messageNumObj['support']" :type="'service'" :isOpen="openReceiveMsgNotifi3" v-if="isRender3"/>
+    <ReceiveMessageAlert :numobj="messageNumObj['withdraw']" :type="'withdraw'" :isOpen="openReceiveMsgNotifi4" v-if="isRender4"/>
 
   </div>
 </template>
@@ -23,6 +23,9 @@ const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
 const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
 const openReceiveMsgNotifi3 = computed(() => useCommon.openReceiveMsgNotifi3)
 const openReceiveMsgNotifi4 = computed(() => useCommon.openReceiveMsgNotifi4)
-
+const isRender1 = computed(() => useCommon.isRender1)
+const isRender2 = computed(() => useCommon.isRender2)
+const isRender3 = computed(() => useCommon.isRender3)
+const isRender4 = computed(() => useCommon.isRender4)
 
 </script>

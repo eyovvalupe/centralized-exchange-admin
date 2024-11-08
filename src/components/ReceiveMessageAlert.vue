@@ -1,7 +1,14 @@
 <template>
   <div
     class="notification_container w-[300px] h-[102px] bg-[#fff]"
-    :class="isOpen ? 'open_notification' : 'close_notification'"
+    :class="
+      (openReceiveMsgNotifi1 && type == 'deposit') ||
+      (openReceiveMsgNotifi2 && type == 'verify') ||
+      (openReceiveMsgNotifi3 && type == 'service') ||
+      (openReceiveMsgNotifi4 && type == 'withdraw')
+        ? 'open_notification'
+        : 'close_notification'
+    "
     :style="
       type == 'deposit'
         ? 'border: 1px solid #cdf2de'
@@ -25,16 +32,13 @@
       "
     >
       <div class="flex h-[42px] items-center">
-        <div class="mr-[5px]"><NotifiDepositIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'deposit'"><NotifiDepositIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'verify'"><NotifiVerifyIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'service'"><NotifiServiceIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'withdraw'"><NotifiWithdrawIcon /></div>
         <div class="mr-[5px]">
           <span class="text-[16px] text-[#000] font-semibold">{{
-            type == 'deposit'
-              ? '充值'
-              : type == 'withdraw'
-              ? '提现'
-              : type == 'verify'
-              ? '实名认证'
-              : '客服'
+            type == 'deposit' ? '充值' : type == 'withdraw' ? '提现' : type == 'verify' ? '实名认证' : '客服'
           }}</span>
         </div>
         <div class="notification_alert mr-[5px]">
@@ -65,8 +69,9 @@ import NotifiServiceIcon from './icons/NotifiServiceIcon.vue'
 import NotifiVerifyIcon from './icons/NotifiVerifyIcon.vue'
 import NotifiWithdrawIcon from './icons/NotifiWithdrawIcon.vue'
 import NotifiCloseIcon from './icons/NotifiCloseIcon.vue'
-import { useCommonStore } from '/@/store';
+import { useCommonStore } from '/@/store'
 
+const bottomPosition = ref([15, 127, 239, 351])
 const useCommon = useCommonStore()
 const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
 const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
@@ -88,8 +93,8 @@ const props = defineProps({
   },
   isOpen: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const transferTime = time => {
@@ -105,10 +110,27 @@ const transferTime = time => {
 }
 
 const closeNotifi = () => {
-  console.log(props.type)
   if (props.type == 'deposit') {
-    useCommon.setOpenReceiveMsgNotifi1 = false
+    useCommon.toggleNotification1(false)
   }
+  if (props.type == 'verify') {
+    useCommon.toggleNotification2(false)
+  }
+  if (props.type == 'service') {
+    useCommon.toggleNotification3(false)
+  }
+  if (props.type == 'withdraw') {
+    useCommon.toggleNotification4(false)
+  }
+}
+
+const numOfOpen = () => {
+  let i = 0;
+  if (openReceiveMsgNotifi1) i++;
+  if (openReceiveMsgNotifi2) i++;
+  if (openReceiveMsgNotifi3) i++;
+  if (openReceiveMsgNotifi4) i++;
+  return i
 }
 </script>
 <style lang="css">

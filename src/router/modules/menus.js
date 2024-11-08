@@ -62,13 +62,13 @@ export default [
         icon: 'withdrawl',
         meta: { title: '提现订单', auth: '112', noCache: true }
       },
-      // {
-      //   path: '/notice',
-      //   component: () => import('/@/views/layout/components/service/Index.vue'),
-      //   name: 'notice',
-      //   icon: 'notice',
-      //   meta: { title: '客服', auth: '601', noCache: true }
-      // },
+      {
+        path: '/notice',
+        component: () => import('/@/views/layout/components/service/Test.vue'),
+        name: 'notice',
+        icon: 'withdrawl',
+        meta: { title: '客服', auth: '601', noCache: true }
+      },
       // {
       //   path: '/xxx',
       //   name: 'withdrawlOrder',
