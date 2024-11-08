@@ -5,12 +5,13 @@
         v-model="state.userName"
         class="p-[5px] w-full h-[40px] bg-[#f5f5f5] rounded-[8px] flex items-center px-[10px]"
         placeholder="玩家名称/登录UID/用户名"
+        @keydown="(e) => getAllList(e.target.value)"
       />
       <div class="absolute top-[17.5px] right-[15px]" @click="() => {}">
         <SearchIcon />
       </div>
     </div>
-    <div style="overflow-y: auto;">
+    <div style="overflow-y: auto">
       <div
         class="w-full h-[68px] rounded-[8px] p-[10px] flex items-center mb-[10px] hover:bg-[#cee9ff]"
         v-for="item in useService.userList"
@@ -20,7 +21,10 @@
       >
         <div class="w-full h-[68px] rounded-[8px] flex items-center">
           <div class="w-[48px] h-[48px] bg-[#4377fe] rounded-[24px] flex justify-center items-center mr-[10px]">
-            <span class="text-[20px] text-[#fff]">{{ item.order_no ? item.fater_username ? item.fater_username : '未' : '匿' }}</span>
+            <span class="text-[20px] text-[#fff]">{{
+              item.partyid ? item.username.slice(0, 1) : '匿'
+            }}</span>
+            {{ console.log('aaaaaaaaaaaa ', item) }}
           </div>
           <div class="flex flex-col justify-between">
             <span class="text-[14px] text-[#000]">{{ item.remarks || item.username || '匿名用户' }}</span>
@@ -37,10 +41,14 @@
           "
         >
           <span class="text-[12px] text-[#999999]">{{ transferTime(item.lasttime) }}</span>
-          <div style="display: inline-block; width: 20px; " 
+          <div
+            style="display: inline-block; width: 20px"
             :style="item.unread && item.unread != 0 ? 'visibility: visible;' : 'visibility: hidden;'"
           >
-            <div class="w-[20px] h-[16px] rounded-[10px] bg-[red]" style="display: flex; justify-content: center; align-items: center;">
+            <div
+              class="w-[20px] h-[16px] rounded-[10px] bg-[red]"
+              style="display: flex; justify-content: center; align-items: center"
+            >
               <span class="text-[12px] text-[#fff]">{{ item.unread }}</span>
             </div>
           </div>
@@ -63,7 +71,7 @@ import {
   apiSetRemark,
   apiCreateChatInfo,
 } from '/@/api/modules/service/index.api'
-import SearchIcon from './common/SearchIcon.vue'
+import SearchIcon from './common/icons/SearchIcon.vue'
 
 const useService = useServiceStore()
 const state = reactive({
@@ -105,7 +113,8 @@ const getAllList = params => {
   }
   timer = setTimeout(() => {
     // loading.value = true
-    apiUserSearch().then(data => {
+    apiUserSearch(params).then(data => {
+      console.log(data)
       loading.value = false
       msgUserList.value = data.user
     })
@@ -190,106 +199,6 @@ const setBlack = item => {
 </script>
 
 <style lang="scss" scoped>
-// .username {
-//   width: 59%;
-//   font-size: 15px;
-// }
-
-// .h-home {
-//   position: relative;
-// }
-
-// .time {
-//   width: 100px;
-//   text-align: right;
-// }
-
-// .all {
-//   color: #165dff;
-// }
-
-// .msg-con {
-//   max-width: 335px;
-//   font-size: 12px;
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// }
-
-// .left-header {
-//   flex-direction: column;
-// }
-
-// .is-search {
-//   text-align: center;
-//   background: #f5f5f5;
-//   color: #b1b1b1;
-//   padding: 2px 0;
-// }
-
-// .scroll-boxs-left {
-//   max-height: calc(100% - 56px);
-//   // padding: 20px;
-//   overflow-y: auto;
-// }
-
-// .scroll-boxs-left::-webkit-scrollbar {
-//   width: 2px;
-// }
-
-// .scroll-boxs-left::-webkit-scrollbar-thumb {
-//   background-color: rgba(155, 168, 255, 0.795);
-//   border-radius: 2px;
-// }
-
-// .scroll-box {
-//   padding: 20px;
-//   overflow-y: auto;
-// }
-
-// .item-box {
-//   &.active {
-//     background: #165dff;
-//     color: #fff;
-
-//     .el-icon {
-//       color: #fff !important;
-//     }
-//   }
-
-//   border-bottom: 1px solid #e6e6e6;
-
-//   &:not(.active):hover {
-//     background: #dfe6f9;
-//   }
-// }
-
-// .scroll-box::-webkit-scrollbar {
-//   width: 6px;
-// }
-
-// .footer-btn {
-//   text-align: right;
-// }
-
-// .scroll-box::-webkit-scrollbar-thumb {
-//   background-color: rgba(95, 37, 255, 0.795);
-//   border-radius: 3px;
-// }
-
-// .el-button:hover {
-//   background-color: transparent !important;
-//   color: inherit !important;
-// }
-
-// .el-button--text {
-//   margin-right: 15px;
-// }
-
-// .dialog-footer button:first-child {
-//   margin-right: 10px;
-// }
 .sider_container {
   width: 400px;
   border-right: 1px solid #ececec;

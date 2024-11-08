@@ -676,5 +676,4 @@ function goGooglePage(){
 }
 
 
-</style>(: string)(: { notArrow: any; name: any; isRoute: any; isDialog: any }): any(: any[])(: { children: any[] })(:
-{ subMenu: any; children: any[] })(: any): string: any(: { paneName: any })(: any)(: any)(: any)
+</style>

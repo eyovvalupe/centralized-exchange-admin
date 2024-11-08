@@ -1,16 +1,17 @@
 <template>
- <section class="h-rightcon h-full flex flex-col">
+  <section class="flex-1 flex-col justify-between">
+    <div>
       <userInforHeader />
       <messageInterface />
-      <sendMessage />
-    </section>
+    </div>
+    <sendMessage />
+  </section>
 </template>
 
 <script setup>
 import userInforHeader from './common/userInforHeader.vue'
 import messageInterface from './common/messageInterface.vue'
 import sendMessage from './common/sendMessage.vue'
-
 </script>
 
 <style lang="scss" scoped>

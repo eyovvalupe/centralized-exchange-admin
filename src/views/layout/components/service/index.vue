@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full flex w-full">
+  <div class="relative flex w-full"  style="height: calc(100vh - 50px);">
     <ServiceSider />
     <ServiceMain />
   </div>

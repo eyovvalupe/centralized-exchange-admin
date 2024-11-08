@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div v-show="loading" class="loading w-full h-full flex flex-col items-center justify-center">
+    <div v-show="loading" class="loading w-full flex flex-col items-center justify-center">
       <p>
         <el-icon class="is-loading" :size="30">
           <Loading />
@@ -28,15 +28,11 @@
         <li
           v-for="item in useService.newMessageList[useService.chatid]"
           :key="item.id"
-          class="flex w-auto mb-[15px]"
+          class="flex w-auto mb-[20px]"
           :class="item.direction === 'send' ? '' : 'justify-end'"
         >
-          <!-- <div>
-            <span class="avatar-txt" v-if="item.direction == 'send'"> {{ (item.username || '匿').substring(0, 1)
-              }}</span>
-          </div> -->
-          <div>
-            <span class="flex">
+          <div class="flex">
+            <span class="flex mx-[10px]">
               <el-checkbox
                 size="small"
                 v-if="useService.isSelectMessage"
@@ -44,34 +40,41 @@
                 @click="getMessageInfor(item)"
                 :checked="stateObj[item.msgid]"
               />
+
+              <p
+                :class="`txt-${item.direction}`"
+                class="text-[12px] text-[#999999] pr-[10px] flex flex-col justify-end"
+                v-if="item.direction == 'receive'"
+              >
+                {{ transferTime(item.time) }}
+              </p>
               <template v-if="item.type === 'img'">
                 <div class="img-loading" v-if="item.fileName">
                   <el-icon size="60" color="#bbb"><icon-picture /></el-icon>
                   <div class="img-loading-txt">图片加载中...</div>
-                  <!-- <div class="img-loading-txt">{{item.fileName}}</div> -->
                 </div>
-                <el-image
-                  v-else
-                  lazy
-                  :preview-src-list="[item.content]"
-                  style="max-height: 100px"
-                  :src="item.content"
-                  class="imgMessage"
-                >
-                  <template #placeholder>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
+                <div style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; overflow: hidden;" :style="item.direction == 'send' ? 'border-top-right-radius: 16px' : 'border-top-left-radius: 16px'" v-else>
+                  <el-image
+                    lazy
+                    :preview-src-list="[item.content]"
+                    style="max-height: 300px"
+                    :src="item.content"
+                    class="imgMessage"
+                  >
+                    <template #placeholder>
+                      <div class="image-slot">
+                        <el-icon><icon-picture /></el-icon>
+                      </div>
+                    </template>
+                    <template #error>
+                      <div class="image-slot">
+                        <el-icon><icon-picture /></el-icon>
+                      </div>
+                    </template>
+                  </el-image>
+                </div>
               </template>
 
-              <!-- {{ useService.deleteMessageID }}---{{ stateObj[item.msgid] }}---{{ item.msgid }} -->
               <p
                 v-else
                 :class="[item.direction, useService.deleteMessageID.includes(item.msgid) ? 'checked' : '']"
@@ -80,7 +83,11 @@
                 <span v-html="item.content"></span>
               </p>
             </span>
-            <p :class="`txt-${item.direction}`">
+            <p
+              :class="`txt-${item.direction}`"
+              class="text-[12px] text-[#999999] flex flex-col justify-end"
+              v-if="item.direction == 'send'"
+            >
               {{ transferTime(item.time) }}
             </p>
           </div>
@@ -88,6 +95,7 @@
       </ul>
     </main>
   </div>
+  <!-- <div>asdf</div> -->
 </template>
 
 <script setup>
@@ -110,17 +118,19 @@ const transferTime = time => {
     date.getDate() === currentDate.getDate() &&
     date.getMonth() === currentDate.getMonth() &&
     date.getFullYear() === currentDate.getFullYear()
-  if (isToday) {
-    const hours = date.getHours().toString().padStart(2, '0')
-    const minutes = date.getMinutes().toString().padStart(2, '0')
-    return `${hours}:${minutes}`
-  } else {
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    const hours = date.getHours().toString().padStart(2, '0')
-    const minutes = date.getMinutes().toString().padStart(2, '0')
-    return `${month}-${day} ${hours}:${minutes}`
-  }
+  // if (isToday) {
+  //   const hours = date.getHours().toString().padStart(2, '0')
+  //   const minutes = date.getMinutes().toString().padStart(2, '0')
+  //   return `${hours}:${minutes}`
+  // } else {
+  const year = String(date.getFullYear()).slice(-4)
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  // }
 }
 const getMessageInfor = item => {
   stateObj.value[item.msgid] = !stateObj.value[item.msgid]
@@ -143,8 +153,8 @@ const rebackMessage = () => {
     cancelRebackMessage()
     useService.setSeleteMessageID([])
     loading.value = false
-  })  
-  const message = { type : 'text', chatid: useService.chatid, content: "msg" || inputDom.value.textContent }
+  })
+  const message = { type: 'text', chatid: useService.chatid, content: 'msg' || inputDom.value.textContent }
   ServiceChat.sendMessage('send', message)
   // ServiceChat.sendMessage('send', { chatid, msgid })
 }
@@ -178,6 +188,7 @@ watch(
 <style lang="scss" scoped>
 .main {
   position: relative;
+  flex: 1;
 
   .loading {
     position: absolute;
@@ -202,10 +213,10 @@ watch(
 }
 
 .scroll-box {
-  height: calc(100vh - 150px);
+  height: calc(100vh - 250px);
 
   &.select-box {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 300px);
   }
 
   overflow-y: auto;
@@ -231,7 +242,8 @@ watch(
 
 .msg-con {
   position: relative;
-  padding: 5px 10px;
+  padding: 15px 20px;
+  font-size: 16px;
 
   &.checked {
     background: #ff7777;
@@ -241,12 +253,18 @@ watch(
 .receive {
   background: #165dff;
   color: #fff;
-  border-radius: 10px 0 10px 10px;
+  border-radius: 16px 0 16px 16px;
 }
 
 .send {
   background: #eaeaea;
   color: #333;
-  border-radius: 0 10px 10px 10px;
+  border-radius: 0 16px 16px 16px;
+}
+</style>
+<style lang="css">
+.el-dialog__title {
+  font-size: 20px !important;
+  font-weight: 600 !important;
 }
 </style>

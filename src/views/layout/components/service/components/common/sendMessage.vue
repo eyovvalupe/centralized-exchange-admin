@@ -1,22 +1,34 @@
 <template>
-  <footer class="send-box h-[125px] border-t-[1px] border-solid border-[#E6E6E6] flex items-center justify-between">
-    <div
-      ref="inputDom"
-      contenteditable="true"
-      class="border-0 h-full w-full inputDom"
-      placeholder="请输入消息"
-      style="white-space: nowrap; overflow-x: auto"
-      @keyup.enter="sendchat()"
-    ></div>
-    <div class="send-box-icon flex items-center justify-between">
-      <img :src="sendMessage" alt="" class="cursor-pointer" @click="sendchat()" />
-      <label>
-        <img :src="sendImg" alt="" class="mx-8 cursor-pointer" />
-        <input type="file" style="display: none" ref="fileInput" @change="uploadImg" />
-      </label>
-      <img :src="moreImg" @click="setDelel" class="ml-4 mr-4 cursor-pointer" />
+  <div class="w-full h-[100px] p-[20px] flex items-center">
+    <label class="mr-[20px]">
+      <UploadIcon />
+      <input type="file" style="display: none" ref="fileInput" @change="uploadImg" />
+    </label>
+    <div class="flex-1 h-[60px] rounded-[16px] border-[1px] border-[#ececec] p-[15px] flex items-center">
+      <div
+        ref="inputDom"
+        contenteditable="true"
+        class="flex-1"
+        placeholder="请输入消息"
+        style="white-space: nowrap; overflow-x: auto"
+        @keyup.enter="sendchat()"
+      ></div>
+      <div
+        class="w-[78px] h-[30px] bg-[#4377fe] rounded-[8px] mr-[15px] px-[10px] flex items-center justify-between cursor-pointer"
+        @click="sendchat()"
+      >
+        <SendIcon />
+        <span class="text-[14px] text-[#fff]">发送</span>
+      </div>
+      <div
+        class="w-[106px] h-[30px] bg-[#ececec] rounded-[8px] px-[10px] flex items-center justify-between cursor-pointer"
+        @click="setDelel"
+      >
+        <DelIcon />
+        <span class="text-[14px] text-[#999999]">删除信息</span>
+      </div>
     </div>
-  </footer>
+  </div>
 </template>
 
 <script setup>
@@ -27,6 +39,10 @@ import sendImg from '/@/assets/imgs/service/sendImg.png'
 import { _compressImg, randomFileName } from '/@/utils'
 import { useServiceStore } from '/@/store'
 import { ServiceChat } from './ServiceChat'
+import UploadIcon from './icons/UploadIcon.vue'
+import SendIcon from './icons/SendIcon.vue'
+import DelIcon from './icons/DelIcon.vue'
+
 ServiceChat.init()
 ServiceChat.initNum()
 const useService = useServiceStore()
