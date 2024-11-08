@@ -9,7 +9,7 @@ const useCommonStore = defineStore({
       FundData: false,
       GameData: false,
       parameters: '',
-      openReceiveMsgNotifi1: true,
+      openReceiveMsgNotifi1: false,
       openReceiveMsgNotifi2: false,
       openReceiveMsgNotifi3: false,
       openReceiveMsgNotifi4: false,
