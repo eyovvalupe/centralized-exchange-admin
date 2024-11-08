@@ -5,7 +5,7 @@
         v-model="state.userName"
         class="p-[5px] w-full h-[40px] bg-[#f5f5f5] rounded-[8px] flex items-center px-[10px]"
         placeholder="玩家名称/登录UID/用户名"
-        @keydown="(e) => getAllList(e.target.value)"
+        @keydown="e => getAllList(e.target.value)"
       />
       <div class="absolute top-[17.5px] right-[15px]" @click="() => {}">
         <SearchIcon />
@@ -20,11 +20,10 @@
         @click="selectAllMessage(item)"
       >
         <div class="w-full h-[68px] rounded-[8px] flex items-center">
-          <div class="w-[48px] h-[48px] bg-[#4377fe] rounded-[24px] flex justify-center items-center mr-[10px]">
-            <span class="text-[20px] text-[#fff]">{{
-              item.partyid ? item.username.slice(0, 1) : '匿'
-            }}</span>
-            {{ console.log('aaaaaaaaaaaa ', item) }}
+          <div
+            class="w-[48px] h-[48px] bg-[#4377fe] rounded-[24px] flex justify-center items-center mr-[10px] min-w-[48px]"
+          >
+            <span class="text-[20px] text-[#fff]">{{ item.partyid ? item.username.slice(0, 1) : '匿' }}</span>
           </div>
           <div class="flex flex-col justify-between">
             <span class="text-[14px] text-[#000]">{{ item.remarks || item.username || '匿名用户' }}</span>
@@ -80,6 +79,7 @@ const state = reactive({
   remarks: '',
   userName: '',
 })
+console.log('sider', useService.userList)
 // const dataList = ref(useService.userList);
 const msgUserList = ref([])
 const isSearch = ref(false)
@@ -136,7 +136,7 @@ const selectAllMessage = async item => {
   useService.setSelectMessageStatus(false)
   useService.setChatid(item.chatid || '')
   useService.setPartyid(item.partyid || '')
-  useService.getMessageList(item.chatid).then(() => {
+  useService.getMessageList(item.chatid).then(res => {
     isLoading.value = false
     clearUserList()
   })

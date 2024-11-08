@@ -53,7 +53,11 @@
                   <el-icon size="60" color="#bbb"><icon-picture /></el-icon>
                   <div class="img-loading-txt">图片加载中...</div>
                 </div>
-                <div style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; overflow: hidden;" :style="item.direction == 'send' ? 'border-top-right-radius: 16px' : 'border-top-left-radius: 16px'" v-else>
+                <div
+                  style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; overflow: hidden"
+                  :style="item.direction == 'send' ? 'border-top-right-radius: 16px' : 'border-top-left-radius: 16px'"
+                  v-else
+                >
                   <el-image
                     lazy
                     :preview-src-list="[item.content]"
@@ -183,6 +187,7 @@ watch(
     useService.setSeleteMessageID([])
   }
 )
+
 </script>
 
 <style lang="scss" scoped>

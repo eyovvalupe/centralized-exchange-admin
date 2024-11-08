@@ -1,11 +1,11 @@
 <template>
   <div class="user_info_container flex" v-loading="loading">
-    <div class="user_info_main min-w-[250px]">
-      <div class="w-[48px] h-[48px] rounded-[24px] bg-[#4377fe] flex justify-center items-center mr-[10px]">
+    <div class="user_info_main min-w-[300px]">
+      <div class="w-[48px] h-[48px] min-w-[48px] rounded-[24px] bg-[#4377fe] flex justify-center items-center mr-[10px]">
         <span class="text-[20px] text-[#fff]">{{ useService.partyid ? tableData[0].username.slice(0, 1) : "匿"}}</span>
       </div>
       <span class="text-[16px] text-[#000] font-semibold mr-[10px]">{{ useService.partyid ? tableData[0].username : "匿名用户" }}</span>
-      <div class="w-[60px] h-[20px] rounded-[10px] bg-[#4377fe] px-[10px] flex justify-between items-center cursor-pointer" v-if="useService.partyid">
+      <div class="w-[60px] min-w-[60px] h-[20px] rounded-[10px] bg-[#4377fe] px-[10px] flex justify-between items-center cursor-pointer" v-if="useService.partyid">
         <EditIcon />
         <span class="text-[12px] text-[#fff]">编辑</span>
       </div>
@@ -14,24 +14,24 @@
       <table>
         <thead>
           <tr>
-            <th>UID</th>
-            <th>用户名</th>
-            <th>角色</th>
+            <th class="min-w-[51px]">UID</th>
+            <th class="min-w-[63px]">用户名</th>
+            <th class="min-w-[35px]">角色</th>
             <th>账户余额</th>
             <th>流水限制</th>
             <th>备注</th>
-            <th>最后登录时间</th>
+            <th class="min-w-[63px]">最后登录时间</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{{ tableData[0].uid }}</td>
-            <td class="text-[#4377fe]">{{ tableData[0].username }}</td>
-            <td>真实用户</td>
+            <td class="min-w-[50px]">{{ tableData[0].uid }}</td>
+            <td class="text-[#4377fe] min-w-[60px]">{{ tableData[0].username }}</td>
+            <td class="min-w-[30px]">真实用户</td>
             <td>undifined</td>
             <td>undifined</td>
             <td>undifined</td>
-            <td>{{ tableData[0].lastlogin.split(" ")[0] }}<br>{{ tableData[0].lastlogin.split(" ")[1] }}</td>
+            <td class="min-w-[62px]">{{ tableData[0].lastlogin.split(" ")[0] }}<br>{{ tableData[0].lastlogin.split(" ")[1] }}</td>
           </tr>
         </tbody>
       </table>

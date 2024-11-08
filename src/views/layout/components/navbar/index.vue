@@ -218,8 +218,9 @@ const shortCut = ref([
 const showService = ref(false)
 // short cut click
 const onShortCut = item => {
+  console.log(item)
   if (checkAuthCode(item.auth)) {
-    if (item.isDialog) {
+    if ("shrtcut", item.isDialog) {
       // console.log('客服')
       showService.value = !showService.value
       dialogVisible.value = true
@@ -674,6 +675,4 @@ function goGooglePage(){
     margin:10px 0;
   }
 }
-
-
 </style>

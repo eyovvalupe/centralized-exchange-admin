@@ -44,7 +44,6 @@ import SendIcon from './icons/SendIcon.vue'
 import DelIcon from './icons/DelIcon.vue'
 
 ServiceChat.init()
-ServiceChat.initNum()
 const useService = useServiceStore()
 
 const inputDom = ref(null)

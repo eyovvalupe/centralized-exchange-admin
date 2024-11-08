@@ -63,6 +63,7 @@ const useServiceStore = defineStore({
             obj[item.chatid] = tmp_obj;
           })
           this.userList = { ...obj };
+          console.log(obj)
           r(obj)
         })
       })
@@ -97,6 +98,7 @@ const useServiceStore = defineStore({
     },
     setUserList(arr) {
       arr.forEach(item => {
+        console.log(item)
         const { chatid } = item;
         const key_arr = Object.keys(this.userList);
         this.userList[chatid] = {}
@@ -116,7 +118,7 @@ const useServiceStore = defineStore({
       this.serviceList = this.userList
     },
     pushNewMessageList(obj) {
-      this.newMessageList[this.chatid].push(obj)
+      this.newMessageList[obj.chatid].push(obj)
     },
     timerCheckImg(arr_chatid) {
       const tmp_img_idx = [];

@@ -29,17 +29,18 @@ class Service {
         this.isConnected = false
       })
       this.socket.on('receive', message => {
+        console.log(message)
         const useService = useServiceStore()
-        message.data.forEach(data => {
-          useService.pushNewMessageList(data)
-        });
+        message.data.forEach(dt => {
+          useService.pushNewMessageList(dt)
+        })
       })
     }
   }
   initNum() {
     if (!this.socketNum) {
       const useService = useServiceStore()
-      const token = localStorage.getItem('token') || useUserStore().token;
+      const token = localStorage.getItem('token') || useUserStore().token
       const URL = import.meta.env.VITE_PROXY_WEBSOCKET2 + '/msgadmin'
       this.socketNum = io.connect(URL, {
         transports: ['websocket'],
@@ -55,26 +56,27 @@ class Service {
         console.log('连接断开')
       })
       this.socketNum.on('receive', message => {
-        console.log(message, Date.now())
+        // console.log(message, Date.now())
         const { channel, type, num } = message.data
         let msg = ''
         if (channel === 'deposit') {
           msg = '您有1条新的充值消息'
         } else if (channel === 'support') {
           msg = '您有1条新的客服消息'
+          if (type === 'new' && useService.playVoice) {
+            useService.getUserList()
+            audio.play()
+            ElNotification({
+              title: '新消息提醒！',
+              message: msg,
+              position: 'bottom-right',
+              duration: 0,
+            })
+          }
         } else if (channel === 'withdraw') {
           msg = '您有1条新的提现消息'
         } else if (channel === 'kyc') {
           msg = '您有1条新的实名审核消息'
-        }
-        if (type === 'new' && useService.playVoice) {
-          audio.play()
-          ElNotification({
-            title: '新消息提醒！',
-            message: msg,
-            position: 'bottom-right',
-            duration: 0,
-          })
         }
         useService.setMessageNumObj(channel, num)
       })

@@ -15,11 +15,14 @@ import { ref } from 'vue'
 import { wsConnect } from '/@/utils/socket'
 import { useSocketStore, useAppStore } from '/@/store'
 import { containsProp } from '@vueuse/core'
+import { ServiceChat } from './service/components/common/ServiceChat'
 
 const socketStore = useSocketStore()
 const appStore = useAppStore()
 const tabs = computed(() => appStore.tabs)
 
+console.log('重新链接ws')
+ServiceChat.initNum()
 const ws = wsConnect('/admin', () => {
   socketStore.setWS(ws)
 })
