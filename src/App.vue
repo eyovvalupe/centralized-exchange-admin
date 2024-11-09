@@ -275,7 +275,9 @@ th.el-table__cell.bg-color3,
     border-left: 1px solid #ddd;
     padding: 0 15px;
     margin-right: -14px;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 8px 8px 0;
+    min-width: 48px;
+    box-sizing: border-box;
   }
 }
 .el-tabs__header {
@@ -586,43 +588,68 @@ th.el-table__cell.bg-color3,
   margin-right: 10px;
 }
 
-.el-menu--horizontal.el-menu {
-  border-bottom: none !important;
-  height: auto;
-}
+body{
+  .el-menu--horizontal.el-menu {
+    border-bottom: none !important;
+    height: auto;
+  }
 
-.el-dialog {
-  .el-dialog__header {
-    height: 50px;
-    line-height: 50px;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0 20px !important;
-    margin: 0 !important;
+  .el-dialog {
+    .el-dialog__header {
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0 20px !important;
+      margin: 0 !important;
 
-    .el-dialog__title {
-      color: #000;
-      font-size: 16px;
-      font-weight: 400;
-    }
-
-    .el-dialog__headerbtn {
-      top: 4px;
-      .el-dialog__close {
-        font-size: 18px;
-        font-weight: bolder;
+      .el-dialog__title {
         color: #000;
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      .el-dialog__headerbtn {
+        top: 4px;
+        .el-dialog__close {
+          font-size: 18px;
+          font-weight: bolder;
+          color: #000;
+        }
       }
     }
+
+    .el-dialog__footer {
+      padding: 0 10px 10px 10px !important;
+    }
   }
 
-  .el-dialog__footer {
-    padding: 0 10px 10px 10px !important;
+  .el-message--tips {
+    background: #000000db !important;
+    color: #fff !important;
   }
-}
+  .el-button+.el-button {
+    margin-left: 10px;
+  }
 
-.el-message--tips {
-  background: #000000db !important;
-  color: #fff !important;
+  .el-transfer__buttons{
+    .el-transfer__button + .el-transfer__button{
+      margin-left: 0px;
+    }
+    .el-transfer__button{
+      .el-icon{
+        font-size: 18px;
+      }
+    }
+    .el-transfer__button.is-disabled{
+      background-color: #E3E3E3;
+      border-color: #E3E3E3;
+    }
+  }
+
+  .el-button--small + .el-button--small {
+    margin-left: 5px;
+  }
+
 }
 
 .split-line {
@@ -719,6 +746,11 @@ th.el-table__cell.bg-color3,
   color: #fff;
 }
 
+.status-bg.all{
+  background: #E1EAFF;
+  color: #4377FE;
+}
+
 .status-yellow,
 .status-bg.none,
 .status-bg.waitpayment,
@@ -731,9 +763,6 @@ th.el-table__cell.bg-color3,
   color: #fff;
 }
 
-.el-button--success {
-  background: #03bc59 !important;
-}
 
 .status-bg.issuing,
 .status-bg.success,

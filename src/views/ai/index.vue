@@ -10,7 +10,12 @@
         <el-button class="ml-[10px]" plain icon="plus" type="primary" @click="showDialog(null, 'showDialog')">添加场控</el-button>
       </div>
       <div class="flex items-center">
-       
+        <!-- <div class="w-[168px]">
+           <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div> -->
         <div class="w-[264px] ml-[10px]">
           <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
         </div>
@@ -29,8 +34,8 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
-            <span v-else-if="item.prop === 'offset'"  class="status-bg" :class="scope.row[item.prop]">
-              {{ options[scope.row[item.prop]] }}
+            <span v-else-if="item.prop === 'offset'"  class="status-bg" :class="scope.row[item.prop] ? scope.row[item.prop] : 'all'">
+              {{ options[scope.row[item.prop]] || '全部' }}
             </span>
             <span v-else-if="item.prop === 'role'">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
@@ -39,7 +44,7 @@
               {{   scope.row[item.prop] || '全部' }}
             </span> 
             <span v-else-if="item.prop === 'winrate'">
-             {{  scope.row['compare']=='ge'?'大于或等于':'小于' }} {{   scope.row[item.prop] }}%
+             {{  scope.row['compare'] == 'ge' ? '大于或等于':'小于' }} {{   scope.row[item.prop] }}%
             </span> 
             <span v-else-if="item.prop === 'username'">
               <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showInfoDialog')">{{
@@ -101,6 +106,8 @@ import EditPrice from './components/EditPrice.vue'
 import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
 import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+
 const router = useRouter()
 
 const tabPosition = ref('aiIndex')
@@ -121,10 +128,14 @@ const dialogType = reactive({
   showGoogle: false,
   info: null
 })
+
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  role: sessionStorage['aiIndexSearchRole'] || 'all',
+  params: sessionStorage['aiIndexSearchParams'] || '',
+  status: sessionStorage['aiIndexSearchStatus'] || 'all'
 })
+
+
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 const optionStatus = [
@@ -171,14 +182,35 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
+
+  if (searchForm.role !== 'all') {
+    //send.role = searchForm.role
+  }
+
   if (searchForm.params) {
     send.params = searchForm.params;
   }
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['aiIndexSearch']){
+    const searchCache = JSON.parse(sessionStorage['aiIndexSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+  sessionStorage['aiIndexSearchRole']   = searchForm.role
+  sessionStorage['aiIndexSearchParams'] = searchForm.params
+  sessionStorage['aiIndexSearchStatus'] = searchForm.status
+  
   getCtrList(send)
     .then(res => {
       isLoading.value = false
@@ -196,6 +228,11 @@ const getDataList = (page) => {
         item.role = item.role || ''
       })
       tableData.value = res
+      sessionStorage['aiIndexSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
+
     })
     .finally(() => {
       isLoading.value = false
@@ -213,7 +250,6 @@ const handleSubmit = async (data) => {
   ElMessageBox.confirm(`确定删除`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     isLoading.value = true
     apiCtrDel({ partyid: data.partyid }).then(() => {
@@ -232,11 +268,16 @@ const handleDelete = (row) => {
   ElMessageBox.confirm(`删除会清空所有行情数据，且无法恢复`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     dialogType.info = row;
     dialogType.showGoogle = true;
   })
 }
+
+const changeSearch = (s) => {
+  searchForm.role = s;
+  getDataList();
+}
+
 getDataList();
 </script>

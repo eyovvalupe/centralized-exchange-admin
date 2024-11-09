@@ -1,25 +1,26 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex justify-between p-2">
+  <div class="px-[30px] py-[10px]">
+    <div class="flex justify-between reset-el-style-v2">
       <div>
-        <el-button type="primary" @click="showDialog(null, 'showDialog')">新增</el-button>
-        <el-button class="ml-2" @click="showDialog(null, 'showTimeCtrDialog')">时间区间配置</el-button>
-      </div>
+        <el-button type="primary" class="w-[120px]" icon="plus" plain @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button plain type="primary" class="w-[140px]" @click="showDialog(null, 'showTimeCtrDialog')">时间区间配置</el-button>
+      </div>  
       <div class="flex">
         <!-- <div class="mr-10">
           <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
             :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         </div> -->
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="名称/代码" style="width: 250px;" />
 
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+        <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="名称/代码" style="width: 264px;" />
+        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
+
       </div>
     </div>
-    <div>
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'locked'" :style="{ color: !scope.row[item.prop] ? 'green' : '#ff0000' }">
@@ -41,31 +42,34 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button class="underline" size="default" link type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
+              </div>
+              <el-dropdown class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleDelete(scope.row)">
-                      <el-icon :size="20">
-                        <DeleteFilled />
+                       <el-icon :size="18">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
+            
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
+    <div class="py-[10px]"><Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" /></div>
   </div>
   <TimeCtr v-if="dialogType.showTimeCtrDialog" :data="dialogType.info" @close="closeDialogType" />
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
@@ -88,6 +92,7 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import TimeCtr from './components/TimeCtr.vue'
 import Edit from './components/Edit.vue'
 import StockList from './components/StockList.vue'
+import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -102,21 +107,27 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  params: sessionStorage.aiConfigSearchParams || '',
+  status: sessionStorage.aiConfigSearchStatus || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
+
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'center',width:100, },
-  { prop: 'symbol', label: '代码', align: 'center',width:100 },
-  { prop: 'minamount', label: '最小投资额', align: 'center',width:100  },
-  { prop: 'maxgrid', label: '最大网格', align: 'center' ,width:100 },
-  { prop: 'numpeople', label: '投资人数', align: 'center',width:100  },
-  { prop: 'income', label: '收益金额', align: 'center' },
-  { prop: 'ratereturn', label: '历史收益率', align: 'center' },
-  { prop: 'ratereturn24h', label: '24小时收益率', align: 'center' },
-  { prop: 'runtime', label: '运行时间', align: 'center' },
+  { prop: 'name', label: '名称', align: 'center', minWidth:gw(360), },
+  { prop: 'symbol', label: '代码', align: 'center', minWidth:gw(200) },
+  { prop: 'minamount', label: '最小投资额', align: 'center', minWidth:gw(170)  },
+  { prop: 'maxgrid', label: '最大网格', align: 'center' , minWidth:gw(170) },
+  { prop: 'numpeople', label: '投资人数', align: 'center', minWidth:gw(170)  },
+  { prop: 'income', label: '收益金额', align: 'center', minWidth:gw(170) },
+  { prop: 'ratereturn', label: '历史收益率', align: 'center', minWidth:gw(170) },
+  { prop: 'ratereturn24h', label: '24小时收益率', align: 'center', minWidth:gw(170) },
+  { prop: 'runtime', label: '运行时间', align: 'center', minWidth:gw(170) },
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
@@ -131,7 +142,7 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
+
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -139,6 +150,22 @@ const getDataList = (page) => {
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  sessionStorage.aiConfigSearchParams = searchForm.params
+  sessionStorage.aiConfigSearchStatus = searchForm.status
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['aiConfigSearch']){
+    const searchCache = JSON.parse(sessionStorage['aiConfigSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -153,6 +180,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['aiConfigSearch'] = JSON.stringify({
+        cacheKey,
+        data:tableData.value
+      })
     })
     .finally(() => {
       isLoading.value = false
@@ -169,8 +200,7 @@ const closeDialogType = (item) => {
 const handleSubmit = async (googlecode) => {
   ElMessageBox.confirm(`确定删除`, `确定删除吗？`, {
     confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
+    cancelButtonText: '取消'
   }).then(() => {
     isLoading.value = true
     apiDel({ symbol: dialogType.info.symbol, googlecode }).then(() => {
@@ -188,8 +218,7 @@ const handleSubmit = async (googlecode) => {
 const handleDelete = (row) => {
   ElMessageBox.confirm(`删除会清空所有行情数据，且无法恢复`, `确定删除吗？`, {
     confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
+    cancelButtonText: '取消'
   }).then(() => {
     dialogType.info = row;
     dialogType.showGoogle = true;

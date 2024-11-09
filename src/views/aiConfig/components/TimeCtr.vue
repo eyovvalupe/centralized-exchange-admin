@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="980" class="reset-el-styte" title="时间区间配置" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" title="时间区间配置" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
     <ctrTime />
     <template #footer>
