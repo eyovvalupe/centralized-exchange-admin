@@ -821,14 +821,6 @@ body{
   }
 }
 
-.el-button + .el-button {
-  margin-left: 10px !important;
-}
-
-.el-button--small + .el-button--small {
-  margin-left: 5px !important;
-}
-
 .table-list-order {
   border: 1px solid #ececec;
   border-bottom: none;
