@@ -161,7 +161,7 @@ const transferTime = time => {
     date.getFullYear() === currentDate.getFullYear()
   const inAhour = isToday && currentDate.getHours() == date.getHours()
   if (inAhour) {
-    return `${currentDate.getMinutes() - date.getMinutes()}分钟前`
+    return `${(currentDate.getMinutes() - date.getMinutes()) > 0 ? currentDate.getMinutes() - date.getMinutes() : 0 }分钟前`
   } else if (isToday) {
     const hours = date.getHours().toString().padStart(2, '0')
     const minutes = date.getMinutes().toString().padStart(2, '0')
