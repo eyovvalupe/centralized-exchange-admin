@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import { ElConfigProvider } from 'element-plus'
-import { useAppStore } from '/@/store'
+import { useAppStore, useServiceStore, useCommonStore } from '/@/store'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 export default defineComponent({
   name: 'App',
@@ -20,7 +20,139 @@ export default defineComponent({
   },
   setup() {
     const appStore = useAppStore()
+    const useService = useServiceStore()
+    const useCommon = useCommonStore()
+
     const size = computed(() => appStore.size)
+    const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
+    const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
+    const openReceiveMsgNotifi3 = computed(() => useCommon.openReceiveMsgNotifi3)
+    const openReceiveMsgNotifi4 = computed(() => useCommon.openReceiveMsgNotifi4)
+    const depositMsgPosition = computed(() => useCommon.depositMsgPosition)
+    const verifyMsgPosition = computed(() => useCommon.verifyMsgPosition)
+    const serviceMsgPosition = computed(() => useCommon.serviceMsgPosition)
+    const withdrawMsgPosition = computed(() => useCommon.withdrawMsgPosition)
+    const receivedDepositMsg = computed(() => useService.receivedDepositMsg)
+    const receivedVerifyMsg = computed(() => useService.receivedVerifyMsg)
+    const receivedServiceMsg = computed(() => useService.receivedServiceMsg)
+    const receivedWithdrawMsg = computed(() => useService.receivedWithdrawMsg)
+
+    const messageNumObj = computed(() => useService.messageNumObj)
+
+    const click1 = () => {
+      if (!openReceiveMsgNotifi1.value) {
+        useCommon.toggleNotification1(true)
+        useCommon.setAlreadyRender1()
+        useCommon.setDepositMsgPosition(numOfOpen())
+      } else {
+        if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > depositMsgPosition.value)
+          useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+        if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > depositMsgPosition.value)
+          useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+        if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > depositMsgPosition.value)
+          useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+        useCommon.setDepositMsgPosition(numOfOpen())
+        useCommon.setLatestMsg(1)
+      }
+      useCommon.setDepositMsgLasttime(Date.now())
+    }
+    const click2 = () => {
+      if (!openReceiveMsgNotifi2.value) {
+        useCommon.toggleNotification2(true)
+        useCommon.setAlreadyRender2()
+        useCommon.setVerifyMsgPosition(numOfOpen())
+      } else {
+        if (openReceiveMsgNotifi1.value && depositMsgPosition.value > verifyMsgPosition.value)
+          useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+        if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > verifyMsgPosition.value)
+          useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+        if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > verifyMsgPosition.value)
+          useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+        useCommon.setVerifyMsgPosition(numOfOpen())
+        useCommon.setLatestMsg(2)
+      }
+      useCommon.setVerifyMsgLasttime(Date.now())
+    }
+    const click3 = () => {
+      if (!openReceiveMsgNotifi3.value) {
+        useCommon.toggleNotification3(true)
+        useCommon.setAlreadyRender3()
+        useCommon.setServiceMsgPosition(numOfOpen())
+      } else {
+        if (openReceiveMsgNotifi1.value && depositMsgPosition.value > serviceMsgPosition.value)
+          useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+        if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > serviceMsgPosition.value)
+          useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+        if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > serviceMsgPosition.value)
+          useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+        useCommon.setServiceMsgPosition(numOfOpen())
+        useCommon.setLatestMsg(3)
+      }
+      useCommon.setServiceMsgLasttime(Date.now())
+    }
+    const click4 = () => {
+      if (!openReceiveMsgNotifi4.value) {
+        useCommon.toggleNotification4(true)
+        useCommon.setAlreadyRender4()
+        useCommon.setWithdrawMsgPosition(numOfOpen())
+      } else {
+        if (openReceiveMsgNotifi1.value && depositMsgPosition.value > withdrawMsgPosition.value)
+          useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+        if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > withdrawMsgPosition.value)
+          useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+        if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > withdrawMsgPosition.value)
+          useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+        useCommon.setWithdrawMsgPosition(numOfOpen())
+        useCommon.setLatestMsg(4)
+      }
+      useCommon.setWithdrawMsgLasttime(Date.now())
+    }
+
+    const numOfOpen = () => {
+      let i = -1
+      if (openReceiveMsgNotifi1.value) i++
+      if (openReceiveMsgNotifi2.value) i++
+      if (openReceiveMsgNotifi3.value) i++
+      if (openReceiveMsgNotifi4.value) i++
+      return i
+    }
+    watch(
+      () => receivedDepositMsg.value,
+      val => {
+        click1()
+      }
+    )
+    watch(
+      () => receivedVerifyMsg.value,
+      val => {
+        click2()
+      }
+    )
+    watch(
+      () => receivedServiceMsg.value,
+      val => {
+        click3()
+      }
+    )
+    watch(
+      () => receivedWithdrawMsg.value,
+      val => {
+        click4()
+      }
+    )
+
+    watch(() => messageNumObj.value['deposit'], (val) => {
+      if (val == 0) useCommon.toggleNotification1(false)
+    })
+    watch(() => messageNumObj.value['kyc'], (val) => {
+      if (val == 0) useCommon.toggleNotification2(false)
+    })
+    watch(() => messageNumObj.value['support'], (val) => {
+      if (val == 0) useCommon.toggleNotification3(false)
+    })
+    watch(() => messageNumObj.value['withdraw'], (val) => {
+      if (val == 0) useCommon.toggleNotification4(false)
+    })
 
     return {
       size,
@@ -290,8 +422,8 @@ th.el-table__cell.bg-color3,
     min-height: 48px !important;
     line-height: 48px !important;
   }
-  .el-select__placeholder{
-    color:#000;
+  .el-select__placeholder {
+    color: #000;
   }
 
   .el-button--primary.is-plain {
@@ -660,7 +792,7 @@ th.el-table__cell.bg-color3,
   }
 }
 
-.el-button+.el-button {
+.el-button + .el-button {
   margin-left: 10px !important;
 }
 

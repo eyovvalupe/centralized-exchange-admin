@@ -15,10 +15,12 @@ import ReceiveMessageAlert from '../../components/ReceiveMessageAlert.vue';
 import AppMain from '/@/views/layout/components/AppMain.vue'
 import NavBar from '/@/views/layout/components/navbar'
 import { useServiceStore, useCommonStore } from '/@/store';
+import { watch } from 'vue';
 
 const useService = useServiceStore()
 const useCommon = useCommonStore()
 const messageNumObj = computed(() => useService.messageNumObj)
+const receivedServiceMsg = computed(() => useService.receivedServiceMsg)
 const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
 const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
 const openReceiveMsgNotifi3 = computed(() => useCommon.openReceiveMsgNotifi3)

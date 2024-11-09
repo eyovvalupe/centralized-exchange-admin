@@ -23,11 +23,27 @@ const useServiceStore = defineStore({
       deleteMessageID: [],
       // 所有消息存储
       newMessageList: {},
+      receivedDepositMsg: false,
+      receivedVerifyMsg: false,
+      receivedServiceMsg: false,
+      receivedWithdrawMsg: false,
     }
   },
   getters: {
   },
   actions: {
+    setReceivedDepositMsg() {
+      this.receivedDepositMsg = !this.receivedDepositMsg
+    },
+    setReceivedVerifyMsg() {
+      this.receivedVerifyMsg = !this.receivedVerifyMsg
+    },
+    setReceivedServiceMsg() {
+      this.receivedServiceMsg = !this.receivedServiceMsg
+    },
+    setReceivedWithdrawMsg() {
+      this.receivedWithdrawMsg = !this.receivedWithdrawMsg
+    },
     setMessageNumObj(key, val) {
       this.messageNumObj[key] = val;
     },
@@ -63,7 +79,6 @@ const useServiceStore = defineStore({
             obj[item.chatid] = tmp_obj;
           })
           this.userList = { ...obj };
-          console.log(obj)
           r(obj)
         })
       })
