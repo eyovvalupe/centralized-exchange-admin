@@ -16,6 +16,10 @@
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
+         <!-- <div class="w-[400px] ml-2">
+            <el-date-picker style="width:100%;" v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间" end-placeholder="请选择结束时间"/>
+          </div> -->
+
         <div class="w-[264px] ml-[10px]">
           <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
         </div>
@@ -88,6 +92,8 @@ import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
 import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+
 const router = useRouter()
 
 const tabPosition = ref('aiSearch')
@@ -103,6 +109,9 @@ Bus.on('update:contractSearch', () => {
   getDataList()
 })
 const timeRanges = ref([])
+if(sessionStorage['aiSearchTimerange'] && sessionStorage['aiSearchTimerange'] != '[]'){
+  //timeRanges.value = JSON.parse(sessionStorage['aiSearchTimerange'])
+}
 const optionOffset = {
   long: '买涨',
   short: '买跌'
@@ -169,10 +178,11 @@ const optionsTime = [
   { value : 'h', label : '小时' },
   { value : 'd', label : '天' }
 ]
+
 const searchForm = reactive({
-  params: '',
-  role: 'all',
-  status: 'all'
+  params: sessionStorage['aiSearchParams'] || '',
+  role: sessionStorage['aiSearchRole'] || 'all',
+  status: sessionStorage['aiSearchStatus'] || 'all'
 })
 
 const currentLastPage = ref(1)
@@ -181,7 +191,6 @@ const currentPage = ref(1)
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
-
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID', minWidth: gw(205), align: 'center' },
@@ -218,7 +227,6 @@ const getDataList = page => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params
@@ -234,6 +242,22 @@ const getDataList = page => {
     send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
   }
 
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['aiSearch']){
+    const searchCache = JSON.parse(sessionStorage['aiSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+  sessionStorage['aiSearchTimerange'] = JSON.stringify(timeRanges.value)
+  sessionStorage['aiSearchParams']    = searchForm.params
+  sessionStorage['aiSearchRole']      = searchForm.role
+  sessionStorage['aiSearchStatus']    = searchForm.status
 
   apiQueryList(send)
     .then(res => {
@@ -249,6 +273,10 @@ const getDataList = page => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['aiSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false

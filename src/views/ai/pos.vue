@@ -30,7 +30,7 @@
         <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'profit'" style="line-height: 20px;">
+            <span v-if="item.prop === 'profit'" style="lpine-height: 20px;">
               <span class="w-100 block">
                 {{ scope.row['amountreturn'] }}
               </span>
@@ -82,9 +82,9 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link type="primary" @click="showDialog(scope.row, 'showCtrDialog')">用户场控</el-button>
+            <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showCtrDialog')">用户场控</el-button>
             <!-- <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">查看订单</el-button> -->
           </template>
         </el-table-column>
@@ -144,9 +144,9 @@ const optionsTime = [
   { value : 'd', label : '天' }
 ]
 const dialogLoading = ref(false)
-const searchValue = ref(localStorage.getItem('searchstr') || 'all')
-const searchStrbtn = ref('')
-const searchStr = ref('')
+const searchValue = ref(sessionStorage['aiPosSearchValue'] || 'all')
+const searchStr = ref(sessionStorage['aiPosSearchStr'] || '')
+const searchStrbtn = ref(searchStr.value)
 const tableData = computed(() => {
   let list = socketStore.aiOrderList || []
   if (searchValue.value !== 'all') {
@@ -157,6 +157,8 @@ const tableData = computed(() => {
       return f.username.indexOf(searchStr.value) !== -1 || f.uid.indexOf(searchStr.value) !== -1
     })
   }
+  sessionStorage['aiPosSearchValue'] = searchValue.value
+  sessionStorage['aiPosSearchStr'] = searchStr.value
   return list
 });
 const dialogType = reactive({
@@ -168,8 +170,11 @@ const dialogType = reactive({
   closePos: false
 })
 const getDataList = () => {
+  isLoading.value = true
   searchStr.value = searchStrbtn.value;
-  searchValue.value = 'all';
+  setTimeout(()=>{
+    isLoading.value = false
+  },300)
 }
 const transKeyName = (val, key) => {
   let str = val;
@@ -210,19 +215,24 @@ const transKeyName = (val, key) => {
   str = obj[val] || val;
   return str;
 }
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  { prop: 'uid', label: 'UID', width: 100,align: 'center' },
-  { prop: 'username', label: '用户名', width: 150, align: 'center' },
-  { prop: 'role', label: '角色',width: 100, align: 'center' },
-  // { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'name', label: '名称',width: 120, align: 'center' },
-  { prop: 'offset', label: '开仓', width: 100, align: 'center' },
-  { prop: 'lever', label: '网格', width: 100, align: 'center' },
-  { prop: 'time', label: '时间区间', width: 120, align: 'center' },
-  { prop: 'amount', label: '投资金额', width: 120,align: 'center' },
-  { prop: 'endtime', label: '剩余时间', width: 130, align: 'center' },
-  { prop: 'profit', label: '预期盈亏', align: 'center' },
-  { prop: 'status', label: '用户场控', width: 70, align: 'center' }
+  { prop: 'uid', label: 'UID', minWidth: gw(110),align: 'center' },
+  { prop: 'username', label: '用户名', minWidth: gw(140), align: 'center' },
+  { prop: 'role', label: '角色',minWidth: gw(200), align: 'center' },
+  // { prop: 'father_username',minWidth: gw(200), label: '代理', align: 'center' },
+  { prop: 'name', label: '名称',minWidth: gw(240), align: 'center' },
+  { prop: 'offset', label: '开仓', minWidth: gw(140), align: 'center' },
+  { prop: 'lever', label: '网格', minWidth: gw(140), align: 'center' },
+  { prop: 'time', label: '时间区间', minWidth: gw(140), align: 'center' },
+  { prop: 'amount', label: '投资金额', minWidth: gw(140),align: 'center' },
+  { prop: 'endtime', label: '剩余时间', minWidth: gw(140), align: 'center' },
+  { prop: 'profit', label: '预期盈亏',minWidth: gw(220), align: 'center' },
+  { prop: 'status', label: '用户场控', minWidth: gw(140), align: 'center' }
 ])
 
 const isLoading = ref(false)

@@ -3,7 +3,32 @@
     --el-color-primary: #4377FE !important;
     --el-font-weight-primary: 400 !important;
     --el-dialog-padding-primary: 10px !important;
-    --el-color-danger:#ED4043;
+    --el-color-danger:#F33764;
+    --el-color-danger-light-3: #f25076;
+    --el-color-danger-light-5: #fab6b6;
+    --el-color-danger-light-7: #fcd3d3;
+    --el-color-danger-light-8: #fde2e2;
+    --el-color-danger-light-9: #fef0f0;
+    --el-color-danger-dark-2: #e92754;
+
+    --el-color-success: #03BC59;
+    --el-color-success-light-3: #01cb60;
+    --el-color-success-light-5: #b3e19d;
+    --el-color-success-light-7: #d1edc4;
+    --el-color-success-light-8: #e1f3d8;
+    --el-color-success-light-9: #f0f9eb;
+    --el-color-success-dark-2: #02af53;
+
+
+    --el-color-info: #999;
+    --el-color-info-light-3: #a4a5aa;
+    --el-color-info-light-5: #c8c9cc;
+    --el-color-info-light-7: #dedfe0;
+    --el-color-info-light-8: #e9e9eb;
+    --el-color-info-light-9: #f4f4f5;
+    --el-color-info-dark-2: #73767a;
+
+
     --el-disabled-bg-color:#F5F5F5;
     
 
@@ -48,6 +73,14 @@
       --el-button-active-text-color:var(--el-color-primary);
     }
 
+    .el-button--small{
+      --el-button-size:28px;
+      border-radius: 4px;
+    }
+
+    .el-button--danger{
+
+    }
     
     .el-select__wrapper{
       --el-border-radius-base:8px;

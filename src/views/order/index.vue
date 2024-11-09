@@ -298,9 +298,9 @@ const getDataList = page => {
   
   const cacheKey = hex_md5(JSON.stringify(send))
   if(sessionStorage['orderSearch']){
-    const orderSearchCache = JSON.parse(sessionStorage['orderSearch'])
-    if(orderSearchCache.cacheKey == cacheKey){
-      tableData.value = orderSearchCache.data
+    const searchCache = JSON.parse(sessionStorage['orderSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
     }else{
       isLoading.value = true
     }
