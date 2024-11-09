@@ -4,7 +4,7 @@
       <div>
         <el-button type="primary" class="w-[120px]" icon="plus" plain @click="showDialog(null, 'showDialog')">新增</el-button>
         <el-button plain type="primary" class="w-[140px]" @click="showDialog(null, 'showTimeCtrDialog')">时间区间配置</el-button>
-      </div>  
+      </div>
       <div class="flex">
         <!-- <div class="mr-10">
           <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
@@ -12,7 +12,7 @@
         </div> -->
 
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="名称/代码" style="width: 264px;" />
-        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1)"
+        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1,2)"
           :loading="isLoading">查询</el-button>
 
       </div>
@@ -138,11 +138,14 @@ const showDialog = (data, type) => {
   }
   dialogType[type] = true;
 }
-const getDataList = (page) => {
+
+const getDataList = (page,loadingMode=1) => {
   if (page) {
     currentLastPage.value = page
   }
-
+  if(loadingMode == 2){ //1有缓存不显示loading，2始终显示
+    isLoading.value = true
+  }
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;

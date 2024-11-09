@@ -18,7 +18,7 @@
         <el-table-column label="操作" width="80" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link :type="scope.row['status'] == 1?'':'primary'" :disabled="scope.row['status'] == 1"
+              <el-button link  :type="scope.row['status'] == 1?'':'primary'" :disabled="scope.row['status'] == 1"
                 @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
             </span>
           </template>

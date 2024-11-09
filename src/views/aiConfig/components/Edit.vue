@@ -1,59 +1,61 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
-      <el-form-item label="名称" required prop="name">
-        <el-input v-model="form.name" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="代码" prop="symbol">
-        <el-input v-model="form.symbol" disabled autocomplete="off" />
-      </el-form-item>
-      <div class="flex">
-        <el-form-item label="最小投资额" required class="mr-2 w-1/2" prop="minamount">
-          <el-input v-model="form.minamount" autocomplete="off" />
+   <div class="soll-list soll-list-y max-h-[520px]">
+      <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
+        <el-form-item label="名称" required prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="最大网格" required class="w-1/2" prop="maxgrid">
-          <el-input v-model="form.maxgrid" autocomplete="off" />
+        <el-form-item label="代码" prop="symbol">
+          <el-input v-model="form.symbol" disabled autocomplete="off" />
         </el-form-item>
-      </div>
-      <div class="flex">
-        <el-form-item label="投资人数" required class="mr-2 w-1/2" prop="numpeople">
-          <el-input v-model="form.numpeople" autocomplete="off" />
+        <div class="flex ml-[-10px]">
+          <el-form-item label="最小投资额" required class="flex-1 w-0 ml-[10px]" prop="minamount">
+            <el-input-number :min="0" class="input-number" :controls="false" @blur="form.minamount <= 0 ? form.minamount = '' : ''" v-model="form.minamount" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="最大网格" required class="flex-1 w-0 ml-[10px]" prop="maxgrid">
+            <el-input-number class="input-number" :controls="false" :precision="0" :min="1" v-model="form.maxgrid" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <div class="flex ml-[-10px]">
+          <el-form-item label="投资人数" required class="flex-1 ml-[10px] w-0" prop="numpeople">
+            <el-input-number v-model="form.numpeople" :precision="0" :min="0" class="input-number" :controls="false" @blur="form.numpeople <= 0 ? form.numpeople = '' : ''" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="收益金额" required class="flex-1 ml-[10px] w-0" prop="income">
+            <el-input-number v-model="form.income" class="input-number" :controls="false" @blur="form.income <= 0 ? form.income = '' : ''" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <el-form-item label="开始运行日期" required prop="starttime">
+          <el-date-picker v-model="form.starttime" type="date" placeholder="请选择日期" />
         </el-form-item>
-        <el-form-item label="收益金额" required class="w-1/2" prop="income">
-          <el-input v-model="form.income" autocomplete="off" />
-        </el-form-item>
-      </div>
-      <el-form-item label="开始运行日期" required prop="starttime">
-        <el-date-picker v-model="form.starttime" type="date" placeholder="请选择日期" />
-      </el-form-item>
-      <p class="text-base mt-5 mb-1">波动机器人</p>
-      <div class="flex">
-        <el-form-item label="投资人数增加" required class="mr-2 w-1/2" prop="pernumpeople">
-          <el-input v-model="form.pernumpeople" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="收益金额增加" required class="w-1/2" prop="perincome">
-          <el-input v-model="form.perincome" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="小时/次" required class="w-1/2 ml-2" prop="perhour">
-          <el-input v-model="form.perhour" autocomplete="off" />
-        </el-form-item>
-      </div>
-      <div class="flex">
-        <el-form-item label="历史收益率波动(%)" required class="mr-2 w-1/2" prop="ratereturn">
-          <el-input v-model="form.ratereturn" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="24小时收益率波动(%)" required class="w-1/2" prop="ratereturn24h">
-          <el-input v-model="form.ratereturn24h" autocomplete="off" />
-        </el-form-item>
-      </div>
-      <small class="text-gray-400">* 逗号隔开，波动区间在值1和值2之间</small>
-    </el-form>
+        <p class="text-base pb-[20px] text-[#000]">波动机器人</p>
+        <div class="flex ml-[-10px]">
+          <el-form-item label="投资人数增加" required class="ml-[10px] flex-1 w-0" prop="pernumpeople">
+            <el-input-number :precision="0" v-model="form.pernumpeople" :min="0" class="input-number" :controls="false" @blur="form.pernumpeople <= 0 ? form.pernumpeople = '' : ''" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="收益金额增加" required class="ml-[10px] flex-1 w-0" prop="perincome">
+            <el-input-number v-model="form.perincome" :controls="false" @blur="form.perincome <= 0 ? form.perincome = '' : ''" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="小时/次" required class="ml-[10px] flex-1 w-0" prop="perhour">
+            <el-input-number :precision="0" v-model="form.perhour" :controls="false" @blur="form.perhour <= 0 ? form.perhour = '' : ''"  autocomplete="off" />
+          </el-form-item>
+        </div>
+        <div class="flex ml-[-10px]">
+          <el-form-item label="历史收益率波动(%)" required class="flex-1 w-0 ml-[10px]" prop="ratereturn">
+            <el-input v-model="form.ratereturn" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="24小时收益率波动(%)" required class="flex-1 w-0 ml-[10px]" prop="ratereturn24h">
+            <el-input v-model="form.ratereturn24h" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <small class="text-gray-400">* 逗号隔开，波动区间在值1和值2之间</small>
+      </el-form>
+    </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px] pt-[30px]">
+        <el-button class="w-[98px]" round @click="emit('close', false)">取消</el-button>
+        <el-button class="w-[98px]" round type="primary" @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
@@ -83,13 +85,13 @@ const form = reactive({
   name: '',
   symbol: '',
   minamount: null,
-  maxgrid: '',
-  numpeople: '',
-  income: '',
+  maxgrid: null,
+  numpeople: null,
+  income: null,
   starttime: '',
-  pernumpeople: '',
-  perincome: '',
-  perhour: '',
+  pernumpeople: null,
+  perincome: null,
+  perhour: null,
   ratereturn: '',
   ratereturn24h: ''
 })

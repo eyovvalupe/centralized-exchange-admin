@@ -1,12 +1,12 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex p-2">
-      <el-button type="primary" @click="showDialog(null, 'showDialog')">新增</el-button>
+  <div>
+    <div class="flex">
+      <el-button type="primary" size="default" class="w-[80px]" @click="showDialog(null, 'showDialog')">新增</el-button>
     </div>
-    <div>
+    <div class="py-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'unit'">
@@ -17,31 +17,34 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(165)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button class="underline" size="default" link type="primary" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+              </div>
+              <el-dropdown class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleDelete(scope.row)">
-                      <el-icon :size="20">
-                        <DeleteFilled />
+                      <el-icon :size="18">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
-      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+     
     </div>
+    
   </div>
   <TimeEdit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="dialogType.showGoogle" width="320" @close="closeDialogType">
@@ -69,10 +72,15 @@ const dialogType = reactive({
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 const options = { s: '秒', m: '分钟', h: '小时', d: '天' }
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  { prop: 'time', label: '时间', align: 'center', },
-  { prop: 'unit', label: '时间单位', align: 'center' },
-  { prop: 'rangereturn', label: '盈亏范围(%)', align: 'center' },
+  { prop: 'time', label: '时间', align: 'center',minWidth:gw(165) },
+  { prop: 'unit', label: '时间单位', align: 'center',minWidth:gw(165) },
+  { prop: 'rangereturn', label: '盈亏范围(%)', align: 'center',minWidth:gw(165) },
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
@@ -120,9 +128,9 @@ const handleSubmit = async (googlecode) => {
   ElMessageBox.confirm(`确定删除`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     isLoading.value = true
+    dialogType.showGoogle = false
     apiDel({ id: dialogType.info.id, googlecode }).then(() => {
       closeDialogType({ reload: true })
       ElMessage({
@@ -139,7 +147,6 @@ const handleDelete = (row) => {
   ElMessageBox.confirm(`删除会清空所有行情数据，且无法恢复`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     dialogType.info = row;
     dialogType.showGoogle = true;

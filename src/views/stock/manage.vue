@@ -30,7 +30,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="minWidth" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
               <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
@@ -88,12 +88,14 @@ const marketTitleMap = ref({
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 
-const minWidth = 200
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
 const columnBase = ref([
-  { prop: 'name', label: '公司名称', align: 'center',minWidth },
-  { prop: 'symbol', label: '股票代码', align: 'center',minWidth },
-  { prop: 'exchange', label: '交易所', align: 'center',minWidth },
-  { prop: 'enabled', label: '状态', align: 'center',minWidth }
+  { prop: 'name', label: '公司名称', align: 'center',minWidth:gw(500) },
+  { prop: 'symbol', label: '股票代码', align: 'center',minWidth:gw(500) },
+  { prop: 'exchange', label: '交易所', align: 'center',minWidth:gw(544) },
+  { prop: 'enabled', label: '状态', align: 'center',minWidth:gw(200) }
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {

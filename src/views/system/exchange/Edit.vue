@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="420" class="reset-el-styte" title="汇率价格设置" v-model="show" :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
+    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" class="pt-[10px]">
       <el-form-item label="市场" :label-width="formLabelWidth">
         <el-input  v-model="form.market" disabled />
       </el-form-item>
@@ -12,10 +12,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

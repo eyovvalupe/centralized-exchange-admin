@@ -3,7 +3,7 @@
     @close="emit('close', false)">
     <el-form :model="form" :rules="rules" v-loading="loading" label-position="top" class="pt-[10px]" ref="ruleForm">
       <el-form-item label="用户UID" required prop="uid">
-        <el-input v-model="form.uid" placeholder="请输入用户UID" :disabled="!isAddType" autocomplete="off" />
+        <el-input-number class="input-number" :precision="0" :controls="false" v-model="form.uid" placeholder="请输入用户UID" :disabled="!isAddType" autocomplete="off" />
       </el-form-item>
       <div class="flex justify-between">
         <el-form-item label="方向" required prop="offset" class="w-4/12 mr-[20px]">
@@ -30,7 +30,7 @@
         <el-form-item class="w-8/12">
            <div class="flex w-full mt-7">
             <div  class="w-7/12">
-              <el-input-number class="input-number" :precision="0" :min="0" :controls="false" v-model="form.winrate" autocomplete="off">
+              <el-input-number class="input-number" :max="100" :precision="0" :min="0" :controls="false" v-model="form.winrate" autocomplete="off">
                 <template #suffix>%</template>
               </el-input-number>
             </div>
@@ -85,7 +85,7 @@ const loadingSelect = ref(false)
 const show = ref(true)
 
 const form = ref({
-  uid: '',
+  uid: null,
   symbol: 'all',
   offset: 'all',
   compare: 'ge',

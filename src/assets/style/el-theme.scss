@@ -88,7 +88,8 @@
     .el-input__wrapper{
       --el-input-border-radius:8px;
     }
-    .el-button--large{
+    .el-button--large,
+    .el-button--default{
       --el-border-radius-base:8px;
     }
     .el-input-group__append, .el-input-group__prepend{

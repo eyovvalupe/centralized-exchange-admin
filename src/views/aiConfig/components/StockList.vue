@@ -12,16 +12,16 @@
     
     <div class="soll-list mt-[10px] reset-el-style-v2">
       <el-table :data="tableData" border v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             {{ scope.row[item.prop] || 'N/A' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(130)" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link class="underline" :type="scope.row['status'] == 1 ? '' : 'primary'" :disabled="scope.row['status'] == 1"
+              <el-button link class="underline" size="default" :type="scope.row['status'] == 1 ? '' : 'primary'" :disabled="scope.row['status'] == 1"
                 @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
             </span>
           </template>
@@ -62,12 +62,11 @@ const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
 
-
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'center' },
-  { prop: 'symbol', label: '代码', align: 'center', width: 100 },
-  { prop: 'price', label: '最新价', align: 'center', width: 100 },
-  { prop: 'amount', label: '交易金额(24H)', align: 'center', width: 180 },
+  { prop: 'name', label: '名称', align: 'center',minWidth:gw(130) },
+  { prop: 'symbol', label: '代码', align: 'center', minWidth: gw(130) },
+  { prop: 'price', label: '最新价', align: 'center', minWidth: gw(130) },
+  { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: gw(144) },
 ])
 const searchForm = reactive({
   params: ''

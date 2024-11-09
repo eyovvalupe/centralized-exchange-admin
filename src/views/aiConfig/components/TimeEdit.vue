@@ -1,10 +1,10 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" class="pt-[10px]" label-position="top" ref="ruleForm" v-loading="loading">
       <div class="flex">
-        <el-form-item label="时间" required class="mr-2 w-1/2" prop="time">
-          <el-input v-model.number="form.time" type="number" autocomplete="off" />
+        <el-form-item label="时间" required class="mr-[10px] w-1/2" prop="time">
+          <el-input-number class="input-number" :min="1" :precision="0" :controls="false" v-model="form.time"  autocomplete="off" />
         </el-form-item>
         <el-form-item label="时间单位" required class="w-1/2" prop="unit">
           <el-select v-model="form.unit" class="w-full">
@@ -14,14 +14,14 @@
       </div>
       <el-form-item label="盈亏范围(%)" required  prop="rangereturn">
           <el-input v-model="form.rangereturn" autocomplete="off" />
-          <small class="text-gray-400">* 逗号隔开，盈亏在两个数值之间浮动</small>
+          <small class="text-gray-400 pt-[10px]">* 逗号隔开，盈亏在两个数值之间浮动</small>
         </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button @click="emit('close', false)"  round class="w-[98px]">取消</el-button>
+        <el-button type="primary" round class="w-[98px]" @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320" :append-to-body="true">
