@@ -1,41 +1,53 @@
 <template>
-  <div class="reset-el-styte">
-    <div class="flex justify-between p-2">
+  <div class="px-[30px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
       <div>
-        <el-button  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  @click="showDialog(null, 'showDialog')">新增</el-button>
+        <el-button class="w-[120px]" plain icon="plus"  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  @click="showDialog(null, 'showDialog')">新增</el-button>
       </div>
       <div class="flex">
-        <el-button :type="searchForm.offset == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-          :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        <el-select v-model="searchForm.crypto" style="width: 150px;" class="mx-2">
-          <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" >
-            <div class="select-money">
-              <img v-if="item.name != '全部加密货币'" :src="`/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
-              <span>{{ item.name }}</span>
-            </div>
-          </el-option>
-        </el-select>
-        <el-select v-model="searchForm.currency" style="width: 150px;">
-          <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" >
-            <div class="select-money">
-              <img v-if="item.name != '全部计价法币'" :src="`/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
-              <span>{{ item.name }}</span>
-            </div>
-          </el-option>
-        </el-select>
-        <el-button type="primary" class="ml-2" :icon="Search" @click="getDataList(1)"
+
+        <div class="w-[168px]">
+          <el-select v-model="searchForm.offset">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+        <div class="w-[168px] ml-[10px]">
+          <el-select v-model="searchForm.crypto">
+            <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" >
+              <div class="select-money">
+                <img v-if="item.name != '全部加密货币'" :src="`/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+                <span>{{ item.name }}</span>
+              </div>
+            </el-option>
+          </el-select>
+        </div>
+        <div class="w-[168px] ml-[10px]">
+          <el-select v-model="searchForm.currency" >
+            <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" >
+              <div class="select-money">
+                <img v-if="item.name != '全部计价法币'" :src="`/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
+                <span>{{ item.name }}</span>
+              </div>
+            </el-option>
+          </el-select>
+        </div>
+        <el-button type="primary" class="ml-[10px]" :icon="Search" @click="getDataList(1)"
           :loading="isLoading">搜索</el-button>
       </div>
     </div>
-    <div>
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'offset'" class="status-bg"
               :class="scope.row['offset'] == 'buy' ? 'long' : 'short'">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
+            </span>
+            <span class="flex items-center" v-else-if="item.prop == 'crypto' || item.prop == 'currency'">
+              <img class="w-[16px] h-[16px] rounded mr-[10px]" :src="`/images/crypto/${ scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop]"> {{scope.row[item.prop]}}
             </span>
             <template v-else-if="item.prop === 'merchant'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
@@ -46,29 +58,33 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <el-button link :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button class="underline" size="default" link :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)" @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+               </div>
+              <el-dropdown class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleDelete(scope.row)" :disabled="!checkAuthCode(12101)" >
-                      <el-icon :size="20" :color="checkAuthCode(12101)?'red':'#ccc'">
-                        <DeleteFilled />
+                      <el-icon :size="18" :color="checkAuthCode(12101)?'':'#ccc'">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -87,6 +103,7 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import { getGlobalWalletList } from '/@/api/modules/base.api'
 import AdEdit from './components/AdEdit.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
+import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -115,19 +132,24 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  currency: 'all',
-  crypto: 'all',
-  offset: 'all'
+  currency: sessionStorage['c2cAdSearchCurrency'] || 'all',
+  crypto: sessionStorage['c2cAdSearchCrypto'] || 'all',
+  offset: sessionStorage['c2cAdSearchOffset'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  { prop: 'merchant', label: '商户名称', align: 'center',width:250 },
-  { prop: 'offset', label: '方向', align: 'center' },
-  { prop: 'crypto', label: '加密货币', align: 'center' },
-  { prop: 'currency', label: '计价法币', align: 'center'},
-  { prop: 'price', label: '价格', align: 'center'  },
-  { prop: 'limit', label: '限额', align: 'center',width:200 },
+  { prop: 'merchant', label: '商户名称', align: 'center',minWidth:gw(500) },
+  { prop: 'offset', label: '方向', align: 'center',minWidth:gw(200) },
+  { prop: 'crypto', label: '加密货币', align: 'center',minWidth:gw(200) },
+  { prop: 'currency', label: '计价法币', align: 'center',minWidth:gw(200)},
+  { prop: 'price', label: '价格', align: 'center',minWidth:gw(200)  },
+  { prop: 'limit', label: '限额', align: 'center',minWidth:gw(446) },
 ])
 const currencyList = ref([])
 const cryptoList = ref([])
@@ -171,6 +193,24 @@ const getDataList = (page) => {
   if (searchForm.currency !== 'all') {
     send.currency = searchForm.currency;
   }
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['c2cAdSearch']){
+    const searchCache = JSON.parse(sessionStorage['c2cAdSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+  sessionStorage['c2cAdSearchParams'] = searchForm.params
+  sessionStorage['c2cAdSearchOffset'] = searchForm.offset
+  sessionStorage['c2cAdSearchCrypto'] = searchForm.crypto
+  sessionStorage['c2cAdSearchCurrency'] = searchForm.currency
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -185,6 +225,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['c2cAdSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false
@@ -202,8 +246,7 @@ const closeDialogType = (item) => {
 const handleDelete = (row) => {
   ElMessageBox.confirm(`确定删除此c2c广告吗？`, `确定删除吗？`, {
     confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
+    cancelButtonText: '取消'
   }).then(() => {
     isLoading.value = true
     apiDel({ id: row.id }).then(() => {

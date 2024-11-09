@@ -123,7 +123,6 @@ const handleClear = (row) => {
   ElMessageBox.confirm(`确定清除吗？`, `确认清除`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     handleSubmit(row);
   })

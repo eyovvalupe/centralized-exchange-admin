@@ -1,14 +1,10 @@
 <template>
    <div class="px-[30px] py-[10px]">
-    <div class="flex reset-el-style-v2 justify-between">
+    <!-- <div class="flex reset-el-style-v2 justify-between">
       <div>
         <el-button type="primary" plain @click="showDialog(null,'showAutoDialog')">汇率更新方式</el-button>
       </div>
-      <div>
-        <!-- {{ autoMode?'自动':'手动' }} -->
-       
-      </div>
-    </div>
+    </div> -->
     <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
@@ -18,16 +14,20 @@
             <span v-if="item.prop === 'market'">
               {{ scope.row[item.prop] == 'forex' ? '外汇' : '加密货币' }}
             </span>
+            <span class="flex items-center" v-if="item.prop === 'symbol'">
+              <img class="w-[16px] h-[16px] mr-[10px] rounded-full" :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()" v-show="scope.row.showIcon" @load="scope.row.showIcon=true;">
+              {{ scope.row[item.prop] }}
+            </span>
             <span v-else>
               {{ scope.row[item.prop] }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="gw(140)" align="center">
+        <!-- <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
             <el-button class="underline" link type="primary" @click="showDialog(scope.row, 'showEditDialog')">编辑价格</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
@@ -115,6 +115,9 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
+      res.map(item=>{
+        item.showIcon = false
+      })
       tableData.value = res || []
       sessionStorage['exchangeSearch'] = JSON.stringify({
         cacheKey,

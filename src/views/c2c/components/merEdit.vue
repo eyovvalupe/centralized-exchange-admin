@@ -1,27 +1,27 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
       <el-form-item label="商户名称" required prop="name">
         <el-input v-model="form.name" />
       </el-form-item>
-      <div class="flex w-full">
-        <el-form-item label="成交量" required class="w-4/12" prop="volume">
-          <el-input v-model="form.volume" />
+      <div class="flex ml-[-20px]">
+        <el-form-item label="成交量" required class="flex-1 w-0 ml-[20px]" prop="volume">
+          <el-input-number :controls="false" :precision="0" class="input-number"  v-model="form.volume" />
         </el-form-item>
-        <el-form-item label="成交率" required class="mx-2 w-4/12" prop="volumerate">
-          <el-input v-model="form.volumerate" />
+        <el-form-item label="成交率" required class="flex-1 w-0 ml-[20px]" prop="volumerate">
+          <el-input-number :controls="false" :precision="0" class="input-number" :max="100" v-model="form.volumerate" />
         </el-form-item>
-        <el-form-item label="平均时效(分钟)" required class="w-4/12" prop="avetime">
-          <el-input v-model="form.avetime" />
+        <el-form-item label="平均时效(分钟)" required class="flex-1 w-0 ml-[20px]" prop="avetime">
+          <el-input-number :controls="false" :precision="0" class="input-number"  v-model="form.avetime" />
         </el-form-item>
       </div>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button class="w-[98px]" round @click="emit('close', false)">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
@@ -49,9 +49,9 @@ const showGoogle = ref(false)
 
 const form = reactive({
   name: '',
-  volumerate: '',
-  volume: '',
-  avetime: '',
+  volumerate: null,
+  volume: null,
+  avetime: null,
 })
 onMounted(() => {
   for (const key in form) {

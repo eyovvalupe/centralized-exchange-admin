@@ -1169,11 +1169,12 @@ small {
 }
 .select-money {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   img {
     width: 20px;
     height: 20px;
+    margin-right:10px;
+    border-radius: 50%;
   }
 }
 

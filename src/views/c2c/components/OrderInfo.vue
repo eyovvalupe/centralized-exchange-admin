@@ -267,7 +267,6 @@ const handleSubmit = (status) => {
       customClass: 'transTop320',
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
     }).then(() => {
       funcEvent(status)
     }).catch(() => { })
