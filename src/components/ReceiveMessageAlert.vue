@@ -59,7 +59,7 @@
             : '客服消息'
         }}未处理</span
       >
-      <span>{{ transferTime(time) }}</span>
+      <span>{{ transferTime(new Date()) }}</span>
     </div>
   </div>
 </template>
