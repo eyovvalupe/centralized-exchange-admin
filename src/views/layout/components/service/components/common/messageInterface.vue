@@ -61,7 +61,7 @@
                   <el-image
                     lazy
                     :preview-src-list="[item.content]"
-                    style="max-height: 300px"
+                    style="max-width: 470px;"
                     :src="item.content"
                     class="imgMessage"
                   >
