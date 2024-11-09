@@ -8,7 +8,7 @@
       </p>
       <p>请稍候...</p>
     </div>
-    <div class="del-tools reset-el-styte w-full px-5 py-2 flex justify-between" v-if="useService.isSelectMessage">
+    <div class="del-tools reset-el-styte w-full h-[50px] px-[20px] flex justify-between items-center" v-if="useService.isSelectMessage">
       <el-button type="primary" @click="rebackMessage">删除 {{ useService.deleteMessageID.length }}</el-button>
       <el-button link @click="cancelRebackMessage">取消</el-button>
     </div>
@@ -61,7 +61,7 @@
                   <el-image
                     lazy
                     :preview-src-list="[item.content]"
-                    style="max-height: 300px"
+                    style="max-width: 470px; height: auto; display: block;"
                     :src="item.content"
                     class="imgMessage"
                   >
@@ -195,6 +195,10 @@ watch(
   position: relative;
   flex: 1;
 
+  :deep(img.el-image__inner.el-image__preview) {
+    max-height: none !important;
+  }
+  
   .loading {
     position: absolute;
     left: 0;
@@ -215,11 +219,16 @@ watch(
   padding: 5px 10px;
   border-radius: 10px;
   color: #bbb;
+  
+  // :deep(img.el-image__inner.el-image__preview) {
+  //   max-height: none !important;
+  // }
+  
 }
 
 .scroll-box {
   height: calc(100vh - 250px);
-
+  padding: 10px !important;
   &.select-box {
     height: calc(100vh - 300px);
   }
@@ -266,10 +275,14 @@ watch(
   color: #333;
   border-radius: 0 16px 16px 16px;
 }
+
+
 </style>
 <style lang="css">
 .el-dialog__title {
   font-size: 20px !important;
   font-weight: 600 !important;
 }
+
+
 </style>

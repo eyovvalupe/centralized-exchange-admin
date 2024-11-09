@@ -546,7 +546,7 @@ function goGooglePage(){
 
   .el-dialog__body {
     padding: 0px !important;
-    height: calc(100% - 36px);
+    height: calc(100% - 50px);
   }
 
   .el-dialog {

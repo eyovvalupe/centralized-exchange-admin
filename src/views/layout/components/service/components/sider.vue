@@ -150,22 +150,32 @@ const setDelel = () => {
 }
 // 时间转换
 const transferTime = time => {
+  const weekday = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
   const date = new Date(time)
   const currentDate = new Date()
+  const inAWeek = date.getMonth() === currentDate.getMonth() &&
+  date.getFullYear() === currentDate.getFullYear() && ((currentDate.getDate() - date.getDate()) < 7)
   const isToday =
     date.getDate() === currentDate.getDate() &&
     date.getMonth() === currentDate.getMonth() &&
     date.getFullYear() === currentDate.getFullYear()
-  if (isToday) {
+  const inAhour = isToday && currentDate.getHours() == date.getHours()
+  if (inAhour) {
+    return `${(currentDate.getMinutes() - date.getMinutes()) > 0 ? currentDate.getMinutes() - date.getMinutes() : 0 }分钟前`
+  } else if (isToday) {
     const hours = date.getHours().toString().padStart(2, '0')
     const minutes = date.getMinutes().toString().padStart(2, '0')
     return `${hours}:${minutes}`
+  } else if (inAWeek) {
+    const dayOfWeek = date.getDay()
+    return weekday[dayOfWeek]
   } else {
+    const year = String(date.getFullYear()).slice(-4)
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     const day = date.getDate().toString().padStart(2, '0')
     const hours = date.getHours().toString().padStart(2, '0')
     const minutes = date.getMinutes().toString().padStart(2, '0')
-    return `${month}-${day} ${hours}:${minutes}`
+    return `${year}-${month}-${day} ${hours}:${minutes}`
   }
 }
 const setRemark = item => {
