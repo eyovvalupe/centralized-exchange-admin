@@ -25,10 +25,14 @@ const click1 = () => {
     useCommon.setAlreadyRender1()
     useCommon.setDepositMsgPosition(numOfOpen())
   } else {
-      if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > depositMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
-      if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > depositMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
-      if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > depositMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
-      useCommon.setDepositMsgPosition(numOfOpen())
+    if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > depositMsgPosition.value)
+      useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+    if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > depositMsgPosition.value)
+      useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > depositMsgPosition.value)
+      useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+    useCommon.setDepositMsgPosition(numOfOpen())
+    useCommon.setLatestMsg(1)
   }
 }
 const click2 = () => {
@@ -37,10 +41,14 @@ const click2 = () => {
     useCommon.setAlreadyRender2()
     useCommon.setVerifyMsgPosition(numOfOpen())
   } else {
-      if (openReceiveMsgNotifi1.value && depositMsgPosition.value > verifyMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
-      if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > verifyMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
-      if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > verifyMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
-      useCommon.setVerifyMsgPosition(numOfOpen())
+    if (openReceiveMsgNotifi1.value && depositMsgPosition.value > verifyMsgPosition.value)
+      useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+    if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > verifyMsgPosition.value)
+      useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > verifyMsgPosition.value)
+      useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+    useCommon.setVerifyMsgPosition(numOfOpen())
+    useCommon.setLatestMsg(2)
   }
 }
 const click3 = () => {
@@ -49,10 +57,14 @@ const click3 = () => {
     useCommon.setAlreadyRender3()
     useCommon.setServiceMsgPosition(numOfOpen())
   } else {
-      if (openReceiveMsgNotifi1.value && depositMsgPosition.value > serviceMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
-      if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > serviceMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
-      if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > serviceMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
-      useCommon.setServiceMsgPosition(numOfOpen())
+    if (openReceiveMsgNotifi1.value && depositMsgPosition.value > serviceMsgPosition.value)
+      useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+    if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > serviceMsgPosition.value)
+      useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+    if (openReceiveMsgNotifi4.value && withdrawMsgPosition.value > serviceMsgPosition.value)
+      useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+    useCommon.setServiceMsgPosition(numOfOpen())
+    useCommon.setLatestMsg(3)
   }
 }
 const click4 = () => {
@@ -61,10 +73,14 @@ const click4 = () => {
     useCommon.setAlreadyRender4()
     useCommon.setWithdrawMsgPosition(numOfOpen())
   } else {
-      if (openReceiveMsgNotifi1.value && depositMsgPosition.value > withdrawMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
-      if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > withdrawMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
-      if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > withdrawMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
-      useCommon.setWithdrawMsgPosition(numOfOpen())
+    if (openReceiveMsgNotifi1.value && depositMsgPosition.value > withdrawMsgPosition.value)
+      useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+    if (openReceiveMsgNotifi2.value && verifyMsgPosition.value > withdrawMsgPosition.value)
+      useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+    if (openReceiveMsgNotifi3.value && serviceMsgPosition.value > withdrawMsgPosition.value)
+      useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    useCommon.setWithdrawMsgPosition(numOfOpen())
+    useCommon.setLatestMsg(4)
   }
 }
 

@@ -21,6 +21,7 @@ const useCommonStore = defineStore({
       verifyMsgPosition: 0,
       serviceMsgPosition: 0,
       withdrawMsgPosition: 0,
+      latestMsg: 0
     }
   },
   mutations:{
@@ -63,6 +64,9 @@ const useCommonStore = defineStore({
     setWithdrawMsgPosition(val) {
       this.withdrawMsgPosition = val
     },
+    setLatestMsg(val) {
+      this.latestMsg = val
+    }
   }
 })
 
