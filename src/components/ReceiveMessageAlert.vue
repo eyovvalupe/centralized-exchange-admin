@@ -59,7 +59,15 @@
             : '客服消息'
         }}未处理</span
       >
-      <span>{{ transferTime(new Date()) }}</span>
+      <span>{{
+        type == 'deposit'
+          ? transferTime(depositMsgLasttime)
+          : type == 'withdraw'
+          ? transferTime(withdrawMsgLasttime)
+          : type == 'verify'
+          ? transferTime(verifyMsgLasttime)
+          : transferTime(serviceMsgLasttime)
+      }}</span>
     </div>
   </div>
 </template>
@@ -70,7 +78,7 @@ import NotifiVerifyIcon from './icons/NotifiVerifyIcon.vue'
 import NotifiWithdrawIcon from './icons/NotifiWithdrawIcon.vue'
 import NotifiCloseIcon from './icons/NotifiCloseIcon.vue'
 import { useCommonStore } from '/@/store'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 const bottomPosition = ref([15, 127, 239, 351])
 const depositZindex = ref(2000)
@@ -87,6 +95,11 @@ const depositMsgPosition = computed(() => useCommon.depositMsgPosition)
 const verifyMsgPosition = computed(() => useCommon.verifyMsgPosition)
 const serviceMsgPosition = computed(() => useCommon.serviceMsgPosition)
 const withdrawMsgPosition = computed(() => useCommon.withdrawMsgPosition)
+const depositMsgLasttime = computed(() => useCommon.depositMsgLasttime)
+const serviceMsgLasttime = computed(() => useCommon.serviceMsgLasttime)
+const verifyMsgLasttime = computed(() => useCommon.verifyMsgLasttime)
+const withdrawMsgLasttime = computed(() => useCommon.withdrawMsgLasttime)
+
 const latestMsg = computed(() => useCommon.latestMsg)
 
 const props = defineProps({

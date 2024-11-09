@@ -17,6 +17,10 @@ const useCommonStore = defineStore({
       isRender2: false,
       isRender3: false,
       isRender4: false,
+      depositMsgLasttime: '',
+      verifyMsgLasttime: '',
+      serviceMsgLasttime: '',
+      withdrawMsgLasttime: '',
       depositMsgPosition: 0,
       verifyMsgPosition: 0,
       serviceMsgPosition: 0,
@@ -63,6 +67,18 @@ const useCommonStore = defineStore({
     },
     setWithdrawMsgPosition(val) {
       this.withdrawMsgPosition = val
+    },
+    setDepositMsgLasttime(val) {
+      this.depositMsgLasttime = val
+    },
+    setVerifyMsgLasttime(val) {
+      this.verifyMsgLasttime = val
+    },
+    setServiceMsgLasttime(val) {
+      this.serviceMsgLasttime = val
+    },
+    setWithdrawMsgLasttime(val) {
+      this.withdrawMsgLasttime = val
     },
     setLatestMsg(val) {
       this.latestMsg = val

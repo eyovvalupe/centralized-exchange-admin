@@ -34,6 +34,7 @@ const click1 = () => {
     useCommon.setDepositMsgPosition(numOfOpen())
     useCommon.setLatestMsg(1)
   }
+  useCommon.setDepositMsgLasttime(Date.now())
 }
 const click2 = () => {
   if (!openReceiveMsgNotifi2.value) {
@@ -50,6 +51,7 @@ const click2 = () => {
     useCommon.setVerifyMsgPosition(numOfOpen())
     useCommon.setLatestMsg(2)
   }
+  useCommon.setVerifyMsgLasttime(Date.now())
 }
 const click3 = () => {
   if (!openReceiveMsgNotifi3.value) {
@@ -66,6 +68,7 @@ const click3 = () => {
     useCommon.setServiceMsgPosition(numOfOpen())
     useCommon.setLatestMsg(3)
   }
+  useCommon.setServiceMsgLasttime(Date.now())
 }
 const click4 = () => {
   if (!openReceiveMsgNotifi4.value) {
@@ -82,6 +85,7 @@ const click4 = () => {
     useCommon.setWithdrawMsgPosition(numOfOpen())
     useCommon.setLatestMsg(4)
   }
+  useCommon.setWithdrawMsgLasttime(Date.now())
 }
 
 const numOfOpen = () => {
