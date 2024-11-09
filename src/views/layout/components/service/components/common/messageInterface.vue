@@ -219,7 +219,7 @@ watch(
 
 .scroll-box {
   height: calc(100vh - 250px);
-
+  padding: 10px !important;
   &.select-box {
     height: calc(100vh - 300px);
   }
