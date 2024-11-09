@@ -195,6 +195,10 @@ watch(
   position: relative;
   flex: 1;
 
+  :deep(img.el-image__inner.el-image__preview) {
+    max-height: none !important;
+  }
+  
   .loading {
     position: absolute;
     left: 0;
@@ -215,6 +219,11 @@ watch(
   padding: 5px 10px;
   border-radius: 10px;
   color: #bbb;
+  
+  // :deep(img.el-image__inner.el-image__preview) {
+  //   max-height: none !important;
+  // }
+  
 }
 
 .scroll-box {
@@ -266,10 +275,14 @@ watch(
   color: #333;
   border-radius: 0 16px 16px 16px;
 }
+
+
 </style>
 <style lang="css">
 .el-dialog__title {
   font-size: 20px !important;
   font-weight: 600 !important;
 }
+
+
 </style>
