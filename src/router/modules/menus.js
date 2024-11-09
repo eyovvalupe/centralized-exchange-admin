@@ -64,9 +64,9 @@ export default [
       },
       // {
       //   path: '/notice',
-      //   component: () => import('/@/views/layout/components/service/Index.vue'),
+      //   component: () => import('/@/views/layout/components/service/Test.vue'),
       //   name: 'notice',
-      //   icon: 'notice',
+      //   icon: 'withdrawl',
       //   meta: { title: '客服', auth: '601', noCache: true }
       // },
       // {

@@ -155,7 +155,6 @@
       <!-- <GoogleValidator ref="googleDialogShowRef" ></GoogleValidator> -->
   </section>
   <div class="service">
-    <!-- @close="handleClose" -->
      <el-dialog :close-on-click-modal="false" v-model="dialogVisible" title="客服工作台" draggable :fullscreen="true" :close-on-press-escape="false"
       >
       <serviceComponents />

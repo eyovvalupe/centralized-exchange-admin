@@ -1,15 +1,22 @@
 <template>
   <div
     class="notification_container w-[300px] h-[102px] bg-[#fff]"
-    :class="isOpen ? 'open_notification' : 'close_notification'"
+    :class="
+      (openReceiveMsgNotifi1 && type == 'deposit') ||
+      (openReceiveMsgNotifi2 && type == 'verify') ||
+      (openReceiveMsgNotifi3 && type == 'service') ||
+      (openReceiveMsgNotifi4 && type == 'withdraw')
+        ? 'open_notification'
+        : 'close_notification'
+    "
     :style="
       type == 'deposit'
-        ? 'border: 1px solid #cdf2de'
+        ? `border: 1px solid #cdf2de; bottom: ${bottomPosition[depositMsgPosition]}px; z-index: ${depositZindex};`
         : type == 'withdraw'
-        ? 'border: 1px solid #CED9F2'
+        ? `border: 1px solid #CED9F2; bottom: ${bottomPosition[withdrawMsgPosition]}px; z-index: ${withdrawZindex};`
         : type == 'verify'
-        ? 'border: 1px solid #ECCDF2'
-        : 'border: 1px solid #F2CDCD'
+        ? `border: 1px solid #ECCDF2; bottom: ${bottomPosition[verifyMsgPosition]}px; z-index: ${verifyZindex};`
+        : `border: 1px solid #F2CDCD; bottom: ${bottomPosition[serviceMsgPosition]}px; z-index: ${serviceZindex};`
     "
   >
     <div
@@ -25,16 +32,13 @@
       "
     >
       <div class="flex h-[42px] items-center">
-        <div class="mr-[5px]"><NotifiDepositIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'deposit'"><NotifiDepositIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'verify'"><NotifiVerifyIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'service'"><NotifiServiceIcon /></div>
+        <div class="mr-[5px]" v-if="type == 'withdraw'"><NotifiWithdrawIcon /></div>
         <div class="mr-[5px]">
           <span class="text-[16px] text-[#000] font-semibold">{{
-            type == 'deposit'
-              ? '充值'
-              : type == 'withdraw'
-              ? '提现'
-              : type == 'verify'
-              ? '实名认证'
-              : '客服'
+            type == 'deposit' ? '充值' : type == 'withdraw' ? '提现' : type == 'verify' ? '实名认证' : '客服'
           }}</span>
         </div>
         <div class="notification_alert mr-[5px]">
@@ -44,7 +48,7 @@
       <div class="flex items-center cursor-pointer" @click="closeNotifi()"><NotifiCloseIcon /></div>
     </div>
     <div class="flex flex-col p-[10px] justify-between">
-      <span class="text-[16px] font-semibold text-[#000]">
+      <span class="text-[16px] text-[#000]">
         有新的{{
           type == 'deposit'
             ? '充值订单'
@@ -55,7 +59,15 @@
             : '客服消息'
         }}未处理</span
       >
-      <span>{{ transferTime(time) }}</span>
+      <span>{{
+        type == 'deposit'
+          ? transferTime(depositMsgLasttime)
+          : type == 'withdraw'
+          ? transferTime(withdrawMsgLasttime)
+          : type == 'verify'
+          ? transferTime(verifyMsgLasttime)
+          : transferTime(serviceMsgLasttime)
+      }}</span>
     </div>
   </div>
 </template>
@@ -65,13 +77,30 @@ import NotifiServiceIcon from './icons/NotifiServiceIcon.vue'
 import NotifiVerifyIcon from './icons/NotifiVerifyIcon.vue'
 import NotifiWithdrawIcon from './icons/NotifiWithdrawIcon.vue'
 import NotifiCloseIcon from './icons/NotifiCloseIcon.vue'
-import { useCommonStore } from '/@/store';
+import { useCommonStore } from '/@/store'
+import { computed, watch } from 'vue'
+
+const bottomPosition = ref([15, 127, 239, 351])
+const depositZindex = ref(2000)
+const verifyZindex = ref(2000)
+const serviceZindex = ref(2000)
+const withdrawZindex = ref(2000)
 
 const useCommon = useCommonStore()
 const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
 const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
 const openReceiveMsgNotifi3 = computed(() => useCommon.openReceiveMsgNotifi3)
 const openReceiveMsgNotifi4 = computed(() => useCommon.openReceiveMsgNotifi4)
+const depositMsgPosition = computed(() => useCommon.depositMsgPosition)
+const verifyMsgPosition = computed(() => useCommon.verifyMsgPosition)
+const serviceMsgPosition = computed(() => useCommon.serviceMsgPosition)
+const withdrawMsgPosition = computed(() => useCommon.withdrawMsgPosition)
+const depositMsgLasttime = computed(() => useCommon.depositMsgLasttime)
+const serviceMsgLasttime = computed(() => useCommon.serviceMsgLasttime)
+const verifyMsgLasttime = computed(() => useCommon.verifyMsgLasttime)
+const withdrawMsgLasttime = computed(() => useCommon.withdrawMsgLasttime)
+
+const latestMsg = computed(() => useCommon.latestMsg)
 
 const props = defineProps({
   type: {
@@ -88,10 +117,9 @@ const props = defineProps({
   },
   isOpen: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
-
 const transferTime = time => {
   const date = new Date(time)
   const currentDate = new Date()
@@ -105,17 +133,96 @@ const transferTime = time => {
 }
 
 const closeNotifi = () => {
-  console.log(props.type)
   if (props.type == 'deposit') {
-    useCommon.setOpenReceiveMsgNotifi1 = false
+    useCommon.toggleNotification1(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > depositMsgPosition.value)
+        useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > depositMsgPosition.value)
+        useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (serviceMsgPosition.value > depositMsgPosition.value)
+        useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 300)
+  }
+  if (props.type == 'verify') {
+    useCommon.toggleNotification2(false)
+    setTimeout(() => {
+      if (depositMsgPosition.value > verifyMsgPosition.value)
+        useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > verifyMsgPosition.value)
+        useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (serviceMsgPosition.value > verifyMsgPosition.value)
+        useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 300)
+  }
+  if (props.type == 'service') {
+    useCommon.toggleNotification3(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > serviceMsgPosition.value)
+        useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > serviceMsgPosition.value)
+        useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (depositMsgPosition.value > serviceMsgPosition.value)
+        useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+    }, 300)
+  }
+  if (props.type == 'withdraw') {
+    useCommon.toggleNotification4(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > withdrawMsgPosition.value)
+        useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (depositMsgPosition.value > withdrawMsgPosition.value)
+        useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+      if (serviceMsgPosition.value > withdrawMsgPosition.value)
+        useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 300)
   }
 }
+
+const numOfOpen = () => {
+  let i = -1
+  if (openReceiveMsgNotifi1.value) i++
+  if (openReceiveMsgNotifi2.value) i++
+  if (openReceiveMsgNotifi3.value) i++
+  if (openReceiveMsgNotifi4.value) i++
+  return i
+}
+
+watch(
+  () => latestMsg.value,
+  val => {
+    if (val == 1) {
+      depositZindex.value = 9999
+      setTimeout(() => {
+        depositZindex.value = 3000
+      }, 500)
+    }
+    if (val == 2) {
+      verifyZindex.value = 9999
+      setTimeout(() => {
+        verifyZindex.value = 3000
+      }, 500)
+    }
+    if (val == 3) {
+      serviceZindex.value = 9999
+      setTimeout(() => {
+        serviceZindex.value = 3000
+      }, 500)
+    }
+    if (val == 1) {
+      withdrawZindex.value = 9999
+      setTimeout(() => {
+        withdrawZindex.value = 3000
+      }, 500)
+    }
+  }
+)
 </script>
 <style lang="css">
 .notification_container {
   position: absolute;
-  z-index: 9999;
-  bottom: 15px;
+  z-index: 2000;
+  /* bottom: 15px; */
   right: 15px;
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
@@ -123,6 +230,7 @@ const closeNotifi = () => {
   margin-top: 10px;
   box-shadow: 0px 4px 4px 0px #00000026;
   overflow: hidden;
+  transition: all 0.2s linear;
 }
 
 .notification_alert {

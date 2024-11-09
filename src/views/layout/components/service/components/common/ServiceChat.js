@@ -60,23 +60,29 @@ class Service {
         const { channel, type, num } = message.data
         let msg = ''
         if (channel === 'deposit') {
-          msg = '您有1条新的充值消息'
-        } else if (channel === 'support') {
-          msg = '您有1条新的客服消息'
           if (type === 'new' && useService.playVoice) {
+            useService.setReceivedDepositMsg()
             useService.getUserList()
             audio.play()
-            ElNotification({
-              title: '新消息提醒！',
-              message: msg,
-              position: 'bottom-right',
-              duration: 0,
-            })
+          }
+        } else if (channel === 'support') {
+          if (type === 'new' && useService.playVoice) {
+            useService.setReceivedServiceMsg()
+            useService.getUserList()
+            audio.play()
           }
         } else if (channel === 'withdraw') {
-          msg = '您有1条新的提现消息'
+          if (type === 'new' && useService.playVoice) {
+            useService.setReceivedWithdrawMsg()
+            useService.getUserList()
+            audio.play()
+          }
         } else if (channel === 'kyc') {
-          msg = '您有1条新的实名审核消息'
+          if (type === 'new' && useService.playVoice) {
+            useService.setReceivedVerifyMsg()
+            useService.getUserList()
+            audio.play()
+          }
         }
         useService.setMessageNumObj(channel, num)
       })
