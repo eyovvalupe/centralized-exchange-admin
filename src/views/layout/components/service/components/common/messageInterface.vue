@@ -8,7 +8,7 @@
       </p>
       <p>请稍候...</p>
     </div>
-    <div class="del-tools reset-el-styte w-full px-5 py-2 flex justify-between" v-if="useService.isSelectMessage">
+    <div class="del-tools reset-el-styte w-full h-[50px] px-[20px] flex justify-between items-center" v-if="useService.isSelectMessage">
       <el-button type="primary" @click="rebackMessage">删除 {{ useService.deleteMessageID.length }}</el-button>
       <el-button link @click="cancelRebackMessage">取消</el-button>
     </div>
