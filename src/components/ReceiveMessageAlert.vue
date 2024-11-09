@@ -11,12 +11,12 @@
     "
     :style="
       type == 'deposit'
-        ? 'border: 1px solid #cdf2de'
+        ? `border: 1px solid #cdf2de; bottom: ${bottomPosition[depositMsgPosition]}px`
         : type == 'withdraw'
-        ? 'border: 1px solid #CED9F2'
+        ? `border: 1px solid #CED9F2; bottom: ${bottomPosition[withdrawMsgPosition]}px`
         : type == 'verify'
-        ? 'border: 1px solid #ECCDF2'
-        : 'border: 1px solid #F2CDCD'
+        ? `border: 1px solid #ECCDF2; bottom: ${bottomPosition[verifyMsgPosition]}px`
+        : `border: 1px solid #F2CDCD; bottom: ${bottomPosition[serviceMsgPosition]}px`
     "
   >
     <div
@@ -77,6 +77,10 @@ const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
 const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
 const openReceiveMsgNotifi3 = computed(() => useCommon.openReceiveMsgNotifi3)
 const openReceiveMsgNotifi4 = computed(() => useCommon.openReceiveMsgNotifi4)
+const depositMsgPosition = computed(() => useCommon.depositMsgPosition)
+const verifyMsgPosition = computed(() => useCommon.verifyMsgPosition)
+const serviceMsgPosition = computed(() => useCommon.serviceMsgPosition)
+const withdrawMsgPosition = computed(() => useCommon.withdrawMsgPosition)
 
 const props = defineProps({
   type: {
@@ -96,7 +100,6 @@ const props = defineProps({
     default: false,
   },
 })
-
 const transferTime = time => {
   const date = new Date(time)
   const currentDate = new Date()
@@ -112,32 +115,53 @@ const transferTime = time => {
 const closeNotifi = () => {
   if (props.type == 'deposit') {
     useCommon.toggleNotification1(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > depositMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > depositMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (serviceMsgPosition.value > depositMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 500);
   }
   if (props.type == 'verify') {
     useCommon.toggleNotification2(false)
+    setTimeout(() => {
+      if (depositMsgPosition.value > verifyMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > verifyMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (serviceMsgPosition.value > verifyMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 500);
   }
   if (props.type == 'service') {
     useCommon.toggleNotification3(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > serviceMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (withdrawMsgPosition.value > serviceMsgPosition.value) useCommon.setWithdrawMsgPosition(withdrawMsgPosition.value - 1)
+      if (depositMsgPosition.value > serviceMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+    }, 500);
   }
   if (props.type == 'withdraw') {
     useCommon.toggleNotification4(false)
+    setTimeout(() => {
+      if (verifyMsgPosition.value > withdrawMsgPosition.value) useCommon.setVerifyMsgPosition(verifyMsgPosition.value - 1)
+      if (depositMsgPosition.value > withdrawMsgPosition.value) useCommon.setDepositMsgPosition(depositMsgPosition.value - 1)
+      if (serviceMsgPosition.value > withdrawMsgPosition.value) useCommon.setServiceMsgPosition(serviceMsgPosition.value - 1)
+    }, 500);
   }
 }
 
 const numOfOpen = () => {
-  let i = 0;
-  if (openReceiveMsgNotifi1) i++;
-  if (openReceiveMsgNotifi2) i++;
-  if (openReceiveMsgNotifi3) i++;
-  if (openReceiveMsgNotifi4) i++;
+  let i = -1;
+  if (openReceiveMsgNotifi1.value) i++;
+  if (openReceiveMsgNotifi2.value) i++;
+  if (openReceiveMsgNotifi3.value) i++;
+  if (openReceiveMsgNotifi4.value) i++;
   return i
 }
+
 </script>
 <style lang="css">
 .notification_container {
   position: absolute;
   z-index: 9999;
-  bottom: 15px;
+  /* bottom: 15px; */
   right: 15px;
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;

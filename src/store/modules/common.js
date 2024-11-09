@@ -17,22 +17,14 @@ const useCommonStore = defineStore({
       isRender2: false,
       isRender3: false,
       isRender4: false,
+      depositMsgPosition: 0,
+      verifyMsgPosition: 0,
+      serviceMsgPosition: 0,
+      withdrawMsgPosition: 0,
     }
   },
   mutations:{
-    setOpenReceiveMsgNotifi1(state, data) {
-      console.log(data);
-      state.openReceiveMsgNotifi1 = data
-    },
-    setOpenReceiveMsgNotifi2(state, data) {
-      state.openReceiveMsgNotifi2 = data
-    },
-    setOpenReceiveMsgNotifi3(state, data) {
-      state.openReceiveMsgNotifi3 = data
-    },
-    setOpenReceiveMsgNotifi4(state, data) {
-      state.openReceiveMsgNotifi4 = data
-    }
+    
   },
   actions: {
     toggleNotification1(value) {
@@ -58,7 +50,19 @@ const useCommonStore = defineStore({
     },
     setAlreadyRender4() {
       this.isRender4 = true
-    }
+    },
+    setDepositMsgPosition(val) {
+      this.depositMsgPosition = val
+    },
+    setVerifyMsgPosition(val) {
+      this.verifyMsgPosition = val
+    },
+    setServiceMsgPosition(val) {
+      this.serviceMsgPosition = val
+    },
+    setWithdrawMsgPosition(val) {
+      this.withdrawMsgPosition = val
+    },
   }
 })
 
