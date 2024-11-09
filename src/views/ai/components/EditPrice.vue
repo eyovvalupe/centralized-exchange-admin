@@ -1,12 +1,12 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="640" class="reset-el-styte" :title="!isAddType ? '编辑' : '新建'" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="!isAddType ? '编辑' : '新建'" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" v-loading="loading" label-position="top" ref="ruleForm">
+    <el-form :model="form" :rules="rules" v-loading="loading" label-position="top" class="pt-[10px]" ref="ruleForm">
       <el-form-item label="用户UID" required prop="uid">
-        <el-input v-model="form.uid" :disabled="!isAddType" autocomplete="off" />
+        <el-input v-model="form.uid" placeholder="请输入用户UID" :disabled="!isAddType" autocomplete="off" />
       </el-form-item>
       <div class="flex justify-between">
-        <el-form-item label="方向" required prop="offset" class="w-4/12 mr-2">
+        <el-form-item label="方向" required prop="offset" class="w-4/12 mr-[20px]">
           <el-select v-model="form.offset" style="width: 100%;">
             <el-option label="全部" value="all" />
             <el-option label="买涨" value="long" />
@@ -21,7 +21,7 @@
         </el-form-item>
       </div>
       <div class="flex justify-between align-middle w-full">
-        <el-form-item label="赢亏比率" required prop="winrate" class="w-4/12">
+        <el-form-item label="赢亏比率" required prop="winrate" class="w-4/12 mr-[20px]">
           <el-select v-model="form.compare">
             <el-option label="大于或等于" value="ge" />
             <el-option label="小于" value="lt" />
@@ -29,38 +29,36 @@
         </el-form-item>
         <el-form-item class="w-8/12">
            <div class="flex w-full mt-7">
-            <div  class="w-7/12 mx-2">
-              <el-input v-model="form.winrate" autocomplete="off">
-            <template #append>%</template>
-          </el-input>
+            <div  class="w-7/12">
+              <el-input-number class="input-number" :precision="0" :min="0" :controls="false" v-model="form.winrate" autocomplete="off">
+                <template #suffix>%</template>
+              </el-input-number>
             </div>
-          <div class="text-right w-5/12">赢率：{{ form.compare == 'ge' ? '大于或等于' : '小于' }}<b class="txt-blue">{{
+          <!-- <div class="text-right w-5/12">赢率：{{ form.compare == 'ge' ? '大于或等于' : '小于' }}<b class="txt-blue">{{
             form.winrate
-          }}%</b></div>
+          }}%</b></div> -->
            </div>
         </el-form-item>
       </div>
-      <el-form-item>
-        <div class="flex justify-between align-middle">
+        <div class="flex">
           <div class="text-left">
             <el-button v-for="(s, i) in 5" :key="i" type="danger" size="small" @click="mathBtnPrice(i)">{{ i * 10
               }}%</el-button>
           </div>
-          <div class="text-center">
-            <el-button type="info" size="small" plain @click="mathBtnPrice(5)">50%</el-button>
+          <div class="text-center mx-[5px]">
+            <el-button type="info" size="small" @click="mathBtnPrice(5)">50%</el-button>
           </div>
           <div class="text-right">
             <el-button v-for="(s, i) in 5" :key="i" type="success" size="small" @click="mathBtnPrice(i + 6)">{{ (i +
               6) * 10 }}%</el-button>
           </div>
         </div>
-      </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px] pt-[30px]">
+        <el-button @click="emit('close', false)" round class="w-[98px]">取消</el-button>
+        <el-button type="primary" round class="w-[98px]" @click="handleSubmit" :loading="isLoading">确定</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
@@ -169,8 +167,4 @@ const mathBtnPrice = (num) => {
   form.value.winrate = num * 10;
 }
 </script>
-<style lang="scss" scoped>
-.el-button:first-child {
-  margin-left: 5px;
-}
-</style>
+

@@ -143,7 +143,9 @@ th.el-table__cell.bg-color3,
     border-left: 1px solid #ddd;
     padding: 0 15px;
     margin-right: -14px;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 8px 8px 0;
+    min-width: 48px;
+    box-sizing: border-box;
   }
 }
 .el-tabs__header {
@@ -612,6 +614,11 @@ body{
   color: #fff;
 }
 
+.status-bg.all{
+  background: #E1EAFF;
+  color: #4377FE;
+}
+
 .status-yellow,
 .status-bg.none,
 .status-bg.waitpayment,
@@ -624,9 +631,6 @@ body{
   color: #fff;
 }
 
-.el-button--success {
-  background: #03bc59 !important;
-}
 
 .status-bg.issuing,
 .status-bg.success,
