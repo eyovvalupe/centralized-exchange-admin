@@ -1,30 +1,33 @@
 <template>
-  <footer class="send-box h-[85px] flex items-center justify-between">
-    <div ref="inputDom" contenteditable="true" class="border-0 h-full w-full inputDom" placeholder="请输入消息"
-        style="white-space: nowrap; overflow-x: auto" @keyup.enter="sendchat()"></div>
-      <div class="send-box-icon flex items-center justify-between">
-        <img :src="sendMessage" alt="" class="cursor-pointer" @click="sendchat()">
+  <footer class="send-box h-[67px] flex items-center justify-between">
+    <div class="send-box-icon flex items-center justify-between">
         <label>
-          <img :src="sendImg" alt="" class="mx-5 cursor-pointer">
+          <img :src="sendImg" class="cursor-pointer">
           <input type="file" style="display: none" ref="fileInput" @change="uploadImg">
         </label>
+    </div>
+    <el-input  v-model="textContent" contenteditable="true" class="h-full w-full inputDom" placeholder="请输入消息"
+         @keyup.enter="sendchat()" />
+      <div class="send-box-icon flex items-center justify-between">
+        <img :src="sendMessage" alt="" class="cursor-pointer" @click="sendchat()">
+        
       </div>
   </footer>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import sendMessage from '/@/assets/imgs/service/send.png'
-import sendImg from '/@/assets/imgs/service/sendImg.png'
+import sendMessage from '/@/assets/imgs/service/send.svg'
+import sendImg from '/@/assets/imgs/service/file.svg'
 import { _compressImg, randomFileName } from '/@/utils'
 import { useServiceStoreC2C } from '/@/store'
 import { ServiceChatC2C } from './ServiceChatC2C'
 const useServiceC2C = useServiceStoreC2C()
 
-const inputDom = ref(null)
+const textContent = ref("")
 const sendchat = (type = 'text', msg) => {
-  ServiceChatC2C.sendMessage('adminsend', { type,order_no: useServiceC2C.orderNo, content: msg || inputDom.value.textContent })
-  inputDom.value.textContent = ''
+  ServiceChatC2C.sendMessage('adminsend', { type,order_no: useServiceC2C.orderNo, content: msg || textContent.value })
+  textContent.value = ''
 }
 
 const fileInput = ref(null)
@@ -34,7 +37,7 @@ const uploadImg = (event) => {
   const fileName = randomFileName(file.name);
   const tmp_arr = { order_no: useServiceC2C.orderNo, content: '图片加载中...', fileName, time: Date.now(), direction: 'receive',isTmp:true, type: "img" }
   useServiceC2C.pushMessageList(tmp_arr)
-  const apiUrl = `${import.meta.env.VITE_UPLOAD_ADDRESS}${fileName}`
+  const apiUrl = `${import.meta.env.VITE_UPLOAD_ADDRESS2}${fileName}`
   const reader = new FileReader();
   reader.onloadend = function () {
     let ratio = 0.5
@@ -51,7 +54,7 @@ const uploadImg = (event) => {
       fetch(`${apiUrl}`, {
         method: 'PUT',
         headers: {
-          'Authorization': import.meta.env.VITE_UPLOAD_TOKEN,
+          'Authorization': import.meta.env.VITE_UPLOAD_TOKEN2,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -84,19 +87,27 @@ const uploadImg = (event) => {
 }
 
 .send-box {
-  height: 45px;
-  padding: 0 15px 0 0;
-  background: #f1f1f1;
   position: relative;
-  width: 100%；
+  margin-bottom: -20px;
+  &::after{
+    content: '';
+    width: calc(100% + 40px);
+    position: absolute;
+    left:-20px;
+    top:0;
+    border-top: 1px solid #EAEEF3;
+  }
 }
 
 .inputDom {
-  padding: 10px;
-  line-height: 25px;
+  padding: 0 20px;
+  
+}
+.inputDom :deep(.el-input__wrapper){
+  border-radius: 16px !important;
 }
 
 .send-box-icon img {
-  height: 28px;
+  height: 30px;
 }
 </style>

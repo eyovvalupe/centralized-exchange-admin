@@ -896,6 +896,8 @@ body{
 
 .imgMessage img {
   max-height: 100px;
+  max-width: 135px;
+  border-radius: 6px;
 }
 
 .order-info {
@@ -1218,4 +1220,5 @@ small {
   padding: 0px;
   min-height: 32px !important;
 }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="`修改${text}`" v-model="dialogShow" :append-to-body="true" @close="emit('close')">
-    <el-form ref="ruleForm" :model="form" :size="size" :rules="rules">
+    <el-form ref="ruleForm" label-position="top" class="pt-[10px]" :model="form" :size="size" :rules="rules">
       <!-- <el-form-item :label="`原${text}`" :label-width="formLabelWidth" required prop="oldPwd">
         <el-input v-model="form.oldPwd" type="password" autocomplete="off" show-password :placeholder="`原${text}`" />
       </el-form-item> -->
@@ -38,10 +38,10 @@
       </el-dialog>
     </el-form>
     <template #footer>
-      <p>
-        <el-button @click="$emit('close')">取消</el-button>
-        <el-button type="primary" @click="showInnerDialog" :loading="isLoading">确定修改</el-button>
-      </p>
+      <div class="p-[10px]">
+        <el-button @click="$emit('close')" class="w-[98px]" round>取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="showInnerDialog" :loading="isLoading">确定修改</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

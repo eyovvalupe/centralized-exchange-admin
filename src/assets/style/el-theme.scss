@@ -87,14 +87,11 @@
       --el-button-active-text-color:var(--el-color-primary);
     }
 
-    .el-button--small{
+    .el-button--small:not(.is-round){
       --el-button-size:28px;
       border-radius: 4px;
     }
 
-    .el-button--danger{
-
-    }
     
     .el-select__wrapper{
       --el-border-radius-base:8px;

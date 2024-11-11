@@ -12,7 +12,6 @@
       </div>
       <el-tabs v-model="activeName" class="w-full pt-[20px]">
         <el-tab-pane name="first" v-loading="loading">
-     
           <div class="order-operate-wrap">
             <div class="flex justify-between order-operate-head" v-if="form.status.indexOf('wait') !== -1">
               <div class="flex">
@@ -150,7 +149,6 @@ import { useServiceStoreC2C } from '/@/store'
 import addBank from '/@/assets/imgs/account.png'
 import { CopyDocument } from '@element-plus/icons-vue'
 import SvgIcon from '/@/components/icons/Index.vue'
-
 const usec2cService = useServiceStoreC2C()
 
 const props = defineProps({
@@ -264,6 +262,7 @@ const funcEvent = async (status) => {
       message: '操作成功',
       offset: 200
     })
+    
     isLoading.value = false
     emit('close', { reload: true })
   } catch (error) {
@@ -434,6 +433,9 @@ const closeDialogType = (item) => {
     font-weight: 600;
     font-size: 12px;
     line-height: 24px;
+  }
+  :deep(.el-tabs__content){
+    overflow: inherit;
   }
 }
 

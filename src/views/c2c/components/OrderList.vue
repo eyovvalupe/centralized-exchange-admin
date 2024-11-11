@@ -2,10 +2,7 @@
     <div class="order-list">
         <div class="w-3/12 order-item-w float-left" v-for="(item,i) in tableData" :key="i">
           <div class="order-item">
-            <div class="order-item-hover">
-              <el-button  :type="item['status'] !== 'done' && checkAuthCode(12101) ? 'primary' : ''"
-              :disabled="!checkAuthCode(12101)" @click="showDialog(item, 'showOrderInfo')" class="w-[120px] underline">查看订单</el-button>
-            </div>
+            
             <div class="flex order-item-bt">
               <div class="order-item-left">
                 UID:{{item.uid}}
@@ -24,12 +21,18 @@
               </div>
               <div class="order-item-right">
                 <div class="flex justify-between">
-                  <div>
+                  <div class="flex-1 w-0">
                     <div class="order-item-right__buy leading-[16px] flex items-center">{{item.offset == 'buy' ? '买入' : '卖出'}} {{item.crypto}}<img class="w-[16px] h-[16px] ml-[6px] rounded" :src="`/images/crypto/${item.crypto.toUpperCase()}.png`" :alt="item.crypto.toUpperCase()"></div>
-                    <div class="mt-[10px] leading-[14px]">价格 {{item.price}} {{item.currency}}</div>
-                    <div class="mt-[6px] leading-[14px]">数量 {{item.volume}} {{item.crypto}}</div>
+                    <div class="mt-[10px] text-xs leading-[14px]">价格 {{item.price}} {{item.currency}}</div>
+                    <div class="mt-[6px] text-xs leading-[14px]">数量 {{item.volume}} {{item.crypto}}</div>
                   </div>
-                  <div  class="order-item-right__amount">{{item.offset == 'buy' ? '-' : '+'}}{{item.totalprice}} <span>{{item.currency}}</span></div>
+                  <div class="w-0 flxe-1 flex justify-end items-end flex-col">
+                    <div class="order-item-right__amount"><strong>{{item.offset == 'buy' ? '-' : '+'}}{{item.totalprice}}</strong> <span>{{item.currency}}</span></div>
+                    <el-button size="small" round :link="item.status != 'waitpayment' && item.status != 'waitconfirm'" type="primary"
+                    :class="{'underline':item.status != 'waitpayment' && item.status != 'waitconfirm'}"
+                    :disabled="!checkAuthCode(12101)" @click="emit('btnClick',item)" class="w-[72px] mt-[10px]">{{item.status == 'waitpayment' || item.status == 'waitconfirm' ? '业务操作' : '查看订单'}}</el-button>
+                  </div>
+
                 </div>
               </div>
             </div> 
@@ -42,6 +45,7 @@
 
 <script setup>
 import { checkAuthCode } from '/@/hooks/store.hook.js'
+const emit = defineEmits(['btnClick'])
 const props = defineProps({
     showDialog:Function,
     tableData:{
@@ -63,6 +67,11 @@ const statusObj = {
 <style lang="scss" scoped>
 .order-list{
   margin-left: -20px;
+  &::after{
+    content: '';
+    clear: both;
+    display: block;
+  }
 }
 .order-item{
   background-color: #F5F7FC;
@@ -70,6 +79,7 @@ const statusObj = {
   position: relative;
   margin:10px 0 10px 20px;
   overflow: hidden;
+  height: 125px;
 }
 .order-item-left,
 .order-item-right{
@@ -78,11 +88,13 @@ const statusObj = {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  overflow: hidden;
 }
 .order-item-left{
   width: 30%;
   border-right: 1px solid #ECECEC;
   box-sizing: border-box;
+  font-size: 13px;
 }
 .order-item-right{
   flex: 1;
@@ -97,17 +109,36 @@ const statusObj = {
     font-weight: 600;
     display: flex;
     align-items: center;
+    strong{
+      max-width: 160px;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     span{
       font-size: 12px;
       margin-left: 5px;
       font-weight: normal;
       position: relative;
       color:#121826;
+      top:1px;
     }
   }
+  :deep(.el-button.is-link){
+    width: auto;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 6px;
+  }
+ 
 }
 .order-item-bt{
   border-bottom: 1px solid #ECECEC;
+  .order-item-left,
+  .order-item-right{
+    font-size: 14px;
+  }
 }
 
 .order-item-hover{
