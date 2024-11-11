@@ -173,6 +173,7 @@ watch(
     width: 100%;
     border-collapse: collapse;
     text-align: center;
+    color: #000;
 
     th,
     td {
