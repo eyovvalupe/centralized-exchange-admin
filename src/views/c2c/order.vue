@@ -17,7 +17,7 @@
       </div>
 
     </div>
-    <div class="py-[10px] reset-el-style-v2" v-loading="isLoading" style="min-height:300px;" > 
+    <div class="pt-[10px] reset-el-style-v2" v-loading="isLoading" style="min-height:300px;" > 
       <OrderList :tableData="tableData" :showDialog="showDialog" @btnClick="onBtnClick" />
       <el-empty class="nodata" v-if="!isLoading && !tableData.length" description="暂无数据" />
       

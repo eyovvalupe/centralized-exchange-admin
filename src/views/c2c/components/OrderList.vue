@@ -10,7 +10,7 @@
               <div class="order-item-right">
                 <div class="flex justify-between">
                   <div>{{item.order_no}}</div>
-                  <div class="status" :class="item.status == 'waitpayment' || item.status == 'waitconfirm' ? 'blue' : item.status">{{ statusObj[item.status] }}</div>
+                  <div class="status" :class="item.status == 'done' ? 'success' : item.status">{{ statusObj[item.status] }}</div>
                 </div>
               </div>
             </div>
@@ -129,7 +129,6 @@ const statusObj = {
     width: auto;
     padding-left: 0px;
     padding-right: 0px;
-    margin-top: 6px;
   }
  
 }

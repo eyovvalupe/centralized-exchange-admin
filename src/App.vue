@@ -674,6 +674,7 @@ body{
 }
 .status {
   &.lock,
+  &.waitpayment,
   &.review {
     color: #ef8401;
   }
@@ -695,10 +696,11 @@ body{
   &.error {
     color: #ff0004;
   }
-
+  &.waitconfirm,
   &.blue {
     color: #4377fe;
   }
+
 }
 .disabled {
   color: #999;
