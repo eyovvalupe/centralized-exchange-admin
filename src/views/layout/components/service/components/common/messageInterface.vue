@@ -170,6 +170,7 @@ const scrollToBottom = () => {
   scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight
 }
 const handleScroll = () => {
+  console.log('get user list')
   const container = scrollContainer.value
   if (container.scrollTop + container.clientHeight === container.scrollHeight) {
     apiMsgRead({ chatid: useService.chatid }).then(() => {
@@ -198,7 +199,7 @@ watch(
   :deep(img.el-image__inner.el-image__preview) {
     max-height: none !important;
   }
-  
+
   .loading {
     position: absolute;
     left: 0;

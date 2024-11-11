@@ -11,6 +11,7 @@
         <SearchIcon />
       </div>
     </div>
+    {{ console.log("user list ===========> ", useService.userList) }}
     <div style="overflow-y: auto">
       <div
         class="w-full h-[68px] rounded-[8px] p-[10px] flex items-center mb-[10px] hover:bg-[#cee9ff]"

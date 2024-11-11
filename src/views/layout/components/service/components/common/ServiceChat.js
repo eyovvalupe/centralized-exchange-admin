@@ -62,7 +62,6 @@ class Service {
         if (channel === 'deposit') {
           if (type === 'new' && useService.playVoice) {
             useService.setReceivedDepositMsg()
-            useService.getUserList()
             audio.play()
           }
         } else if (channel === 'support') {
@@ -74,13 +73,11 @@ class Service {
         } else if (channel === 'withdraw') {
           if (type === 'new' && useService.playVoice) {
             useService.setReceivedWithdrawMsg()
-            useService.getUserList()
             audio.play()
           }
         } else if (channel === 'kyc') {
           if (type === 'new' && useService.playVoice) {
             useService.setReceivedVerifyMsg()
-            useService.getUserList()
             audio.play()
           }
         }

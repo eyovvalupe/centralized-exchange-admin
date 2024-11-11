@@ -192,25 +192,25 @@ watch(
   () => latestMsg.value,
   val => {
     if (val == 1) {
-      depositZindex.value = 9999
+      depositZindex.value = 10000
       setTimeout(() => {
-        depositZindex.value = 3000
+        depositZindex.value = 9999
       }, 500)
     }
     if (val == 2) {
-      verifyZindex.value = 9999
+      verifyZindex.value = 4000
       setTimeout(() => {
         verifyZindex.value = 3000
       }, 500)
     }
     if (val == 3) {
-      serviceZindex.value = 9999
+      serviceZindex.value = 4000
       setTimeout(() => {
         serviceZindex.value = 3000
       }, 500)
     }
     if (val == 1) {
-      withdrawZindex.value = 9999
+      withdrawZindex.value = 4000
       setTimeout(() => {
         withdrawZindex.value = 3000
       }, 500)
