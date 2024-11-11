@@ -207,6 +207,9 @@ watch(
     background: rgba(255, 255, 255, 0.519);
     z-index: 10;
   }
+  :deep(img.el-image__inner.el-image__preview) {
+    max-width: none;
+  }
 }
 
 .image-slot {
