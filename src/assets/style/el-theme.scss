@@ -52,6 +52,20 @@
       --el-button-hover-text-color:var(--el-color-primary);
       --el-button-active-text-color:var(--el-color-primary);
     }
+    .el-button--danger.el-button--large{
+      --el-button-border-color:#FF0004;
+      --el-button-text-color:#FF0004;
+      --el-button-bg-color:rgba(255,255,255,0);
+      --el-button-hover-text-color:#FF0004;
+      --el-button-hover-bg-color:rgba(255,255,255,0);
+      --el-button-active-bg-color:rgba(255,255,255,0);
+      --el-button-disabled-bg-color:rgba(255,255,255,0);
+      --el-button-hover-border-color:#FF0004;
+      --el-button-active-text-color:#FF0004;
+    }
+    .el-button--danger.el-button--large.is-disabled{
+      background-color: rgba(255,255,255,0);
+    }
     .el-input{
         --el-input-text-color:#000;
     }

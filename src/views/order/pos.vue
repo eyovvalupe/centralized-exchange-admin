@@ -44,6 +44,12 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
+            <span class="flex justify-center items-center" v-else-if="item.prop == 'settled_price'">
+              <span>{{ scope.row.open_price || '--' }}</span>
+              <b class="split-line"></b>
+              <span>{{ scope.row.settled_price || '--' }}</span>
+            </span>
+
             <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
                 <span v-if="scope.row[item.prop]"> ...{{
@@ -57,7 +63,7 @@
             </span>
             <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
               {{ scope.row['symbol'] }}
-              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
+              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] || '--' }}</span>
             </span>
         
             <span v-else-if="item.prop === 'role'">
@@ -70,8 +76,8 @@
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
-            <span v-else-if="['status'].includes(item.prop)">
-              <span :class="scope.row[item.prop]=='lock'?'status-bg none':''">
+            <span class="flex" v-else-if="['status'].includes(item.prop)">
+              <span class="status-bg plain" :class="scope.row[item.prop]">
                 {{ transKeyName(scope.row[item.prop], item.prop) }}
               </span>
             </span>
@@ -92,15 +98,15 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="minWidth" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <div class="w-full flex justify-between">
-              <div class="flex-1 flex justify-center items-center">
+            <div class="flex justify-between items-center w-full relative">
+              <div class="flex items-center justify-center flex-1 px-[21px]">
                 <el-button link type="primary" class="underline" size="default" @click="showDialog(scope.row, 'showDialog')">查看订单</el-button>
               </div>
             
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+              <el-dropdown  class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="showDialog(scope.row, 'closePos')">
@@ -191,7 +197,6 @@ const dialogType = reactive({
 })
 const getDataList = () => {
   searchStr.value = searchStrbtn.value;
-  searchValue.value = 'all';
   sessionStorage['orderPosSearchValue'] = searchValue.value
   sessionStorage['orderPosSearchStr'] = searchStr.value
 }
@@ -233,22 +238,23 @@ const transKeyName = (val, key) => {
   str = obj[val] || val;
   return str;
 }
-const minWidth = 100
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号', minWidth, align: 'center' },
-  { prop: 'uid', label: 'UID',minWidth, align: 'center' },
-  { prop: 'username', label: '用户名',minWidth, align: 'center' },
-  { prop: 'role', label: '角色',minWidth, align: 'center' },
-  { prop: 'symbol', label: '股票代码',minWidth:150, align: 'center' },
-  { prop: 'offset', label: '开仓', minWidth: 150, align: 'center' },
-  // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
-  { prop: 'unsold_volume', label: '可售数量', minWidth, align: 'center' },
-  // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
-  { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', minWidth: 200, align: 'center' },
-  // { prop: 'ratio', label: '收益率',  width: 80,align: 'center' },
-  { prop: 'status', label: '状态', minWidth, align: 'center' },
-  { prop: 'date', label: '时间', minWidth:135, align: 'center' }
+  { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },
+  { prop: 'username', label: '用户名',minWidth:gw(140), align: 'center' },
+  { prop: 'role', label: '角色',minWidth:gw(160), align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:gw(240), align: 'center' },
+  { prop: 'offset', label: '开仓', minWidth: gw(200), align: 'center' },
+  { prop: 'settled_price', label: '买价/现价', minWidth:gw(200), align: 'center' },
+  { prop: 'unsold_volume', label: '可售数量', minWidth:gw(120), align: 'center' },
+  { prop: 'surplus_margin', label: '剩余保证金',minWidth:gw(120), align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth:gw(200), align: 'center' },
+  { prop: 'status', label: '状态', minWidth:gw(110), align: 'center' },
+  { prop: 'date', label: '时间', minWidth:gw(150), align: 'center' }
 ])
 
 const isLoading = ref(false)

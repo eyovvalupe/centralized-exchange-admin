@@ -13,7 +13,8 @@
           </el-select>
         </div>
         <div class="w-[168px] ml-[10px]">
-          <el-select v-model="searchForm.crypto">
+          <el-select v-if="!cryptoList.length"></el-select>
+          <el-select v-model="searchForm.crypto" v-else>
             <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" >
               <div class="select-money">
                 <img v-if="item.name != '全部加密货币'" :src="`/images/crypto/${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
@@ -23,7 +24,8 @@
           </el-select>
         </div>
         <div class="w-[168px] ml-[10px]">
-          <el-select v-model="searchForm.currency" >
+          <el-select v-if="!currencyList.length"></el-select>
+          <el-select v-model="searchForm.currency" v-else>
             <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" >
               <div class="select-money">
                 <img v-if="item.name != '全部计价法币'" :src="`/images/crypto/FIAT_${ item.name.toUpperCase()}.png`" :alt="item.name.toUpperCase()">
@@ -166,6 +168,7 @@ getGlobalWalletList({}).then((res) => {
   });
   currencyList.value = currency_arr
   cryptoList.value = mer_arr
+
 })
 const showDialog = (data, type) => {
   if (data) {
@@ -210,7 +213,6 @@ const getDataList = (page) => {
   sessionStorage['c2cAdSearchOffset'] = searchForm.offset
   sessionStorage['c2cAdSearchCrypto'] = searchForm.crypto
   sessionStorage['c2cAdSearchCurrency'] = searchForm.currency
-
   getList(send)
     .then(res => {
       isLoading.value = false

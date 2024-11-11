@@ -654,10 +654,11 @@ body{
 
 .split-line {
   display: inline-block;
-  width: 1px;
+  width: 0px;
   height: 18px;
-  background: #e6e6e6;
+  border-right:1px solid #e6e6e6;
   margin: 0 10px;
+  overflow: hidden
 }
 
 .agentGoogle .input-items {
@@ -728,22 +729,31 @@ body{
 .status-bg.fail,
 .status-bg.failure,
 .status-bg.failure {
-  background: rgba(243, 55, 100, 0.24);
+  background: rgba(243, 55, 100, 0.10);
   color: #f33764;
+
 }
 
 .status-green,
 .status-success,
-.status-bg.open,
 .status-bg.success {
   background: #34c759;
   color: #fff;
+  &.plain{
+    color:#03BC59;
+    background: rgba(3, 188, 89, 0.10);
+  }
 }
 
-.status-bg.lock,
+.status-bg.none,
+.status-bg.open,
 .status-bg.waitconfirm {
   background: #4377fe;
   color: #fff;
+  &.plain{
+    color:#4377FE;
+    background: rgba(67, 119, 254, 0.10);
+  }
 }
 
 .status-bg.all{
@@ -751,12 +761,16 @@ body{
   color: #4377FE;
 }
 
+.status-bg.lock,
 .status-yellow,
-.status-bg.none,
 .status-bg.waitpayment,
 .status-bg.sell {
   background: #ef8401;
   color: #fff;
+  &.plain{
+    color:#EF8401;
+    background: rgba(239, 132, 1, 0.10);
+  }
 }
 .status-bg.review {
   background: #4377fe;
@@ -768,9 +782,10 @@ body{
 .status-bg.success,
 .status-bg.long,
 .status-bg.buy {
-  background: rgba(3, 188, 89, 0.24) !important;
-  color: #03bc59 !important;
+  color:#03BC59;
+  background: rgba(3, 188, 89, 0.10);
 }
+
 
 .status-gray,
 .status-bg.done,
@@ -778,6 +793,10 @@ body{
 .status-bg.close {
   background: #ccc;
   color: #fff;
+  &.plain{
+    background: rgba(153, 153, 153, 0.10);
+    color:#999;
+  }
 }
 
 .txt-gray {

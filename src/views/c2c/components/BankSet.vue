@@ -1,22 +1,22 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="380" class="reset-el-styte" title="银行卡设置" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="银行卡设置" v-model="show" :append-to-body="true"
     @close="emit('close')">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
-      <el-form-item label="银行" required prop="bank_name">
-        <el-input v-model="form.bank_name" autocomplete="off" />
+    <el-form :model="form" class="pt-[10px]" :rules="rules" label-position="top" ref="ruleForm">
+      <el-form-item label="银行名称" required prop="bank_name">
+        <el-input v-model="form.bank_name" autocomplete="off" placeholder="请输入银行名称" />
       </el-form-item>
-      <el-form-item label="卡号" prop="bank_card_number">
-        <el-input v-model="form.bank_card_number" autocomplete="off" />
+      <el-form-item label="银行卡号" prop="bank_card_number">
+        <el-input v-model="form.bank_card_number" autocomplete="off" placeholder="请输入银行卡号" />
       </el-form-item>
-      <el-form-item label="姓名/账号" prop="account_name">
-        <el-input v-model="form.account_name" autocomplete="off" />
+      <el-form-item label="银行账号" prop="account_name">
+        <el-input v-model="form.account_name" autocomplete="off" placeholder="请输入银行账号" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close')">取消</el-button>
-        <el-button type="primary" class="default_btn" :loading="isLoading" @click="handleSubmit">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button class="w-[98px]" round @click="emit('close')">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round :loading="isLoading" @click="handleSubmit">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

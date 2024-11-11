@@ -19,6 +19,7 @@
         <CancelFullscreenIcon :color="color" v-else-if="name == 'cancelFullscreen'" />
         <VoiceIcon :color="color" v-else-if="name == 'voice'" />
         <MuteIcon :color="color" v-else-if="name == 'mute'" />
+        <CardIcon :color="color" v-else-if="name == 'card'" />
     </span>
 </template>
 <script setup>
@@ -41,6 +42,7 @@ import FullscreenIcon from './FullscreenIcon.vue'
 import CancelFullscreenIcon from './CancelFullscreenIcon.vue'
 import VoiceIcon from './VoiceIcon.vue'
 import MuteIcon from './MuteIcon'
+import CardIcon from './CardIcon.vue'
 defineProps({
     name:String,
     color:String,

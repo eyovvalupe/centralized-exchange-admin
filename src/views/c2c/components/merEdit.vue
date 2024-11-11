@@ -7,13 +7,13 @@
       </el-form-item>
       <div class="flex ml-[-20px]">
         <el-form-item label="成交量" required class="flex-1 w-0 ml-[20px]" prop="volume">
-          <el-input-number :controls="false" :precision="0" class="input-number"  v-model="form.volume" />
+          <el-input-number :controls="false" :precision="0" :min="0" class="input-number"  v-model="form.volume" />
         </el-form-item>
         <el-form-item label="成交率" required class="flex-1 w-0 ml-[20px]" prop="volumerate">
-          <el-input-number :controls="false" :precision="0" class="input-number" :max="100" v-model="form.volumerate" />
+          <el-input-number :controls="false" :min="0" :precision="0" class="input-number" :max="100" v-model="form.volumerate" />
         </el-form-item>
         <el-form-item label="平均时效(分钟)" required class="flex-1 w-0 ml-[20px]" prop="avetime">
-          <el-input-number :controls="false" :precision="0" class="input-number"  v-model="form.avetime" />
+          <el-input-number :controls="false" :min="0" :precision="0" class="input-number"  v-model="form.avetime" />
         </el-form-item>
       </div>
     </el-form>

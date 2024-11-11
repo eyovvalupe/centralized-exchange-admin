@@ -19,20 +19,20 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <div class="flex justify-between">
-            <el-form-item label="开仓方向" required prop="offset" class="w-4/12 mr-[5px]">
+          <div class="flex justify-between ml-[-10px]">
+            <el-form-item label="开仓方向" required prop="offset" class="w-0 flex-1 ml-[10px]">
               <el-select v-model="form.offset" class="w-full" placeholder="">
                 <el-option label="买涨" value="long" />
                 <el-option label="买跌" value="short" />
               </el-select>
             </el-form-item>
-            <el-form-item label="杠杆类型" required prop="lever_type" class="w-4/12 mr-[5px]">
+            <el-form-item label="杠杆类型" required prop="lever_type" class="w-0 flex-1 ml-[10px]">
               <el-select v-model="form.lever_type" class="w-full" placeholder="">
                 <el-option label="全仓" value="cross" />
                 <el-option label="逐仓" value="isolated" />
               </el-select>
             </el-form-item>
-            <el-form-item label="杠杆" required prop="lever" class="w-4/12">
+            <el-form-item label="杠杆" required prop="lever" class="w-0 flex-1 ml-[10px]">
               <el-input-number :min="1"  :controls="false" class="input-number" :precision="0" v-model="form.lever" />
             </el-form-item>
           </div>
@@ -44,17 +44,17 @@
       <div class="w-6/12  pl-[20px] right-box" :class="{ showcolor: showErrClass }">
         <div>
           <h2 class="mb-2">锁定单确认</h2>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">保证金</span>
-            <span class="w-6/12 text-left status blue">{{ marginBalance || '--' }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">保证金</span>
+            <span class="table-span-right"><span class=" status blue">{{ marginBalance || '--' }}</span></span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">账户余额</span>
-            <span class="w-6/12 text-left status blue">{{ stockBalance || '--' }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">账户余额</span>
+            <span class="table-span-right status blue"><span class=" status blue">{{ stockBalance || '--' }}</span></span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">锁定差额</span>
-            <span class="w-6/12 text-left status" :class="diffBalance <= 0 ? 'fail' : ''">{{ diffBalance }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">锁定差额</span>
+            <span class="table-span-right"><span class="status" :class="diffBalance <= 0 ? 'fail' : ''">{{ diffBalance }}</span></span>
           </div>
         </div>
         <div class="mt-[10px] status error text-xs" v-if="diffBalance <= 0">

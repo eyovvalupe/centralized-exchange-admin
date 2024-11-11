@@ -7,35 +7,35 @@
           <el-option v-for="item in merList" :label="item.name" :key="item.id" :value="item.id" />
         </el-select>
       </el-form-item>
-      <div class="flex w-full">
-        <el-form-item label="方向" required class="w-4/12" prop="offset">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="方向" required class="w-0 flex-1 ml-[10px]" prop="offset">
           <el-select v-model="form.offset">
             <el-option label="买入" value="buy" />
             <el-option label="卖出" value="sell" />
           </el-select>
         </el-form-item>
-        <el-form-item label="加密货币" required class="mx-2 w-4/12" prop="crypto">
+        <el-form-item label="加密货币" required class="w-0 flex-1 ml-[10px]" prop="crypto">
           <el-select v-model="form.crypto">
             <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" />
           </el-select>
         </el-form-item>
-        <el-form-item label="计价法币" required class="w-4/12" prop="currency">
+        <el-form-item label="计价法币" required class="w-0 flex-1 ml-[10px]" prop="currency">
           <el-select v-model="form.currency">
             <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" />
           </el-select>
         </el-form-item>
       </div>
       <el-form-item label="价格" required prop="price">
-        <el-input v-model="form.price" />
+        <el-input-number class="input-number" :controls="false" @blur="form.price <= 0 ? form.price = '' : ''" v-model="form.price" />
       </el-form-item>
       <el-form-item label="限额" required prop="limitmin">
-        <div class="flex justify-between w-full">
+        <div class="flex justify-between w-full items-center">
           <span class="w-6/12">
-            <el-input v-model="form.limitmin" placeholder="最小限制" />
+            <el-input-number class="input-number" :controls="false" @blur="form.limitmin <= 0 ? form.limitmin = '' : ''" v-model="form.limitmin" placeholder="最小限制" />
           </span>
           <span class="w-1/12 text-center">至</span>
           <span class="w-6/12">
-            <el-input v-model="form.limitmax" placeholder="最大限制" class="w-full" />
+            <el-input-number class="input-number" :controls="false" @blur="form.limitmax <= 0 ? form.limitmax = '' : ''"  v-model="form.limitmax" placeholder="最大限制" />
           </span>
         </div>
       </el-form-item>
@@ -78,9 +78,9 @@ const form = reactive({
   offset: 'buy',
   crypto: '',
   currency: '',
-  price: '',
-  limitmin: '',
-  limitmax: ''
+  price: null,
+  limitmin: null,
+  limitmax: null
 })
 const merList = ref([])
 const cryptoList = ref([{
