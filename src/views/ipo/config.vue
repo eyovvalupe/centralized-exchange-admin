@@ -220,7 +220,6 @@ const handleDelete = (row) => {
   ElMessageBox.confirm(`确定删除(${row.company_name})吗？`, `确认删除`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     isLoading.value = true
     apiDel({ id: row.id }).then(data => {

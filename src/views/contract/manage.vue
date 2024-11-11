@@ -185,7 +185,6 @@ const handleSubmit = async (googlecode) => {
   ElMessageBox.confirm(`确定删除`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     isLoading.value = true
     apiDel({ symbol: dialogType.info.symbol, googlecode }).then(() => {
@@ -204,7 +203,6 @@ const handleDelete = (row) => {
   ElMessageBox.confirm(`删除会清空所有行情数据，且无法恢复`, `确定删除吗？`, {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
   }).then(() => {
     dialogType.info = row;
     dialogType.showGoogle = true;

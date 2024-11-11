@@ -1,51 +1,51 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="480" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
       <el-form-item label="商户" required prop="merchant_id">
         <el-select v-model="form.merchant_id">
           <el-option v-for="item in merList" :label="item.name" :key="item.id" :value="item.id" />
         </el-select>
       </el-form-item>
-      <div class="flex w-full">
-        <el-form-item label="方向" required class="w-4/12" prop="offset">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="方向" required class="w-0 flex-1 ml-[10px]" prop="offset">
           <el-select v-model="form.offset">
             <el-option label="买入" value="buy" />
             <el-option label="卖出" value="sell" />
           </el-select>
         </el-form-item>
-        <el-form-item label="加密货币" required class="mx-2 w-4/12" prop="crypto">
+        <el-form-item label="加密货币" required class="w-0 flex-1 ml-[10px]" prop="crypto">
           <el-select v-model="form.crypto">
             <el-option v-for="item in cryptoList" :label="item.name" :key="item.currency" :value="item.currency" />
           </el-select>
         </el-form-item>
-        <el-form-item label="计价法币" required class="w-4/12" prop="currency">
+        <el-form-item label="计价法币" required class="w-0 flex-1 ml-[10px]" prop="currency">
           <el-select v-model="form.currency">
             <el-option v-for="item in currencyList" :label="item.name" :key="item.currency" :value="item.currency" />
           </el-select>
         </el-form-item>
       </div>
       <el-form-item label="价格" required prop="price">
-        <el-input v-model="form.price" />
+        <el-input-number class="input-number" :controls="false" @blur="form.price <= 0 ? form.price = '' : ''" v-model="form.price" />
       </el-form-item>
       <el-form-item label="限额" required prop="limitmin">
-        <div class="flex justify-between w-full">
+        <div class="flex justify-between w-full items-center">
           <span class="w-6/12">
-            <el-input v-model="form.limitmin" placeholder="最小限制" />
+            <el-input-number class="input-number" :controls="false" @blur="form.limitmin <= 0 ? form.limitmin = '' : ''" v-model="form.limitmin" placeholder="最小限制" />
           </span>
           <span class="w-1/12 text-center">至</span>
           <span class="w-6/12">
-            <el-input v-model="form.limitmax" placeholder="最大限制" class="w-full" />
+            <el-input-number class="input-number" :controls="false" @blur="form.limitmax <= 0 ? form.limitmax = '' : ''"  v-model="form.limitmax" placeholder="最大限制" />
           </span>
         </div>
       </el-form-item>
 
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleGoogle" :loading="isLoading">确定 </el-button>
-      </span>
+       <div class="p-[10px]">
+        <el-button class="w-[98px]" round @click="emit('close', false)">取消</el-button>
+        <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
@@ -78,9 +78,9 @@ const form = reactive({
   offset: 'buy',
   crypto: '',
   currency: '',
-  price: '',
-  limitmin: '',
-  limitmax: ''
+  price: null,
+  limitmin: null,
+  limitmax: null
 })
 const merList = ref([])
 const cryptoList = ref([{

@@ -17,9 +17,8 @@
       </div>
 
     </div>
-    <div class="py-[10px]  reset-el-style-v2"> 
-      <OrderList v-loading="isLoading" :tableData="tableData" :showDialog="showDialog" />
-       
+    <div class="pt-[10px] reset-el-style-v2" v-loading="isLoading" style="min-height:300px;" > 
+      <OrderList :tableData="tableData" :showDialog="showDialog" @btnClick="onBtnClick" />
       <el-empty class="nodata" v-if="!isLoading && !tableData.length" description="暂无数据" />
       
      
@@ -75,7 +74,7 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  params: ''
+  params: sessionStorage['c2cOrderSearchParams'] || ''
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -89,6 +88,10 @@ const showDialog = (data, type) => {
   }
   dialogType[type] = true;
 }
+
+const onBtnClick = (item)=>{
+  showDialog(item,'showOrderInfo')
+}
 const closeDialogType = (item) => {
   for (const key in dialogType) {
     dialogType[key] = false
@@ -101,10 +104,21 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
+  }
+  sessionStorage['c2cOrderSearchParams'] = searchForm.params
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['c2cOrderSearch']){
+    const searchCache = JSON.parse(sessionStorage['c2cOrderSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
   }
  
   getList(send)
@@ -121,6 +135,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res;
+      sessionStorage['c2cOrderSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false

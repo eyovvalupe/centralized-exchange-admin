@@ -45,6 +45,12 @@
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
             </template>
+            <span class="flex justify-center items-center" v-else-if="item.prop == 'settled_price'">
+              <span>{{ scope.row.open_price || '--' }}</span>
+              <b class="split-line"></b>
+              <span>{{ scope.row.settled_price || '--' }}</span>
+            </span>
+
             <!-- <template v-else-if="item.prop === 'order_no'">
               <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
                 <span v-if="scope.row[item.prop]"> ...{{
@@ -72,8 +78,8 @@
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
-            <span v-else-if="['status'].includes(item.prop)">
-              <span class="status" :class="scope.row[item.prop] != 'open' && scope.row[item.prop] != 'none' ? scope.row[item.prop] : ''">
+            <span class="flex" v-else-if="['status'].includes(item.prop)">
+              <span class="status-bg plain" :class="scope.row[item.prop]">
                 {{ transKeyName(scope.row[item.prop], item.prop) }}
               </span>
             </span>
@@ -94,7 +100,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="165" align="center">
+        <el-table-column label="操作"  :min-width="gw(210)" align="center">
           <template #default="scope">
             <div class="w-full flex justify-between">
               <div class="flex-1 flex justify-center items-center">
@@ -176,7 +182,6 @@ const tabChange = ()=>{
   })
 }
 
-
 const dialogLoading = ref(false)
 const searchValue = ref(sessionStorage['futuresPosSearchValue'] || 'all')
 const searchStr = ref(sessionStorage['futuresPosSearchStr'] || '')
@@ -194,6 +199,7 @@ const tableData = computed(() => {
   }
   return list
 });
+
 const dialogType = reactive({
   info: null,
   showInfoDialog: false,
@@ -247,24 +253,25 @@ const transKeyName = (val, key) => {
   return str;
 }
 
-const minWidth = 120
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号', minWidth, align: 'center' },
-  { prop: 'uid', label: 'UID',minWidth, align: 'center' },
-  { prop: 'username', label: '用户名',minWidth, align: 'center' },
-  { prop: 'role', label: '角色',minWidth, align: 'center' },
-  { prop: 'name', label: '合约',minWidth, align: 'center' },
-  { prop: 'offset', label: '开仓',minWidth: 165, align: 'center' },
-  // { prop: 'price_type', label: '限价方式', minWidth, align: 'center' },
-  { prop: 'unsold_volume', label: '可售张数', minWidth:90, align: 'center' },
+  { prop: 'uid', label: 'UID',minWidth:gw(100), align: 'center' },
+  { prop: 'username', label: '用户名',minWidth:gw(140), align: 'center' },
+  { prop: 'role', label: '角色',minWidth:gw(160), align: 'center' },
+  { prop: 'name', label: '合约',minWidth:gw(240), align: 'center' },
+  { prop: 'offset', label: '开仓',minWidth: gw(200), align: 'center' },
+  { prop: 'settled_price', label: '买价/现价', minWidth:gw(200), align: 'center' },
+  { prop: 'unsold_volume', label: '可售张数', minWidth:gw(110), align: 'center' },
   // { prop: 'margin', label: '保证金/剩余金额', minWidth, align: 'center' },
   // { prop: 'profit', label: '收益/百分比',minWidth, align: 'center' },
   // { prop: 'unsold_volume', label: '持仓数量',minWidth, align: 'center' },
-  { prop: 'surplus_margin', label: '剩余保证金',minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比', minWidth:165, align: 'center' },
-  // { prop: 'ratio', label: '收益率',  minWidth,align: 'center' },
-  { prop: 'status', label: '状态', minWidth:90, align: 'center' },
-  { prop: 'date', label: '时间', minWidth, align: 'center' }
+  { prop: 'surplus_margin', label: '剩余保证金',minWidth:gw(110), align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比', minWidth:gw(200), align: 'center' },
+  { prop: 'status', label: '状态', minWidth:gw(100), align: 'center' },
+  { prop: 'date', label: '时间', minWidth:gw(120), align: 'center' }
 ])
 
 const isLoading = ref(false)

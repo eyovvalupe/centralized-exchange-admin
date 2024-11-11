@@ -18,65 +18,9 @@
 
     </div>
     <div class="py-[10px]  reset-el-style-v2"> 
-     
-      <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
-        v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
-          :align="item.align">
-          <template #default="scope">
-            <template v-if="item.prop === 'uid'">
-              <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
-                scope.row[item.prop] }}</span>
-            </template>
-            <template v-else-if="item.prop === 'offset'">
-              <span class="status-bg" :class="scope.row[item.prop]">
-                {{ offsetObj[scope.row[item.prop]] }}
-              </span>
-            </template>
-            <template v-else-if="item.prop === 'crypto'">
-              <div class="money-class">
-                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
-                <span>{{ scope.row[item.prop] }}</span>
-              </div>
-            </template>
-            <template v-else-if="item.prop === 'currency'">
-              <div class="money-class">
-                <img :src="`/images/crypto/FIAT_${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
-                <span>{{ scope.row[item.prop] }}</span>
-              </div>
-            </template>
-            <template v-else-if="item.prop === 'totalprice'">
-              <span class="text-red">
-                {{ scope.row[item.prop] }}
-              </span>
-            </template>
-            <span v-else-if="item.prop === 'username'">
-              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showInfoDialog')">{{
-                scope.row[item.prop] }}
-              </span>
-            </span>
-            <span v-else-if="item.prop === 'status'" class="status-bg"
-              :class="scope.row['status'] == 'done' ? 'buy' : scope.row['status']">
-              {{ statusObj[scope.row[item.prop]] }}
-            </span>
-            <span v-else>
-              {{ scope.row[item.prop] }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
-          <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <!-- :disabled="scope.row['status']=='done'" -->
-              <el-button link :type="scope.row['status'] !== 'done' && checkAuthCode(12101) ? 'primary' : ''"
-                :disabled="!checkAuthCode(12101)" @click="showDialog(scope.row, 'showOrderInfo')">业务操作</el-button>
-            </span>
-          </template>
-        </el-table-column>
-        <template v-slot:empty>
-          <el-empty class="nodata" description="暂无数据" />
-        </template>
-      </el-table>
+      <OrderList v-loading="isLoading" :tableData="tableData" :showDialog="showDialog" @btnClick="onBtnClick" btn-text="业务操作" />
+      <el-empty class="nodata" v-if="!isLoading && !tableData.length" description="暂无数据" />
+      
     </div>
   </div>
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
@@ -98,6 +42,7 @@ import userDetail from '/@/components/userDetail/index.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useAppStore } from '/@/store'
 import { useRouter } from 'vue-router'
+import OrderList from './components/OrderList.vue'
 import OrderInfo from './components/OrderInfo.vue'
 const router = useRouter()
 const appStore = useAppStore()
@@ -155,39 +100,25 @@ const showDialog = (data, type) => {
   }
   dialogType[type] = true;
 }
-const closeDialogType = (item) => {
+const closeDialogType = (obj) => {
   for (const key in dialogType) {
     dialogType[key] = false
   }
+  
 }
-// const getDataList = (page) => {
-//   if (page) {
-//     currentLastPage.value = page
-//   }
-//   isLoading.value = true
-//   const send = { page: currentLastPage.value };
-//   if (searchForm.params) {
-//     send.params = searchForm.params;
-//   }
-//   getList(send)
-//     .then(res => {
-//       isLoading.value = false
-//       if (!res || !res.length && currentLastPage.value > 1) {
-//         currentLastPage.value = currentPage.value;
-//         ElMessage({
-//           offset: 200,
-//           message: '已是最后一页',
-//           type: 'tips'
-//         })
-//         return;
-//       }
-//       currentPage.value = currentLastPage.value;
-//       tableData.value = res || []
-//     })
-//     .finally(() => {
-//       isLoading.value = false
-//     })
-// }
+
+const onBtnClick = (item)=>{
+  showDialog(item,'showOrderInfo')
+}
+
+const getDataList = ()=>{
+  isLoading.value = true
+  setTimeout(()=>{
+    isLoading.value = false
+  },300)
+}
+
+
 let filterData = []
 watch(() => socketStore.sokcetWS, (ws) => {
   if (ws) {

@@ -42,7 +42,6 @@ const comfirmSubmit = () => {
     customClass: 'transTop320',
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning',
   })
     .then(async () => {
       isLoading.value = true

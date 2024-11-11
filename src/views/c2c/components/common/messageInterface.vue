@@ -12,45 +12,47 @@
       ref="scrollChatContainer">
       <p class="w-full flex items-center justify-center"
         v-if="!useServiceC2C.messageList.length">
-        <span>没有更多消息了...</span>
+        <span class="text-[#bbb]">没有更多消息了...</span>
       </p>
       <ul v-else>
-        <li v-for="item in useServiceC2C.messageList" :key="item.id" class="flex w-auto mb-[15px] "
-          :class="item.direction === 'send' ? '' : 'justify-end'">
-          <!-- <div>
-            <span class="avatar-txt" v-if="item.direction == 'send'"> {{ (item.username || '匿').substring(0, 1)
-              }}</span>
-          </div> -->
-          <div>
-            <span class="flex" :class="item.direction === 'send' ? '' : 'justify-end'">
-              <template v-if="item.type === 'img'">
-                <div class="img-loading" v-if="item.fileName">
-                  <el-icon size="60" color="#bbb"><icon-picture /></el-icon>
-                  <div class="img-loading-txt">图片加载中...</div>
-                  <!-- <div class="img-loading-txt">{{item.fileName}}</div> -->
-                </div>
-                <el-image v-else lazy :preview-src-list="[item.content]" :src="item.content"
-                  class="imgMessage">
-                  <template #placeholder>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon><icon-picture /></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-              </template>
-              <p v-else :class="item.direction"
-                class="msg-con">
-                <span>{{  item.content }}</span>
-              </p>
-            </span>
-            <p :class="`txt-${item.direction}`">
-              {{ dayjs(item.time).format('HH:mm:ss') }}
-            </p>
+        <li v-for="(item,i) in useServiceC2C.messageList" :key="item.id" >
+
+          <div class="time" v-if="!useServiceC2C.messageList[i-1] || dayjs(item.time).diff(useServiceC2C.messageList[i-1].time) > 60000">
+              {{ dayjs(item.time).format('YYYY-MM-DD HH:mm:ss') }}
+          </div>
+          <div class="flex mb-[15px]"
+            :class="item.direction === 'send' ? '' : 'justify-end'">
+            <div class="avatar-icon" v-if="item.direction == 'send'"> {{ (item.username || '匿').substring(0, 1)
+              }}</div>
+            
+            <div>
+              <span class="flex" :class="item.direction === 'send' ? '' : 'justify-end'">
+                <template v-if="item.type === 'img'">
+                  <div class="img-loading" v-if="item.fileName">
+                    <el-icon size="24" color="#bbb"><icon-picture /></el-icon>
+                    <div class="img-loading-txt">图片加载中...</div>
+                  </div>
+                  <el-image v-else lazy :preview-src-list="[item.content]" :src="item.content"
+                    class="imgMessage">
+                    <template #placeholder>
+                      <div class="image-slot">
+                        <el-icon><icon-picture /></el-icon>
+                      </div>
+                    </template>
+                    <template #error>
+                      <div class="image-slot">
+                        <el-icon><icon-picture /></el-icon>
+                      </div>
+                    </template>
+                  </el-image>
+                </template>
+                <p v-else :class="item.direction"
+                  class="msg-con">
+                  <span>{{  item.content }}</span>
+                </p>
+              </span>
+            </div>
+            <div class="avatar-icon avatar-icon2" v-if="item.direction != 'send'">商</div>
           </div>
         </li>
       </ul>
@@ -108,7 +110,7 @@ onMounted(() => {
 .img-loading{
  text-align: center;
  background: #f5f5f5;
- padding: 5px 10px;
+ padding: 10px;
  border-radius: 10px;
  color: #bbb;
 }
@@ -147,21 +149,50 @@ onMounted(() => {
   min-height: 25px;
   min-width: 40px;
   position: relative;
-  padding: 5px 10px;
-  background: #f5f5f5;
+  padding: 15px 12px 15px 16px;
+  background: #EFF3F8;
+  line-height: 20px;
 }
-
+.avatar-icon{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(200, 199, 199);
+  text-align: center;
+  line-height: 40px;
+  color:#fff;
+  font-size: 16px;
+  margin-right: 10px;
+}
+.avatar-icon2{
+  background-color: #4377FE;
+  color:#fff;
+  margin-left: 10px;
+  margin-right: 0px;
+}
 .receive {
-  background: #165dff;
+  background: #4377FE;
   color: #fff;
   border-radius: 10px 0 10px 10px;
 
 }
 
+
 .send {
-  background: #EAEAEA;
-  color: #333;
+  background: #EFF3F8;
+  color: #061023;
   border-radius: 0 10px 10px 10px;
 
+}
+.time{
+  display: flex;
+  justify-content: center;
+  justify-content: center;
+  padding: 10px 0;
+  color:#8F92A1;
+  font-size: 14px;
+}
+.img-loading-txt{
+  font-size: 12px;
 }
 </style>

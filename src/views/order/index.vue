@@ -30,7 +30,7 @@
       </div>
 
     </div>
-    <div class="py-[10px] reset-el-style-v2">
+    <div class="pt-[10px] reset-el-style-v2">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
         <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
@@ -40,10 +40,16 @@
               <span class="w-100 block" :class="scope.row[item.prop] > 0 ? 'success' : scope.row[item.prop] < 0 ? 'failure' : ''">
                 {{ scope.row[item.prop] }}
               </span>
+              
               <b class="split-line"></b>
               <span class="w-100 block" :class="scope.row['ratio'] > 0 ? 'success' : scope.row['ratio'] < 0 ? 'failure' : ''">
                 {{ scope.row['ratio'] }}%
               </span>
+            </span>
+            <span class="flex justify-center items-center" v-else-if="item.prop == 'settled_price'">
+              <span>{{ scope.row.open_price || '--' }}</span>
+              <b class="split-line"></b>
+              <span>{{ scope.row.settled_price || '--' }}</span>
             </span>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
@@ -65,7 +71,7 @@
             </template>
             <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
               {{ scope.row['symbol'] }}
-              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] }}</span>
+              <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] || '--' }}</span>
             </span>
           
             <span v-else-if="item.prop === 'role'">
@@ -78,8 +84,8 @@
               <b class="split-line"></b>
               {{ scope.row['lever'] }}X
             </span>
-            <span v-else-if="['status'].includes(item.prop)">
-              <span class="status" :class="scope.row[item.prop]">
+            <span class="flex" v-else-if="['status'].includes(item.prop)">
+              <span class="status-bg plain" :class="scope.row[item.prop]">
                 {{ transKeyName(scope.row[item.prop], item.prop) }}
               </span>
             </span>
@@ -94,7 +100,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :min-width="minWidth" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
             <el-button link type="primary" size="default" class="underline" @click="showDialog(scope.row,'showDialog')">查看订单</el-button>
           </template>
@@ -105,7 +111,9 @@
       </el-table>
       
     </div>
-    <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+    <div class="py-[10px]">
+      <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+    </div>
   </div>
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
@@ -244,22 +252,22 @@ const transKeyName = (val, key) => {
   str = obj[val] || val;
   return str;
 }
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
 
-const minWidth = 100
 const columnBase = ref([
-  // { prop: 'order_no', label: '订单号',minWidth, align: 'center' },
-  { prop: 'uid', label: 'UID', minWidth, align: 'center' },
-  { prop: 'username', label: '用户名', minWidth, align: 'center' },
-  { prop: 'role', label: '角色', minWidth, align: 'center' },
-  { prop: 'symbol', label: '股票代码',minWidth:165, align: 'center' },
-  { prop: 'offset', label: '开仓',minWidth:165,  align: 'center' },
-  // { prop: 'price_type', label: '限价方式',minWidth, align: 'center' },
-  { prop: 'open_volume', label: '开仓数量', minWidth, align: 'center' },
-  { prop: 'margin', label: '开仓保证金', align: 'center' },
-  // { prop: 'settled_price', label: '订单结算价格', minWidth, align: 'center' },
-  { prop: 'profit', label: '订单收益/百分比',  minWidth:180, align: 'center' },
-  { prop: 'status', label: '状态', minWidth, align: 'center' },
-  { prop: 'date', label: '时间',  minWidth:130, align: 'center' }
+  { prop: 'uid', label: 'UID', minWidth:gw(110), align: 'center' },
+  { prop: 'username', label: '用户名', minWidth:gw(140), align: 'center' },
+  { prop: 'role', label: '角色', minWidth:gw(160), align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:gw(240), align: 'center' },
+  { prop: 'offset', label: '开仓',minWidth:gw(200),  align: 'center' },
+  { prop: 'settled_price', label: '买价/现价',minWidth:gw(200), align: 'center' },
+  { prop: 'open_volume', label: '开仓数量', minWidth:gw(120), align: 'center' },
+  { prop: 'margin', label: '开仓保证金',minWidth:gw(120), align: 'center' },
+  { prop: 'profit', label: '订单收益/百分比',  minWidth:gw(200), align: 'center' },
+  { prop: 'status', label: '状态', minWidth:gw(110), align: 'center' },
+  { prop: 'date', label: '时间',  minWidth:gw(150), align: 'center' }
 ])
 
 const isLoading = ref(false)

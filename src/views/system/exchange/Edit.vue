@@ -8,7 +8,7 @@
         <el-input  v-model="form.symbol" disabled/>
       </el-form-item>
       <el-form-item label="汇率" :label-width="formLabelWidth" prop="price">
-        <el-input  v-model="form.price"  />
+        <el-input-number class="input-number"  :controls="false"  v-model="form.price" @blur="form.price <= 0 ? form.price = '' : ''"  />
       </el-form-item>
     </el-form>
     <template #footer>
