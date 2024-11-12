@@ -65,6 +65,7 @@ const statusObj = {
   'done': '已完成',
   'cancel': '已取消'
 }
+
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:c2corderWs', () => {

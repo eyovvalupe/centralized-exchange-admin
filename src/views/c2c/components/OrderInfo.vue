@@ -13,14 +13,15 @@
       <el-tabs v-model="activeName" class="w-full pt-[20px]">
         <el-tab-pane name="first" v-loading="loading">
           <div class="order-operate-wrap">
-            <div class="flex justify-between order-operate-head" v-if="form.status.indexOf('wait') !== -1">
+            <div class="flex justify-between items-center order-operate-head" v-if="form.status.indexOf('wait') !== -1">
               <div class="flex">
-                <span> {{ statusObj[form.status] }}</span>
+                <span> {{ form.offset == 'sell' ? statusObj2[form.status] : statusObj[form.status] }}</span>
                 <b class="timer ml-2">
                   {{formatSeconds(timerNumber) }}
                  </b>
               </div>
-              <div class="text-left">请根据总价，向用户提供的银行卡转账</div>
+              <div class="text-xs text-[#8F92A1]" v-if="form.offset == 'sell'">请根据总价，向用户提供的银行卡转账</div>
+              <div class="text-xs text-[#8F92A1]" v-else>用户根据总价，向商家提供的银行卡转账</div>
             </div>
             <div class="flex justify-center order-operate-head" v-else>
               <div class="status" :class="form.status == 'done' ? 'success' : form.status">{{ statusObj[form.status] }}</div>
@@ -35,7 +36,7 @@
                 </div>
                 <small class="flex justify-between items-center pay-info-head__right">
                   成交量 {{ form.merchant_volume }} <b class="s-line"></b> 成交率{{
-                    form.merchant_volumerate }}%  <b class="s-line"></b> <img src="../../../assets/images/time.svg"/> {{ form.merchant_avetime }}分钟
+                    form.merchant_volumerate }}%  <b class="s-line"></b> <img class="mr-1" src="../../../assets/images/time.svg"/> {{ form.merchant_avetime }}分钟
                 
                 </small>
                 
@@ -166,6 +167,12 @@ const offsetObj = {
 const statusObj = {
   'waitpayment': '等待用户付款',
   'waitconfirm': '等待商家确认',
+  'done': '交易完成',
+  'cancel': '交易已取消'
+}
+const statusObj2 = {
+  'waitpayment': '等待商家付款',
+  'waitconfirm': '等待用户确认',
   'done': '交易完成',
   'cancel': '交易已取消'
 }

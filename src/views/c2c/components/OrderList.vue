@@ -10,7 +10,10 @@
               <div class="order-item-right">
                 <div class="flex justify-between">
                   <div>{{item.order_no}}</div>
-                  <div class="status" :class="item.status == 'done' ? 'success' : item.status">{{ statusObj[item.status] }}</div>
+                  <div class="status relative" :class="item.status == 'done' ? 'success' : item.status">
+                    <span class="unread" v-if="item.unread > 0">{{item.unread > 99 ? '+99' : item.unread}}</span>
+                    {{ statusObj[item.status] }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -78,7 +81,6 @@ const statusObj = {
   border-radius: 16px;
   position: relative;
   margin:10px 0 10px 20px;
-  overflow: hidden;
   height: 125px;
 }
 .order-item-left,
@@ -138,6 +140,9 @@ const statusObj = {
   .order-item-right{
     font-size: 14px;
   }
+   .order-item-right{
+    overflow: inherit;
+   }
 }
 
 .order-item-hover{
@@ -161,5 +166,20 @@ const statusObj = {
   .order-item-w{
     width: 33.3% !important;
   }
+}
+.unread{
+  min-width: 14px;
+  box-sizing: border-box;
+  padding: 0 4px;
+  height: 14px;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #E8503A;
+  color:#fff;
+  font-size: 11px;
+  line-height: 14px;
+  position: absolute;
+  right:-19px;
+  top:-12px;
 }
 </style>
