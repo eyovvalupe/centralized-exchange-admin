@@ -192,9 +192,9 @@ watch(
   () => latestMsg.value,
   val => {
     if (val == 1) {
-      depositZindex.value = 10000
+      depositZindex.value = 4000
       setTimeout(() => {
-        depositZindex.value = 9999
+        depositZindex.value = 3000
       }, 500)
     }
     if (val == 2) {
