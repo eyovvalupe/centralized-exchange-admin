@@ -64,11 +64,11 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
-            <el-button class="underline" link :type="checkAuthCode(11101)?'primary':'info'"
+            <el-button class="underline" link  size="default" :type="checkAuthCode(11101)?'primary':'info'"
               v-if="scope.row['channel']=='auto'"
              :disabled="!checkAuthCode(11101)" @click="showDialog(scope.row, 'showAccountDialog')">提现账号</el-button>
              <b v-if="scope.row['channel']=='auto'" class="split-line"></b>
-            <el-button class="underline" link :type="checkAuthCode(11101) && scope.row.status == 'unknown' ?'primary':'info'" :disabled="!checkAuthCode(11101) || scope.row.status !== 'unknown'"
+            <el-button class="underline"  size="default" link :type="checkAuthCode(11101) && scope.row.status == 'unknown' ?'primary':'info'" :disabled="!checkAuthCode(11101) || scope.row.status !== 'unknown'"
               @click="showDialog(scope.row, 'showDialog')">订单处理</el-button>
           </template>
         </el-table-column>

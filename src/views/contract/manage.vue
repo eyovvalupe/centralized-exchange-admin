@@ -50,7 +50,7 @@
           <el-table-column label="操作" :min-width="minWidth" align="center">
             <template #default="scope">
               <span class="flex justify-center align-middle">
-                <el-button link type="primary" class="underline" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
+                <el-button link type="primary"  size="default" class="underline" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
                 <!-- <el-dropdown>
                   <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
                   <template #dropdown>

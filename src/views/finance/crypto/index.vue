@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link type="danger" class="underline" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button link type="danger"  size="default" class="underline" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>
@@ -49,8 +49,8 @@
   </div>
   <Config v-if="dialogType.showConfigDialog" :data="dialogType.info" @close="closeDialogType" />
   <Edit v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
-   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320">
-    <GoogleVerify class="agentGoogle" @confirm="handleSubmit" @close="emit('close', false)" v-if="showGoogle" />
+   <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="showGoogle" width="320" v-if="showGoogle" >
+    <GoogleVerify class="agentGoogle" @confirm="handleSubmit" @close="showGoogle=false;"/>
   </el-dialog>
 </template>
 

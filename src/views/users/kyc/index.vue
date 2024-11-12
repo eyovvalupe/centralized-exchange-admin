@@ -47,9 +47,9 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
-            <el-button class="underline" link type="primary" @click="showDialog({ ...scope.row, tab: 'info' }, 'showDialog')">实名信息</el-button>
+            <el-button class="underline"  size="default" link type="primary" @click="showDialog({ ...scope.row, tab: 'info' }, 'showDialog')">实名信息</el-button>
             <b class="split-line"></b>
-            <el-button class="underline" link :type="scope.row['status'] === 'success' ? 'info' : 'primary'"
+            <el-button class="underline"  size="default" link :type="scope.row['status'] === 'success' ? 'info' : 'primary'"
               :disabled="scope.row['status'] === 'success'"
               @click="showDialog(scope.row, 'showEditDialog')">审核</el-button>
           </template>

@@ -171,6 +171,9 @@ html {
   height: 100%;
   color: #606266;
 }
+body{
+  overflow-x: auto;
+}
 .border-line {
   border-bottom: 1px solid #dfe1e4;
 }

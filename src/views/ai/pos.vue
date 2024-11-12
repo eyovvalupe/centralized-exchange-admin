@@ -84,7 +84,7 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showCtrDialog')">用户场控</el-button>
+            <el-button link class="underline" size="default" type="primary" @click="showDialog(scope.row, 'showCtrDialog')">用户场控</el-button>
             <!-- <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">查看订单</el-button> -->
           </template>
         </el-table-column>
