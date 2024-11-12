@@ -114,7 +114,7 @@
                   <div class="username">{{ userName }}</div>
               </el-dropdown-item>
               <el-dropdown-item divided @click="goGooglePage">
-                <span class="underline" :class="{ 'no-menu-auth': googlebind }">
+                <span class="underline">
                   绑定谷歌验证码
                 </span>
               </el-dropdown-item>
@@ -387,9 +387,9 @@ const closeUserDataDialog = () => {
 
 
 function goGooglePage(){
-  if(!googlebind.value){
+  //if(!googlebind.value){
     unref(googleDialogShowRef).open()
-  }
+  //}
   // this.$refs.googleDialogShowRef.openDialog(scope.row.userName)
 }
 </script>

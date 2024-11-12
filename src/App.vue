@@ -171,6 +171,9 @@ html {
   height: 100%;
   color: #606266;
 }
+body{
+  overflow-x: auto;
+}
 .border-line {
   border-bottom: 1px solid #dfe1e4;
 }
@@ -955,6 +958,12 @@ body{
     font-weight: 600;
     line-height: normal;
     margin-top: 10px;
+    text-align: center;
+  }
+  &__desc{
+    color:#999;
+    font-size: 12px;
+    margin-top:10px;
     text-align: center;
   }
 }

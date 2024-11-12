@@ -8,8 +8,12 @@
             <el-input v-model="form.uid" @blur="getBalance" />
           </el-form-item>
           <el-form-item label="交易代码" required prop="symbol">
-            <!-- <el-input v-model="form.symbol" :disabled="!form.market"  /> -->
-            <el-select v-model="form.symbol" filterable clearable remote reserve-keyword placeholder="代码模糊搜索"
+           
+            <div class="relative w-full">
+              <div class="absolute w-full h-full left-0 top-0 z-10" @click="showStockSelection=true;"></div>
+              <el-input v-model="form.symbol" placeholder="点击选择股票"  />
+            </div>
+            <!-- <el-select v-model="form.symbol" filterable clearable remote reserve-keyword placeholder="代码模糊搜索"
               remote-show-suffix :remote-method="remoteMethod" @change="symbolChange" :loading="loadingSelect">
               <el-option v-for="item in options" :key="item.symbol" :label="item.symbol" :value="item.symbol">
                 <div class="select-opt my-1">
@@ -17,7 +21,7 @@
                   <small class="color"> {{ item.name || '--' }} </small>
                 </div>
               </el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <div class="flex justify-between ml-[-10px]">
             <el-form-item label="开仓方向" required prop="offset" class="w-0 flex-1 ml-[10px]">
@@ -72,6 +76,8 @@
 
   <safeword v-model="showPwd" @submit="submit" />
 
+  <StockSelection @choice="onChoice" @close="showStockSelection=false" v-if="showStockSelection" />
+
 </template>
 
 <script setup>
@@ -81,6 +87,7 @@ import { ElMessage } from 'element-plus'
 import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
 import { stockPara } from '/@/api/modules/market/index.api'
+import StockSelection from '/@/components/stockSelection/Index.vue'
 const props = defineProps({
   data: { // 行数据
     type: Object,
@@ -88,6 +95,7 @@ const props = defineProps({
   }
 })
 
+const showStockSelection = ref(false)
 const ruleForm = ref(null)
 const loading = ref(false)
 const isLoading = ref(false)
@@ -95,7 +103,7 @@ const loadingSelect = ref(false)
 const showPwd = ref(false)
 const show = ref(true)
 const options = ref([])
-const symbolInfo = ref();
+const symbolInfo = ref(null);
 const form = reactive({
   uid: '',
   symbol: undefined,
@@ -145,6 +153,12 @@ const symbolChange = () => {
     symbolInfo.value = null
   }
 }
+
+const onChoice = (item)=>{
+  form.symbol = item.symbol
+  symbolChange()
+}
+
 const marginBalance = computed(() => {
   let strNum;
   if (!symbolInfo.value || isNaN(symbolInfo.value.price) || isNaN(stockBalance.value)) {

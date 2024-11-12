@@ -71,10 +71,10 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(210)" align="center">
           <template #default="scope">
-            <el-button link  class="underline" :type="scope.row.status == 'success'?'info':'primary'"  :disabled="scope.row.status == 'success'"
+            <el-button link  class="underline" size="default" :type="scope.row.status == 'success'?'info':'primary'"  :disabled="scope.row.status == 'success'"
               @click="showDialog(scope.row, 'showDialog')">充值审核</el-button>
               <b class="split-line" v-if="scope.row['channel']=='crypto'" ></b>
-              <el-button link type="primary"  class="underline" v-if="scope.row['channel']=='crypto'" @click="showDialog(scope.row, 'showAddressDialog')">充值地址</el-button>
+              <el-button link type="primary"  size="default" class="underline" v-if="scope.row['channel']=='crypto'" @click="showDialog(scope.row, 'showAddressDialog')">充值地址</el-button>
           </template>
         </el-table-column>
         <template v-slot:empty>

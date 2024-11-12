@@ -33,7 +33,7 @@
         <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
             <span class="flex justify-center align-middle">
-              <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
+              <el-button link class="underline"  size="default" type="primary" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
             </span>
           </template>
         </el-table-column>

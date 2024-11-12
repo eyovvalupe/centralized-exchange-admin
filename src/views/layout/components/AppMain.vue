@@ -28,6 +28,7 @@ const ws = wsConnect('/admin', () => {
 })
 ws.on('realtime', ({ data, code }) => {
   if (code == 200) {
+    console.log(data)
     socketStore.setDataList('contractList', data)
   }
 })
@@ -51,6 +52,7 @@ ws.on('c2corder', ({ data, code }) => {
     socketStore.setDataList('c2cOrderList', data)
   }
 })
+
 ws.on('futures_control_list', ({ data, code }) => {
   if (code == 200) {
     socketStore.setDataList('futureList', data)
