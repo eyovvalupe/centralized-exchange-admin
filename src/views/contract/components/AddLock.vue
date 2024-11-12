@@ -10,7 +10,7 @@
           <el-form-item label="合约" required prop="symbol">
             
             <div class="relative w-full">
-              <div class="absolute w-full h-full left-0 top-0 z-10" @click="showStockSelection=true;"></div>
+              <div class="absolute w-full h-full left-0 top-0 z-10 cursor-pointer" @click="showStockSelection=true;"></div>
               <el-input v-model="form.name" placeholder="点击选择合约"  />
             </div>
             

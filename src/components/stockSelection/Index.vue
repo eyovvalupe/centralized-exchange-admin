@@ -6,7 +6,7 @@
         </div>
         <div class="stock-list soll-list soll-list-y" v-loading="isLoading">
             <template v-if="list.length">
-                <StockItem v-for="(item,i) in list" :item="item" :handleClick="handleClick" :market-type="marketType == 'futures' ? 'crypto' : marketType" :key="i" />
+                <StockItem v-for="(item,i) in list" :points="getPoints(item.symbol)" :item="item" :handleClick="handleClick" :market-type="marketType == 'futures' ? 'crypto' : marketType" :key="i" />
             </template>
             <el-empty class="nodata" v-else-if="!isLoading" description="暂无数据" />
         </div>
@@ -17,7 +17,7 @@ import StockItem from './StockItem.vue'
 import { computed,onBeforeUnmount,onUnmounted,ref } from 'vue'
 import { searchMarket } from '/@/api/modules/base.api'
 import { useSocketStore } from '/@/store'
-
+import { _getSnapshotLine } from "/@/utils/index"
 import { hex_md5 } from '/@/utils/md5'
 
 const socketStore = useSocketStore()
@@ -56,6 +56,17 @@ const getWs = (fn)=>{
 
 const searchDialogStr = ref('')
 const isLoading = ref(false)
+const pointsList = ref([])
+
+const getPoints = (symbol)=>{
+    for(let i=0;i<pointsList.value.length;i++){
+        if(pointsList.value[i].symbol == symbol){
+            return pointsList.value[i].points
+        }
+    }
+    return null
+}
+
 const getList = ()=>{
 
     const send = {
@@ -76,13 +87,16 @@ const getList = ()=>{
         isLoading.value = true
     }
     searchMarket(send).then(res=>{
+        let _list = res || []
+      
         if(isLoading.value){
-            list.value = res || []
+            list.value = _list
+             sessionStorage['stockSelectionSearch'] = JSON.stringify({
+                cacheKey,
+                data:list.value
+            })
         }
-        sessionStorage['stockSelectionSearch'] = JSON.stringify({
-            cacheKey,
-            data:list.value
-        })
+       
         const keys = list.value.map(item => item.symbol)
 
         getWs(socket=>{
@@ -90,7 +104,7 @@ const getList = ()=>{
             socket.emit('realtime', keys.join(',')) // 价格变化
             socket.on('realtime', res => {
                 if (res.code == 200) {
-                    const arr = list.value.map(item => { // 数据和观察列表里的数据融合
+                    const arr = _list.map(item => { // 数据和观察列表里的数据融合
                         const target = res.data.find(a => a.symbols == item.symbol || a.symbol == item.symbol)
                         if (target) {
                             return {
@@ -107,6 +121,22 @@ const getList = ()=>{
                         data:list.value
                     })
                     
+                }
+            })
+            socket.off('snapshot')
+            socket.emit('snapshot', keys.join(',')) // 快照数据
+            socket.on('snapshot', res => {
+                if (res.code == 200) {
+                    const target = pointsList.value.find(item => item.symbol == res.symbol)
+                    
+                    if (target) {
+                        target.points = _getSnapshotLine(res.data)
+                    }else{
+                        pointsList.value.push({
+                            symbol:res.symbol,
+                            points:_getSnapshotLine(res.data)
+                        })
+                    }
                 }
             })
         })
