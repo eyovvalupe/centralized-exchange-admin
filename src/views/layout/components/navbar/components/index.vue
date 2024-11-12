@@ -1,12 +1,22 @@
 <template>
-<el-dialog :close-on-click-modal="false" width="360" class="reset-el-styte" title="绑定谷歌验证器" v-model="show" :append-to-body="true" @close="emit( 'close', false )"
+<el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="绑定谷歌验证器" v-model="show" :append-to-body="true" @close="emit( 'close', false )"
 >
-  <el-form ref="ruleForm" :rules="rules" label-position="top" :model="formState" v-loading="loadingPage" status-icon
-    class="login-ruleForm">
-    <div class="form-center" style="margin-bottom: 30px; display: flex; justify-content: center">
-      <qrcode-vue :value="link" :size="138" level="H" />
+  <div v-if="googlebind">
+    <div class="status-info py-[30px]">
+        <div class="status-info__icon">
+            <img src="/@/assets/images/success.svg" />
+        </div>
+        <div class="status-info__title pt-[10px]">已绑定</div>
+        <div class="status-info__desc">如果您有任何问题可联系在线客服</div>
+      </div>
+  </div>
+  <el-form ref="ruleForm" :rules="rules" label-position="top" v-else :model="formState" v-loading="loadingPage" status-icon
+    class="login-ruleForm pt-[10px]">
+    <div class="qrcode-box">
+      <qrcode-vue :value="link" :size="142" level="H" />
     </div>
-    <el-form-item label="谷歌密钥" style="margin-bottom: 10px">
+    <div class="form-center">谷歌密钥</div>
+    <el-form-item>
       <el-input readonly v-model="qrcode" class="h50">
         <template #suffix>
           <div class="suffix" @click="copy">
@@ -15,7 +25,7 @@
         </template>
       </el-input>
     </el-form-item>
-    <div class="form-center my-5">谷歌验证码</div>
+    <div class="form-center">谷歌验证码</div>
 
     <el-form-item class="input-items" prop="">
       <el-input type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
@@ -25,11 +35,11 @@
       <el-input type="text" ref="int5" maxlength="1" v-model="fifth" @input="fifthChange" />
       <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
-    <el-form-item style="margin-bottom: 40px;margin-top:40px;">
-      <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="loginHandle">
+    <div class="pt-[20px] py-[10px]">
+      <el-button :loading="loading" type="primary" class="bind-btn" @click.prevent="loginHandle">
         绑定
       </el-button>
-    </el-form-item>
+    </div>
   </el-form>
 </el-dialog>
 </template>
@@ -79,6 +89,10 @@ const rules = ref({
   //   }
   // ]
 })
+const userStore = useUserStore()
+
+const googlebind = computed(() => userStore.userInfo.googlebind)
+
 const googleDialogShow = computed({
   get: () => props.dialogShow,
   set: val => emit('close', val),
@@ -221,7 +235,7 @@ getGoogleCode().then(res => {
 }).finally(() => {
   loadingPage.value = false;
 })
-const userStore = useUserStore()
+
 function loginHandle() {
   // ruleForm.value.validate((valid, fields) => {
   //   if (valid) {
@@ -277,11 +291,12 @@ const emit = defineEmits( ['close', 'success'] )
 }
 
 .form-center {
-  text-align: center;
-  // margin-bottom: 28px;
-  font-family: 'Roboto';
   font-weight: 400;
   font-size: 16px;
+  color:#000;
+  line-height: 22px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .form-text {
@@ -294,20 +309,39 @@ const emit = defineEmits( ['close', 'success'] )
 }
 
 .suffix {
-  color: #165DFF;
-  margin-right: 15px;
+  color: #fff;
   cursor: pointer;
+  background-color: #4377FE;
+  width: 60px;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+  right:-14px;
+  font-size: 14px;
 }
 
+.qrcode-box{
+  border: 1px solid var(--el-color-primary);
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .input-items {
-  margin-bottom: 50px;
-
+  display: flex;
+  margin-left: -10px;
+  .el-input{
+    flex: 1;
+    margin-left: 10px;
+  }
   :deep(.el-form-item__content) {
     display: flex;
     justify-content: space-between;
 
     .el-input {
-      width: 46px;
+      width: 100%;
       height: 46px;
       background-color: #fff;
       box-sizing: border-box;
@@ -317,5 +351,11 @@ const emit = defineEmits( ['close', 'success'] )
       }
     }
   }
+}
+.bind-btn{
+  width: 100%;
+  height:48px !important;
+  font-size:16px;
+  border-radius:40px;
 }
 </style>

@@ -6,7 +6,7 @@
         <div class="w-full flex justify-between content-center">
           <el-input v-model="form.password" autocomplete="off" disabled class="pwd-last">
             <template #append>
-              <div class="absolute left-0 top-0 w-full h-full" @click="copy(form.password)"></div>
+              <div class="absolute left-0 top-0 w-full h-full z-10" @click="copy(form.password)"></div>
               <el-icon color="#014CFA" size="18px">
                 <CopyDocument />
               </el-icon>

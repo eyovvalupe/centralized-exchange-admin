@@ -442,3 +442,29 @@ export function copy(text) {
     inputEle.remove()
   }
 }
+
+
+// 转换数字显示  带单位(K,M,B)
+export const _formatNumber = (num, tail = 2) => {
+  if (isNaN(num)) return ''
+  num = Number(num)
+  if (num >= 1.0e9) {
+    return `${(num / 1.0e9).toFixed(tail)}B`
+  }
+  if (num >= 1.0e6) {
+    return `${(num / 1.0e6).toFixed(tail)}M`
+  }
+  if (num >= 1.0e3) {
+    return `${(num / 1.0e3).toFixed(tail)}K`
+  }
+  return num.toFixed(tail)
+}
+
+
+
+export const fixLittleNum = (num, i) => {
+  const lastNum = num * 1000000 - Math.floor(num * 100000) * 10
+  if (lastNum) {
+      return num.toFixed(i)
+  } else return num
+}

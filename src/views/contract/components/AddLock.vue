@@ -8,8 +8,13 @@
             <el-input-number :min="0" class="input-number" :precision="0" :controls="false" v-model="form.uid" @blur="getBalance" />
           </el-form-item>
           <el-form-item label="合约" required prop="symbol">
-            <!-- <el-input v-model="form.symbol" :disabled="!form.market"  /> -->
-            <el-select v-model="form.symbol" filterable clearable remote reserve-keyword placeholder="代码模糊搜索"
+            
+            <div class="relative w-full">
+              <div class="absolute w-full h-full left-0 top-0 z-10" @click="showStockSelection=true;"></div>
+              <el-input v-model="form.name" placeholder="点击选择合约"  />
+            </div>
+            
+            <!-- <el-select v-model="form.symbol" filterable clearable remote reserve-keyword placeholder="代码模糊搜索"
               remote-show-suffix :remote-method="remoteMethod" @change="symbolChange" :loading="loadingSelect">
               <el-option v-for="item in options" :key="item.symbol" :label="item.symbol" :value="item.symbol">
                 <div class="select-opt my-1">
@@ -17,22 +22,22 @@
                   <small class="color"> {{ item.name || '--' }} </small>
                 </div>
               </el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
-          <div class="flex justify-between">
-            <el-form-item label="开仓方向" required prop="offset" class="w-4/12 mr-[5px]">
+          <div class="flex justify-between ml-[-10px]">
+            <el-form-item label="开仓方向" required prop="offset"  class="w-0 flex-1 ml-[10px]">
               <el-select v-model="form.offset" class="w-full" placeholder="">
                 <el-option label="买涨" value="long" />
                 <el-option label="买跌" value="short" />
               </el-select>
             </el-form-item>
-            <el-form-item label="杠杆类型" required prop="lever_type" class="w-4/12 mr-[5px]">
+            <el-form-item label="杠杆类型" required prop="lever_type"  class="w-0 flex-1 ml-[10px]">
               <el-select v-model="form.lever_type" class="w-full" placeholder="">
                 <el-option label="全仓" value="cross" />
                 <el-option label="逐仓" value="isolated" />
               </el-select>
             </el-form-item>
-            <el-form-item label="杠杆" required prop="lever" class="w-4/12">
+            <el-form-item label="杠杆" required prop="lever"  class="w-0 flex-1 ml-[10px]">
               <el-input-number :controls="false" class="input-number" :precision="0" :min="1" v-model="form.lever" />
             </el-form-item>
           </div>
@@ -44,19 +49,21 @@
       <div class="w-6/12 pl-[20px] right-box" :class="{ showcolor: showErrClass }">
         <div>
           <h2 class="mb-2">锁定单确认</h2>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">保证金</span>
-            <span class="w-6/12 text-left status blue">{{ marginBalance || '--' }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">保证金</span>
+            <span class="table-span-right"><span class=" status blue">{{ marginBalance || '--' }}</span></span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">账户余额</span>
-            <span class="w-6/12 text-left status blue">{{ stockBalance || '--' }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">账户余额</span>
+            <span class="table-span-right status blue"><span class=" status blue">{{ stockBalance || '--' }}</span></span>
           </div>
-          <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">锁定差额</span>
-            <span class="w-6/12 text-left status" :class="diffBalance <= 0 ? 'error' : ''">{{ diffBalance }}</span>
+          <div class="table-list-order flex flex-nowrap justify-between">
+            <span class="table-span-left">锁定差额</span>
+            <span class="table-span-right"><span class="status" :class="diffBalance <= 0 ? 'fail' : ''">{{ diffBalance }}</span></span>
           </div>
         </div>
+
+       
         <div class="mt-[10px] status error text-xs" v-if="diffBalance <= 0">
           * 锁定差额小于或等于0，无效订单
         </div>
@@ -71,6 +78,10 @@
   </el-dialog>
 
   <safeword v-model="showPwd" @submit="submit" />
+
+  <StockSelection @choice="onChoice" market-type="futures" @close="showStockSelection=false" v-if="showStockSelection" />
+
+
 </template>
 
 <script setup>
@@ -80,6 +91,7 @@ import { ElMessage } from 'element-plus'
 import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
 import safeword from '/@/components/safeword'
+import StockSelection from '/@/components/stockSelection/Index.vue'
 
 const props = defineProps({
   data: { // 行数据
@@ -87,6 +99,8 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+const showStockSelection = ref(false)
 
 const ruleForm = ref(null)
 const loading = ref(false)
@@ -99,6 +113,7 @@ const symbolInfo = ref();
 const form = reactive({
   uid: null,
   symbol: undefined,
+  name:null,
   offset: 'long',
   volume: '',
   lever_type: 'cross',
@@ -139,6 +154,14 @@ const symbolChange = () => {
     symbolInfo.value = null
   }
 }
+
+const onChoice = (item)=>{
+  form.symbol = item.symbol
+  form.name = item.name
+  symbolChange()
+}
+
+
 const marginBalance = computed(() => {
   let strNum;
   if (!symbolInfo.value || isNaN(symbolInfo.value.price) || isNaN(stockBalance.value)) {

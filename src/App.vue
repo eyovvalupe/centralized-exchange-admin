@@ -960,6 +960,12 @@ body{
     margin-top: 10px;
     text-align: center;
   }
+  &__desc{
+    color:#999;
+    font-size: 12px;
+    margin-top:10px;
+    text-align: center;
+  }
 }
 
 small {
