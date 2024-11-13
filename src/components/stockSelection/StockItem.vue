@@ -59,7 +59,7 @@
             "
           >
             <SparkLine
-              v-if="props.points"
+              v-if="props.points && props.marketType == 'crypto'"
               :style="
                 props.marketType != 'cryto'
                   ? 'width: 100%; height: 30px;'

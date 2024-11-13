@@ -81,7 +81,7 @@ import { Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import AddEditUser from './AddEditUser.vue'
 import ResetPwd from './ResetPwd.vue'
-import SvgIcon from '/@/components/icons/Index.vue'
+import SvgIcon from '/@/components/icons/index.vue'
 import { hex_md5 } from '/@/utils/md5'
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt

@@ -91,7 +91,7 @@ import { ElMessage } from 'element-plus'
 import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
 import safeword from '/@/components/safeword'
-import StockSelection from '/@/components/stockSelection/Index.vue'
+import StockSelection from '/@/components/stockSelection/index.vue'
 
 const props = defineProps({
   data: { // 行数据

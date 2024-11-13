@@ -174,7 +174,7 @@ import { apilogout } from '/@/api/modules/login.api'
 import routes from '/@/router/modules/menus'
 import UpdatePassword from '../../components/updatePwd'
 
-import SvgIcon from '/@/components/icons/Index.vue'
+import SvgIcon from '/@/components/icons/index.vue'
 
 // import ServiceDialog from './components/service'
 import { ElMessage, ElMessageBox } from 'element-plus'

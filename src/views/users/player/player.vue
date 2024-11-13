@@ -123,7 +123,7 @@ import {
 } from '/@/api/modules/business/player.api'
 // import { apiRoleList } from '/@/api/modules/system/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import SvgIcon from '/@/components/icons/Index.vue'
+import SvgIcon from '/@/components/icons/index.vue'
 
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { copy } from '/@/utils'

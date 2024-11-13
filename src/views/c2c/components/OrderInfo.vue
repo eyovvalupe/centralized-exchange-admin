@@ -149,7 +149,7 @@ import { formatSeconds, copy } from '/@/utils'
 import { useServiceStoreC2C } from '/@/store'
 import addBank from '/@/assets/imgs/account.png'
 import { CopyDocument } from '@element-plus/icons-vue'
-import SvgIcon from '/@/components/icons/Index.vue'
+import SvgIcon from '/@/components/icons/index.vue'
 const usec2cService = useServiceStoreC2C()
 
 const props = defineProps({

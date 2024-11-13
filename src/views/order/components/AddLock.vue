@@ -87,7 +87,7 @@ import { ElMessage } from 'element-plus'
 import { apiWalletBalance } from '/@/api/modules/business/player.api'
 import { getSessionToken, symbolBasic, searchMarket } from '/@/api/modules/base.api'
 import { stockPara } from '/@/api/modules/market/index.api'
-import StockSelection from '/@/components/stockSelection/Index.vue'
+import StockSelection from '/@/components/stockSelection/index.vue'
 const props = defineProps({
   data: { // 行数据
     type: Object,
