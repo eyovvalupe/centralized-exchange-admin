@@ -1,10 +1,11 @@
 <template>
   <el-form ref="ruleForm" :model="formState" :rules="rules" label-width="0" status-icon class="login-ruleForm">
+    <div class="form-text"><i>*</i> 新密码</div>
     <el-form-item prop="password">
       <el-input
         ref="password"
         v-model="formState.password"
-        class="h50"
+        class="login-input"
         show-password
         name="password"
         placeholder="请输入登录密码"
@@ -17,12 +18,12 @@
         :prefix-icon="Lock"
       />
     </el-form-item>
-
+    <div class="form-text"><i>*</i> 确认密码</div>
     <el-form-item prop="secondPassword">
       <el-input
         ref="secondPassword"
         v-model="formState.secondPassword"
-        class="h50"
+        class="login-input"
         show-password
         name="secondPassword"
         placeholder="请再次输入登录密码"
@@ -46,18 +47,20 @@
       <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
 
-    <el-form-item style="margin-bottom: 14px">
+    <div class="pt-[20px]">
       <el-button
-        class="h50"
         :loading="loading"
         :disabled="disabledLogin"
         type="primary"
-        style="width: 100%"
+        class="login-btn"
         @click.prevent="loginHandle"
       >
         修 改
       </el-button>
-    </el-form-item>
+    </div>
+    <div class="pt-[20px]">
+      <el-button @click="goSkipPage" type="primary" class="login-btn" plain>暂时跳过</el-button>
+    </div>
   </el-form>
 </template>
 
@@ -79,6 +82,10 @@ const formState = reactive({
   secondPassword: '',
   password: '',
 })
+
+const goSkipPage=()=>{
+  router.push('/dashboard')
+}
 const validateConfirmPassword = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请确认密码'))
@@ -225,31 +232,55 @@ defineOptions({
   margin-bottom: 11px;
 }
 .el-form-item {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   :deep(.el-input__prefix-inner) {
     color: #165DFF;
   }
 }
+
 .form-text {
-  text-align: center;
-  margin-bottom: 28px;
-  font-family: 'Roboto';
-  font-weight: 400;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 22px;
+  color:#000;
+  margin-bottom: 10px;
+  i{
+    font-style: normal;
+    color:#FF0004;
+    font-weight: normal;
+  }
 }
 .input-items {
   :deep(.el-form-item__content) {
     display: flex;
     justify-content: space-between;
+
     .el-input {
       width: 46px;
       height: 46px;
-      background-color: #fff;
       box-sizing: border-box;
+    
       .el-input__inner {
         text-align: center;
       }
+
+      .el-input__wrapper {
+        border-radius: 6px;
+      }
     }
   }
+}
+.login-input{
+  height: 48px;
+}
+.login-btn{
+  width: 100%;
+  height:48px;
+  font-size: 16px;
+  border-radius: 24px;
+}
+
+:deep(.el-button.is-plain){
+  background: none;
 }
 </style>

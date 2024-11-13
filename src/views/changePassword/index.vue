@@ -51,16 +51,16 @@ defineOptions( {
 }
 
 .top{
-  height: 36px;
+  height: 38px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   .top-title {
     color: #165DFF;
-    font-size: 16px;
-    padding-bottom: 6px;
+    font-size: 20px;
     border-bottom: 2px solid #165DFF;
+    height: 37px;
+    display: inline-block;
   }
 }
-
 .main {
   margin-top: 20px;
   .foot-link {

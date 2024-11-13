@@ -39,7 +39,7 @@
               {{ scope.row['issue_price_min'] + '~' + scope.row['issue_price_max'] }}
             </span>
             <span v-else-if="item.prop === 'vip'">
-              <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : ''">
+              <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : 'done'">
                 {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
               </span>
             </span>

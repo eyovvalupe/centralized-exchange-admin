@@ -259,6 +259,8 @@ defineOptions( {
 </script>
 
 <style lang="scss" scoped>
+
+
 .el-form-item {
   margin-bottom: 28px;
   :deep(.el-input__prefix-inner) {
@@ -268,26 +270,8 @@ defineOptions( {
 .form-text {
   text-align: center;
   margin-bottom: 28px;
-  font-family: 'Roboto';
-  font-weight: 400;
+  font-weight: 500;
   font-size: 16px;
 }
-.input-items {
-  :deep(.el-form-item__content) {
-    display: flex;
-    justify-content: space-between;
-    .el-input {
-      width: 40px;
-      height: 40px;
-      background-color: #fff;
-      box-sizing: border-box;
-      .el-input__inner {
-        text-align: center;
-      }
-      .el-input__wrapper{
-        border-radius: 0;
-      }
-    }
-  }
-}
+
 </style>
