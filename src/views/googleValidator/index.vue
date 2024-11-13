@@ -3,7 +3,7 @@
     <div class="body fix-width">
       <div class="top flex align-middle content-center justify-between">
         <span class="top-title">绑定谷歌验证器</span>
-        <span @click="goSkipPage" class="skip cursor-pointer ">跳过</span>
+        
       </div>
       <div class="main">
         <binding-validator />
@@ -30,9 +30,7 @@ onMounted( () => {
 onUnmounted( () => {
   window.removeEventListener( 'resize', resizeCb )
 } )
-const goSkipPage=()=>{
-  router.push('/dashboard')
-}
+
 </script>
 
 <style lang="scss" scoped>
@@ -53,18 +51,18 @@ const goSkipPage=()=>{
 }
 
 .top{
-  height: 46px;
+  height: 38px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   .top-title {
     color: #165DFF;
-    font-size: 16px;
-    padding-bottom: 6px;
+    font-size: 20px;
     border-bottom: 2px solid #165DFF;
+    height: 37px;
+    display: inline-block;
   }
 }
 
 .main {
-  margin-top: 20px;
   .foot-link {
     text-align: center;
     margin-top: 1px;

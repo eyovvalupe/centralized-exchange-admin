@@ -1,25 +1,30 @@
 <template>
-  <el-form ref="ruleForm" label-position="top" :model="formState" v-loading="loadingPage" status-icon
+  <el-form ref="ruleForm" label-position="top" :model="formState"  status-icon
     class="login-ruleForm">
-    <div class="form-center" style="margin-bottom: 30px; display: flex; justify-content: center">
+    <div class="flex items-center justify-center py-[24px]">
       <qrcode-vue :value="link" :size="138" level="H" />
     </div>
-    <el-form-item label="谷歌密钥" style="margin-bottom: 10px">
-      <el-input readonly v-model="qrcode" class="h50">
+    <div class="form-center">谷歌验证器密钥</div>
+    <el-form-item>
+      <el-input readonly v-model="qrcode" class="login-input">
         <template #suffix>
-          <div class="suffix" @click="copy">
-            <span>Copy</span>
+          <div class="copy-btn" @click="copy">
+            <span>copy</span>
           </div>
         </template>
       </el-input>
-      <!-- <span class="txt-gray text-sm leading-6 mt-2">
-        1、在您的手机上安装「Google Authentication」 <br>
-        2、在「Google Authentication」中创建一个账户，扫码或手动输入秘钥，完成“添加”
-      </span> -->
+ 
     </el-form-item>
-    <div class="form-center my-5">谷歌验证码</div>
+    <div class="tips">
+      1、在您的手机上安装「Google Authentication」
+    </div>
+    <div class="tips pt-[10px]">
+      2、扫码或手动输入<span class="!text-[#EF8401]">谷歌验证器秘钥</span>，完成“添加”
+    </div>
+    
+    <div class="form-center pt-[20px]">谷歌验证码</div>
 
-    <el-form-item class="input-items" prop="">
+    <el-form-item class="input-items">
       <el-input type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
       <el-input type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
       <el-input type="text" ref="int3" maxlength="1" v-model="third" @input="thirdChange" />
@@ -28,11 +33,16 @@
       <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
 
-    <el-form-item style="margin-bottom: 14px">
-      <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="loginHandle">
-        绑定
+  
+    <div class="pt-[20px]">
+      <el-button :loading="loading" type="primary" class="login-btn" @click.prevent="loginHandle">
+        确认
       </el-button>
-    </el-form-item>
+      
+    </div>
+    <div class="pt-[20px]">
+      <el-button @click="goSkipPage" type="primary" class="login-btn" plain>暂时跳过</el-button>
+    </div>
   </el-form>
 </template>
 
@@ -115,7 +125,9 @@ const copy = () => {
     inputEle.remove()
   }
 }
-
+const goSkipPage=()=>{
+  router.push('/dashboard')
+}
 // 输入内容自动切换下一个输入框
 const first = ref('')
 const int1 = ref()
@@ -229,11 +241,11 @@ function loginHandle() {
 }
 
 .form-center {
-  text-align: center;
-  // margin-bottom: 28px;
-  font-family: 'Roboto';
-  font-weight: 400;
+  color:#000;
+  font-weight: 600;
   font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 10px;
 }
 
 .form-text {
@@ -245,15 +257,18 @@ function loginHandle() {
   margin-bottom: 28px;
 }
 
-.suffix {
-  color: #165DFF;
-  margin-right: 15px;
+.copy-btn {
+  color: #fff;
+  background-color: #165DFF;
+  width: 70px;
   cursor: pointer;
+  position: relative;
+  height: 48px;
+  line-height: 48px;
+  right: -15px;
+  border-radius: 0 8px 8px 0;
 }
-
 .input-items {
-  margin-bottom: 50px;
-
   :deep(.el-form-item__content) {
     display: flex;
     justify-content: space-between;
@@ -261,13 +276,37 @@ function loginHandle() {
     .el-input {
       width: 46px;
       height: 46px;
-      background-color: #fff;
       box-sizing: border-box;
-
+    
       .el-input__inner {
         text-align: center;
+      }
+
+      .el-input__wrapper {
+        border-radius: 6px;
       }
     }
   }
 }
+.tips{
+  line-height: 20px;
+  color:#666;
+  font-size: 14px;
+  span{
+    color:#666;
+  }
+}
+.login-input{
+  height: 48px;
+}
+.login-btn{
+  width: 100%;
+  height:48px;
+  font-size: 16px;
+  border-radius: 24px;
+}
+:deep(.el-button.is-plain){
+  background: none;
+}
+
 </style>

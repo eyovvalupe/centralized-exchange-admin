@@ -2,8 +2,7 @@
   <div class="section-container login-container un-select">
     <div class="body fix-width">
       <div class="top">
-        <!-- <logo class="logos" /> -->
-        <span class="top-title">登录</span>
+        <span class="top-title">管理员登录</span>
       </div>
       <div class="main">
         <login-pwd />
@@ -58,13 +57,14 @@ defineOptions( {
   margin: 0 auto 20px;
 }
 .top{
-  height: 36px;
+  height: 38px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   .top-title {
     color: #165DFF;
-    font-size: 16px;
-    padding-bottom: 6px;
+    font-size: 20px;
     border-bottom: 2px solid #165DFF;
+    height: 37px;
+    display: inline-block;
   }
 }
 

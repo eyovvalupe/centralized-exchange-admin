@@ -1,32 +1,20 @@
 <template>
   <el-form ref="ruleForm" :model="formState" :rules="rules" label-width="0" status-icon class="login-ruleForm">
     <el-form-item prop="account">
-      <el-input ref="account" v-model="formState.account" class="h50" name="account" placeholder="请输入用户名"
+      <el-input ref="account" v-model="formState.account" class="login-input" name="account" placeholder="请输入用户名"
         :clearable="true" tabindex="1" type="text" maxlength="100" autocomplete="off" :prefix-icon="User" />
     </el-form-item>
     <el-form-item prop="password">
-      <el-input ref="password" v-model="formState.password" class="h50" show-password name="password"
-        placeholder="请输入密码" :clearable="true" tabindex="2" maxlength="16" type="password" autocomplete="off"
-        @keyup.enter="loginHandle" :prefix-icon="Lock" />
+      <el-input ref="password" v-model="formState.password" class="login-input" show-password name="password"
+        placeholder="请输入密码" :clearable="true" tabindex="2" maxlength="16"  autocomplete="off"
+        @keyup.enter="loginHandle" :prefix-icon="Lock">
+      
+      </el-input>
     </el-form-item>
 
-    <div class="form-text mt-10 mb-5">谷歌验证码</div>
+    <div class="form-text">谷歌验证码</div>
 
-    <el-form-item class="input-items" prop="">
-      <!-- <el-input
-        ref="password"
-        v-model="formState.captcha"
-        class="h50"
-        show-password
-        name="password"
-        placeholder="请输入谷歌验证码"
-        :clearable="true"
-        tabindex="2"
-        maxlength="16"
-        type="password"
-        autocomplete="off"
-        @keyup.enter="loginHandle"
-      /> -->
+    <el-form-item class="input-items">
       <el-input type="text" ref="int1" maxlength="1" v-model="first" @input="firstChange" />
       <el-input type="text" ref="int2" maxlength="1" v-model="second" @input="secondChange" />
       <el-input type="text" ref="int3" maxlength="1" v-model="third" @input="thirdChange" />
@@ -34,9 +22,10 @@
       <el-input type="text" ref="int5" maxlength="1" v-model="fifth" @input="fifthChange" />
       <el-input type="text" ref="int6" maxlength="1" v-model="sixth" @input="sixthChange" />
     </el-form-item>
+    <div class="input-items-tip">如未设置，请置空</div>
 
-    <el-form-item style="margin-bottom: 14px">
-      <el-button class="h50" :loading="loading" type="primary" style="width: 100%" @click.prevent="loginHandle">
+    <el-form-item class="pt-[40px]">
+      <el-button :loading="loading" round type="primary" class="login-btn" @click.prevent="loginHandle">
         登录
       </el-button>
     </el-form-item>
@@ -65,6 +54,7 @@ const rules = {
   password: [{ required: true, message: '请输入密码', trigger }],
 }
 const loading = ref(false)
+const showPwd = ref(false)
 
 // 输入内容自动切换下一个输入框
 const first = ref('')
@@ -140,6 +130,9 @@ function sixthChange(e) {
   }
 }
 
+const goSkipPage = ()=>{
+  router.push('/dashboard')
+}
 
 function loginHandle() {
   loading.value = true
@@ -200,40 +193,60 @@ defineOptions({
 </script>
 
 <style lang="scss" scoped>
+
 .el-form-item {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 
   :deep(.el-input__prefix-inner) {
     color: #165DFF;
   }
+  :deep(.el-input__icon){
+    font-size: 18px;
+  }
 }
 
 .form-text {
-  text-align: center;
-  font-family: 'Roboto';
   font-weight: 400;
   font-size: 16px;
+  line-height: 22px;
+  color:#000;
 }
 
 .input-items {
+  padding-top: 12px;
+  margin-bottom: 10px;
   :deep(.el-form-item__content) {
     display: flex;
     justify-content: space-between;
 
     .el-input {
-      width: 40px;
-      height: 40px;
-      background-color: #fff;
+      width: 46px;
+      height: 46px;
       box-sizing: border-box;
-
+    
       .el-input__inner {
         text-align: center;
       }
 
       .el-input__wrapper {
-        border-radius: 0;
+        border-radius: 6px;
       }
     }
   }
+}
+.input-items-tip{
+  color:#EF8401;
+  line-height: 24px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+.login-input{
+  height: 48px;
+}
+.login-btn{
+  width: 100%;
+  height:48px;
+  font-size: 16px;
+  border-radius: 24px;
 }
 </style>
