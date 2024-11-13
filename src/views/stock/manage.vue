@@ -3,10 +3,7 @@
     <div class="flex reset-el-style-v2 justify-between">
       <div>
         <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
-        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('us')">{{marketTitleMap.us}}</el-button>
-        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('japan')">{{marketTitleMap.japan}}</el-button>
-        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('india')">{{marketTitleMap.india}}</el-button>
-        <el-button class="ml-[10px]" type="info" plain @click="openTimeDialog('korea')">{{marketTitleMap.korea}}</el-button>
+        <el-button class="ml-[10px]" v-for="market in marketList" :key="market" type="info" plain @click="openTimeDialog(market)">{{marketTitleMap[market]}}</el-button>
       </div>
       <div class="flex">
         <div class="w-[264px]">
@@ -80,10 +77,19 @@ const searchForm = reactive({
   symbol: ''
 })
 const marketTitleMap = ref({
-  us:"美股配置",
-  japan:"日股配置",
-  india:"印股配置",
-  korea:"韩股配置"
+  us:"美国市场",
+  japan:"日本市场",
+  india:"印度市场",
+  korea:"韩国市场",
+  germany:"德国市场",
+  uk:"英国市场",
+  singapore:"新加坡市场",
+  hongkong:"香港市场",
+  malaysia:'马来西亚市场'
+})
+
+const marketList = computed(()=>{
+  return Object.keys(marketTitleMap.value)
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
