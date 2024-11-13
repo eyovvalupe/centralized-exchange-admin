@@ -1,68 +1,68 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="540" class="reset-el-styte" :title="!props.data ? '新增' : '修改'" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="600" class="reset-el-styte" :title="!props.data ? '新增' : '修改'" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm" v-loading="loading">
+    <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
       <el-form-item label="公司名称" required :label-width="formLabelWidth" prop="company_name">
         <el-input v-model="form.company_name" autocomplete="off" />
       </el-form-item>
-      <div class="flex">
-        <el-form-item label="市场" class="mr-2 w-1/2" prop="market">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="市场" class="w-0 flex-1 ml-[10px]" prop="market">
           <el-input v-model="form.market" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="交易代码" class="w-1/2" prop="symbol">
+        <el-form-item label="交易代码" class="w-0 flex-1 ml-[10px]" prop="symbol">
           <el-input v-model="form.symbol" autocomplete="off" />
         </el-form-item>
       </div>
-      <div class="flex">
-        <el-form-item label="认购开始时间" required class="mr-2 w-1/2" prop="issue_start_date">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="认购开始时间" required class="w-0 flex-1 ml-[10px]" prop="issue_start_date">
           <el-date-picker v-model="form.issue_start_date" value-format="YYYY-MM-DD" style="width: 100%;"
             :disabled-date="disabledStart" type="date" />
         </el-form-item>
-        <el-form-item label="认购结束时间" required class="w-1/2" prop="issue_end_date">
+        <el-form-item label="认购结束时间" required class="w-0 flex-1 ml-[10px]" prop="issue_end_date">
           <el-date-picker v-model="form.issue_end_date" value-format="YYYY-MM-DD" :disabled-date="disabledEnd"
             type="date" style="width: 100%;" />
         </el-form-item>
       </div>
       <el-form-item label="认购价格" required prop="issue_price_max">
-        <el-input v-model="form.issue_price_max" placeholder="" class="w-full"
+        <el-input-number class="input-number" v-model="form.issue_price_max" :controls="false" @blur="form.issue_price_max <= 0 ? form.issue_price_max ='' : ''"
           autocomplete="off">
-        </el-input>
+        </el-input-number>
       </el-form-item>
-      <div class="flex items-center">
-        <el-form-item label="VIP" class="mr-2 w-1/6">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="VIP" class="w-0 flex-1 ml-[10px]">
           <el-select v-model="statusVIP" class="w-full" @change="resetKey">
             <el-option label="否" :value="false" />
             <el-option label="是" :value="true" />
           </el-select>
         </el-form-item>
-        <el-form-item label="VIP杠杆" :required="statusVIP" class="mr-2 w-1/6" prop="lever">
-          <el-input v-model="form.lever" :disabled="!statusVIP" autocomplete="off" />
+        <el-form-item label="VIP杠杆" :required="statusVIP" class="w-0 flex-1 ml-[10px]" prop="lever">
+          <el-input-number class="input-number" :controls="false" :precision="0" :min="1" v-model="form.lever" :disabled="!statusVIP" />
         </el-form-item>
-        <el-form-item label="VIP密钥" :required="statusVIP" class="flex-1" prop="keyword">
+        <el-form-item label="VIP密钥" :required="statusVIP" class="w-0 flex-1 ml-[10px]" prop="keyword">
           <div class="flex flex-1">
-            <el-input v-model="form.keyword" disabled autocomplete="off" class="append-style mr-1" />
-            <el-button size="mini" type="primary" :disabled="!statusVIP" @click="resetKey">
+            <el-input v-model="form.keyword" disabled autocomplete="off" />
+            <el-button type="primary" :disabled="!statusVIP" @click="resetKey" class="ml-[5px]">
               重置
             </el-button>
           </div>
         </el-form-item>
 
       </div>
-      <div class="flex">
-        <el-form-item label="上市日期" required class="mr-2 w-1/2" :label-width="formLabelWidth" prop="listing_date">
+      <div class="flex ml-[-10px]">
+        <el-form-item label="上市日期" required class="w-0 flex-1 ml-[10px]" :label-width="formLabelWidth" prop="listing_date">
           <el-date-picker v-model="form.listing_date" value-format="YYYY-MM-DD" :disabled-date="disabledStart"
             type="date" style="width: 100%;" />
         </el-form-item>
-        <el-form-item label="上市价格" class="w-1/2" :label-width="formLabelWidth" prop="listed_price">
-          <el-input v-model="form.listed_price" autocomplete="off" />
+        <el-form-item label="上市价格" class="w-0 flex-1 ml-[10px]" :label-width="formLabelWidth" prop="listed_price">
+          <el-input-number class="input-number" :controls="false" @blur="form.listed_price <= 0 ? form.listed_price = '' : ''" v-model="form.listed_price" autocomplete="off" />
         </el-form-item>
       </div>
     </el-form>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emit('close', false)">取消</el-button>
-        <el-button type="primary" class="default_btn" @click="handleSubmit" :loading="isLoading">确定 </el-button>
-      </span>
+      <div class="p-[10px]">
+        <el-button round class="w-[98px]" @click="emit('close', false)">取消</el-button>
+        <el-button round class="w-[98px]" type="primary" @click="handleSubmit" :loading="isLoading">确定 </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>

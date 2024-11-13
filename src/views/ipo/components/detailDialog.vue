@@ -8,7 +8,7 @@
                     <span class="table-span-left">{{ item.label }}</span>
                     <span class="table-span-right">
                         <template v-if="Array.isArray(item.prop)">
-                            <template v-for="(arrItem, idx) in item.prop" :key="arrItem" class="arr">
+                            <template v-for="(arrItem, idx) in item.prop" :key="arrItem">
                                 <span v-if="idx">｜</span>
                                 <span>{{ transKeyName(detailData[arrItem], arrItem) || 0 }}</span>
                             </template>

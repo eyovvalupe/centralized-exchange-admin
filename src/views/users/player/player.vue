@@ -3,7 +3,6 @@
     <div class="reset-el-style-v2">
       <!-- <el-button type="primary" @click="addVisible = true">增加新玩家</el-button> -->
       <div class="flex justify-end">
-    
         <div class="w-[168px]">
           <el-select v-model="role" @change="changeSearch(role)">
             <el-option v-for="(item) in roleOptions"

@@ -1,24 +1,34 @@
 <template>
 <div class="px-[20px] py-[10px]">
     <div class="flex reset-el-style-v2 justify-between">
-      <div></div>
-      <div class="flex">
-        <div class="mr-5">
-          <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-            :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        </div>
-        <el-input v-model="searchForm.params" placeholder="公司名称/交易代码/UID/用户名" style="width: 300px;" />
-        <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 250px;">
-          <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-        <el-button type="primary" class="ml-5" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="ipoIndex">IPO发行管理</el-radio-button>
+          <el-radio-button label="ipoCfg">IPO订单配置</el-radio-button>
+        </el-radio-group>
       </div>
+      <div class="flex justify-end">
+        <div class="w-[168px]">
+          <el-select v-model="searchForm.status" @change="getDataList(1)">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" suffix-icon="search"  placeholder="公司名称/交易代码/UID/用户名" />
+        </div>
+        <!-- <el-select v-model="role" class="ml-2">
+          <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select> -->
+        <el-button type="primary"  class="w-[120px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
+      </div>
+
     </div>
     <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <template v-if="item.prop === 'username'">
@@ -55,7 +65,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="140" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
             <el-button link  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" @click="showDialog(scope.row, 'showWinDialog')">中签管理</el-button>
             <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">详情</el-button>
@@ -70,7 +80,6 @@
   </div>
   <detailDialog :orderNo="dialogType.info.order_no" v-if="dialogType.showDialog" />
   <winDialog :data="dialogType.info" v-if="dialogType.showWinDialog" @close="closeDialogType" />
-  <!-- :partyid="dialogType.info.partyid"  -->
   <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
 </template>
 
@@ -87,6 +96,17 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import winDialog from './components/winDialog.vue'
 import detailDialog from './components/detailDialog.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
+import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+const router = useRouter()
+
+const tabPosition = ref('ipoIndex')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
+
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -100,8 +120,8 @@ const dialogType = reactive({
   info: {}
 })
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  params: sessionStorage['ipoIndexParams'] || '',
+  status: sessionStorage['ipoIndexStatus'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -129,22 +149,27 @@ const optionStatus = [
     label: '未中签',
   },
 ]
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  { prop: 'order_no', label: '订单号',width: 100,  align: 'center' },
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'username',width: 130, label: '用户名', align: 'center' },
-  { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'company_name', label: '公司名称', align: 'center' },
+  { prop: 'order_no', label: '订单号',minWidth:gw(300),  align: 'center' },
+  { prop: 'uid', label: 'UID', align: 'center',minWidth:gw(120) },
+  { prop: 'username',width: 130, label: '用户名',minWidth:gw(140), align: 'center' },
+  // { prop: 'father_username', label: '代理', align: 'center' },
+  { prop: 'company_name', label: '公司名称',minWidth:gw(200), align: 'center' },
   // { prop: 'market', label: '市场', align: 'center' },
   // { prop: 'symbol', label: '交易代码', align: 'center' },
-  { prop: 'issue_price', label: '认购价格', align: 'center' },
-  { prop: 'vip', label: 'VIP杠杆', align: 'center', width: 80 },
-  // { prop: 'lever', label: '认购杠杆', align: 'center', width:90 },
-  { prop: 'volume', label: '认购数量', align: 'center' },
-  { prop: 'winning', label: '中签数量', align: 'center' },
-  // { prop: 'fee', label: '手续费', align: 'center', width:60 },
-  // { prop: 'date', label: '订单时间', align: 'center'},
-  { prop: 'status', label: '状态', align: 'center' },
+  { prop: 'issue_price', label: '认购价格',minWidth:gw(120), align: 'center' },
+  { prop: 'vip', label: 'VIP杠杆', align: 'center', minWidth:gw(120) },
+  // { prop: 'lever', label: '认购杠杆', align: 'center', minWidth:gw(120) },
+  { prop: 'volume', label: '认购数量', align: 'center',minWidth:gw(120) },
+  { prop: 'winning', label: '中签数量', align: 'center',minWidth:gw(120) },
+  // { prop: 'fee', label: '手续费', align: 'center', minWidth:gw(120) },
+  // { prop: 'date', label: '订单时间', align: 'center',minWidth:gw(150)},
+  { prop: 'status', label: '状态', align: 'center',minWidth:gw(120)},
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
@@ -159,7 +184,7 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
+
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -167,6 +192,22 @@ const getDataList = (page) => {
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  sessionStorage['ipoIndexParams'] = searchForm.params
+  sessionStorage['ipoIndexStatus'] = searchForm.status
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['ipoIndex']){
+    const searchCache = JSON.parse(sessionStorage['ipoIndex'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -181,6 +222,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['ipoIndex'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false
@@ -195,8 +240,5 @@ const closeDialogType = (item) => {
   }
 }
 getDataList();
-const changeSearch = (s) => {
-  searchForm.status = s;
-  getDataList();
-}
+
 </script>

@@ -1,11 +1,14 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="540" class="reset-el-styte" title="IPO参数" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="IPO参数" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <el-form v-loading="loading">
-      <div class="from-info">
-        <p><label>隔夜利息</label><span>{{ form.interest  }}</span></p>
-        <p><label>下单数量限制</label><span>{{  form.volume  }}</span></p> </div>
-    </el-form>
+    <div class="py-[10px]" v-loading="loading">
+      <div class="table-list-order flex">
+        <span class="table-span-left">隔夜利息</span><span class="table-span-right">{{ form.interest || '--'  }}</span>
+      </div>
+      <div class="table-list-order flex">
+        <span class="table-span-left">下单数量限制</span><span class="table-span-right">{{  form.volume  }}</span>
+      </div>
+    </div>
   </el-dialog>
 </template>
 

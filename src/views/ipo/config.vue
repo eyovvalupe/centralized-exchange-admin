@@ -1,94 +1,86 @@
 <template>
-  <div class="reset-el-styte p-2">
-    <div class="flex justify-between p-2">
-      <div>
-        <el-button  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" class="ml-2" @click="showDialog(null, 'showDialog')">新增</el-button>
-        <el-button  :type="checkAuthCode(22101)?'su':'info'" :disabled="!checkAuthCode(22101)" class="ml-2" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button>
+<div class="px-[20px] py-[10px]">
+    <div class="flex reset-el-style-v2 justify-between">
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="ipoIndex">IPO发行管理</el-radio-button>
+          <el-radio-button label="ipoCfg">IPO订单配置</el-radio-button>
+        </el-radio-group>
+         <el-button plain  type="primary" :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showDialog')" icon="plus">新增</el-button>
+        <el-button type="info" plain :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button>
       </div>
-      <div class="flex">
-        <div class="mr-10">
-          <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-            :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
+
+      <div class="flex justify-end">
+        <div class="w-[168px]">
+          <el-select v-model="searchForm.status" @change="changeSearch(searchForm.status)">
+            <el-option v-for="(item) in optionStatus"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
         </div>
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="公司名称/交易代码" style="width: 250px;" />
-        <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
-          <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
-        <el-button type="primary" class="ml-4" :icon="Search" @click="getDataList(1)"
-          :loading="isLoading">搜索</el-button>
+
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchForm.params" suffix-icon="search"  placeholder="公司名称/交易代码" />
+        </div>
+
+        <el-button type="primary"  class="w-[120px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
+      
     </div>
-    <div>
+    <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'locked'" :style="{ color: !scope.row[item.prop] ? 'green' : '#ff0000' }">
               {{ scope.row[item.prop] ? '禁用' : '启用' }}
             </span>
-            <span v-else-if="item.prop === 'vip'">
-              <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : ''">
+            <span class="flex" v-else-if="item.prop === 'vip'">
+              <span class="status-bg plain" :class="scope.row['lever'] > 1 ? 'status-yellow' : 'done'">
                 {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
               </span>
             </span>
             <span v-else-if="item.prop === 'issue_price_min'">
               {{ scope.row['issue_price_max'] }}
             </span>
-            <span v-else-if="item.prop === 'status'" class="status-bg" :class="scope.row['status']">
+            <span v-else-if="item.prop === 'status'" class="status-bg plain" :class="scope.row['status']">
               {{ statusObj[scope.row[item.prop]] }}
             </span>
-            <!-- <span v-else-if="item.prop==='issue_start_date'">
-              <el-tag type="info" size="small"> {{  dayjs(scope.row['issue_start_date']).format('YYYY-MM-DD') }}</el-tag>
-              <span class="mx-1">~</span>
-              <el-tag type="info" size="small"> {{ dayjs(scope.row['issue_end_date']).format('YYYY-MM-DD')  }}</el-tag>
-            </span> -->
-            <!-- <span v-else-if="item.prop === 'company_name'"  class="underline cursor-pointer text-[#4377FE]" @click="copy(scope.row[item.prop])">
-              {{ scope.row[item.prop] }}
-            </span> -->
+          
             <span v-else>
               {{ scope.row[item.prop] }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <span class="flex justify-center align-middle">
-              <!-- <el-popover popper-class="operation_popover" placement="bottom" title="" :width="80" trigger="click"
-                :show-arrow="false">
-                <template #reference>
-                  <el-button link type="primary" size="small"><img style="width: 20px; height: 20px"
-                      src="/src/assets/images/more.svg" /></el-button>
-                </template>
-  <div class="flex flex-col items-center cursor-pointer">
-    <p @click="handleDelete(scope.row, 'modifyVisible')" class="flex items-center py-2">
-      <el-icon :size="20">
-        <DeleteFilled />
-      </el-icon> <span class="ml-1">删除</span>
-    </p>
-  </div>
-  </el-popover> -->
-              <!-- <el-button link type="danger" @click="handleDelete(scope.row)">删除</el-button> -->
-              <el-button link  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)"  @click="showDialog(scope.row, 'showDialog')">修改</el-button>
-              <el-dropdown>
-                <img class="mr-[5px] w-[16px]" src="/src/assets/images/more.svg" />
+            <div class="flex justify-between items-center w-full relative">
+             
+              <div class="flex items-center justify-center flex-1 px-[21px]">
+                <el-button link size="default" type="primary" class="underline" :disabled="!checkAuthCode(22101)"  @click="showDialog(scope.row, 'showDialog')">修改</el-button>
+              </div>
+              <el-dropdown  class="!absolute right-[5px] top-[1px] w-[16px] h-[16px]">
+                <img class="w-[16px] h-[16px]" src="/src/assets/images/more.svg" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleDelete(scope.row)" :disabled="!checkAuthCode(22101)">
-                      <el-icon :size="20" :color="checkAuthCode(22101)?'red':'#ccc'">
-                        <DeleteFilled />
+                      <el-icon :size="18" :color="checkAuthCode(22101) ? 'red':'#ccc'">
+                        <Delete />
                       </el-icon> <span class="ml-1">删除</span>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </span>
+            </div>
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -109,6 +101,16 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import AddEditUser from './components/AddEdit.vue'
 import ipoEditModel from './components/ipoEdit.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
+import { useRouter } from 'vue-router'
+import { hex_md5 } from '/@/utils/md5'
+const router = useRouter()
+
+const tabPosition = ref('ipoCfg')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -123,8 +125,8 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  params: sessionStorage['ipoCfgSearchParams'] || '',
+  status: sessionStorage['ipoCfgSearchStatus'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -149,19 +151,24 @@ const optionStatus = [
     label: '已上市',
   },
 ]
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-  { prop: 'company_name', label: '公司名称', align: 'center' },
-  { prop: 'market', label: '市场', align: 'center', width: 100 },
-  { prop: 'symbol', label: '交易代码', align: 'center', width: 90 },
-  { prop: 'issue_start_date', label: '认购开始日期', align: 'center', width: 115 },
-  { prop: 'issue_end_date', label: '认购结束日期', align: 'center', width: 115 },
-  { prop: 'issue_price_min', label: '认购价格', align: 'center', width: 85 },
-  { prop: 'listing_date', label: '上市日期', align: 'center', width: 100 },
-  { prop: 'listed_price', label: '上市价格', align: 'center', width: 90 },
-  { prop: 'vip', label: 'VIP杠杆', align: 'center', width: 80 },
-  { prop: 'keyword', label: 'VIP密钥', align: 'center', width: 80 },
+  { prop: 'company_name',minWidth:gw(300), label: '公司名称', align: 'center' },
+  { prop: 'market', label: '市场',minWidth:gw(120), align: 'center'},
+  { prop: 'symbol', label: '交易代码', align: 'center', minWidth:gw(120), },
+  { prop: 'issue_start_date', label: '认购开始日期', align: 'center', minWidth:gw(150) },
+  { prop: 'issue_end_date', label: '认购结束日期', align: 'center', minWidth:gw(150) },
+  { prop: 'issue_price_min', label: '认购价格', align: 'center', minWidth:gw(120) },
+  { prop: 'listing_date', label: '上市日期', align: 'center', minWidth:gw(150) },
+  { prop: 'listed_price', label: '上市价格', align: 'center', minWidth:gw(150) },
+  { prop: 'vip', label: 'VIP杠杆', align: 'center', minWidth:gw(120) },
+  { prop: 'keyword', label: 'VIP密钥', align: 'center',minWidth:gw(120) },
   // { prop: 'lever', label: '认购杠杆', align: 'center', width:90 },
-  { prop: 'status', label: '状态', align: 'center', width: 100 },
+  { prop: 'status', label: '状态', align: 'center', minWidth:gw(120) },
 
 ])
 const isLoading = ref(false)
@@ -177,7 +184,6 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -185,6 +191,23 @@ const getDataList = (page) => {
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  sessionStorage['ipoCfgSearchParams'] = searchForm.params
+  sessionStorage['ipoCfgSearchStatus'] = searchForm.status
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['ipoCfgSearch']){
+    const searchCache = JSON.parse(sessionStorage['ipoCfgSearch'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -199,6 +222,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['ipoCfgSearch'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
     })
     .finally(() => {
       isLoading.value = false
