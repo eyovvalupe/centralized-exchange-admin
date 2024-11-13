@@ -1,5 +1,5 @@
 <template>
-   <div class="px-[30px] py-[10px]">
+   <div class="px-[20px] py-[10px]">
     <div class="flex reset-el-style-v2 justify-between">
       <div>
         <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>

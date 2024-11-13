@@ -1,5 +1,5 @@
 <template>
-  <div class="px-[30px] py-[10px]">
+  <div class="px-[20px] py-[10px]">
     <div class="flex justify-between reset-el-style-v2">
       <div>
         <el-button type="primary" class="w-[120px]" icon="plus" plain @click="showDialog(null, 'showDialog')">新增</el-button>

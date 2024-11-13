@@ -1,5 +1,5 @@
 <template>
-  <div class="px-[30px] py-[10px]">
+  <div class="px-[20px] py-[10px]">
     <div class="reset-el-style-v2">
       <!-- <el-button type="primary" @click="addVisible = true">增加新玩家</el-button> -->
       <div class="flex justify-end">

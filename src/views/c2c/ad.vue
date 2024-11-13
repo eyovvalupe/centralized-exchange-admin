@@ -1,5 +1,5 @@
 <template>
-  <div class="px-[30px] py-[10px]">
+  <div class="px-[20px] py-[10px]">
     <div class="flex reset-el-style-v2 justify-between">
       <div>
         <el-button class="w-[120px]" plain icon="plus"  :type="checkAuthCode(12101)?'primary':'info'" :disabled="!checkAuthCode(12101)"  @click="showDialog(null, 'showDialog')">新增</el-button>

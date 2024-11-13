@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard-container px-[30px] py-[20px]">
-    <el-row :gutter="30" class="reset-el-style-v2">
+  <div class="dashboard-container px-[20px] py-[20px]">
+    <el-row :gutter="20" class="reset-el-style-v2">
       <el-col :span="16">
         <div class="index-card">
           <div class="flex justify-between index-card-header">

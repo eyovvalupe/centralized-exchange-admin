@@ -1,5 +1,5 @@
 <template>
-  <div class="px-[30px] py-[10px]">
+  <div class="px-[20px] py-[10px]">
     <div class="flex justify-between reset-el-style-v2">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
