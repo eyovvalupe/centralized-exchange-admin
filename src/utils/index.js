@@ -462,6 +462,41 @@ export const _formatNumber = (num, tail = 2) => {
 
 
 
+// 转换为缩略图
+export const _getSnapshotLine = data => {
+  let str = ''
+  const w = 69
+  const h = 25
+  let min = null
+  let max = null
+  data.map((item, index) => {
+    if (min === null) {
+      min = item.price
+    }
+    if (max === null) {
+      max = item.price
+    }
+    if (item.price < min) {
+      min = item.price
+    }
+    if (item.price > max) {
+      max = item.price
+    }
+    str += `${index},${item.price} `
+  })
+  let _str = '' // 最终字符串
+  const gap = max - min || min // 最大与最小值的间隙
+  str.split(' ').map(item => {
+    const _item = item.split(',')
+    if (item.length) {
+      _str += `${((_item[0] / 1) * (w / data.length)).toFixed(2)},${((_item[1] / 1 - min) * (h / gap)).toFixed(2)} `
+    }
+  })
+  return _str.substring(0, _str.length - 1)
+}
+
+
+
 export const fixLittleNum = (num, i) => {
   const lastNum = num * 1000000 - Math.floor(num * 100000) * 10
   if (lastNum) {

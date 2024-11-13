@@ -3,7 +3,7 @@
   <div
     ref="root"
     style="width: 100%"
-    :class="props.marketType != 'crypto' ? '' : 'mt-[10px] pr-[16px]'"
+    :class="props.marketType != 'crypto' ? '' : 'mt-[10px]'"
   >
     
       <div
@@ -59,13 +59,13 @@
             "
           >
             <SparkLine
-              v-if="props.item.points && showSparkLine"
+              v-if="props.points"
               :style="
                 props.marketType != 'cryto'
                   ? 'width: 100%; height: 30px;'
                   : 'width: 100%; height: 27px;'
               "
-              :points="props.item.points"
+              :points="props.points"
               :ratio="props.item.ratio"
             />
           </div>
@@ -160,17 +160,14 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  points:String,
   handleClick: {
     type: Function,
     default: null,
   },
   marketType: {
     type: String,
-  },
-  showSparkLine: {
-    type: Boolean,
-    default: true,
-  },
+  }
 });
 
 const mode = ref(1);
@@ -295,7 +292,7 @@ const goInfo = () => {
   display: flex;
   align-items: center;
   height: 50px;
-  padding: 0 16px;
+  padding-left: 16px;
   position: relative;
   margin-bottom: 9px;
 

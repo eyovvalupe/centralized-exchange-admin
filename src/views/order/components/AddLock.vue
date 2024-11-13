@@ -10,7 +10,7 @@
           <el-form-item label="交易代码" required prop="symbol">
            
             <div class="relative w-full">
-              <div class="absolute w-full h-full left-0 top-0 z-10" @click="showStockSelection=true;"></div>
+              <div class="absolute w-full h-full left-0 top-0 z-10 cursor-pointer" @click="showStockSelection=true;"></div>
               <el-input v-model="form.symbol" placeholder="点击选择股票"  />
             </div>
             <!-- <el-select v-model="form.symbol" filterable clearable remote reserve-keyword placeholder="代码模糊搜索"
