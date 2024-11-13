@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative" style="overflow: hidden;">
     <NavBar />
     <AppMain />
     <ReceiveMessageAlert :numobj="messageNumObj['deposit']" :type="'deposit'" :isOpen="openReceiveMsgNotifi1" v-if="isRender1"/>
