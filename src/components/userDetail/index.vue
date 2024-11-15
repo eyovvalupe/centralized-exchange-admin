@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="`${detailData.username || ''}个人详细信息`" v-model="show"
-    :append-to-body="true" @close="emit('close', false)">
+    :append-to-body="true" @closed="emit('close', false)">
     <div  class="py-[10px]">
       <el-tabs v-model="activeName" type="border-card">
         <el-tab-pane label="财务数据" name="first">

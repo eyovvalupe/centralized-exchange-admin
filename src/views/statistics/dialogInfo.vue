@@ -1,23 +1,22 @@
 <template>
-     <el-dialog :close-on-click-modal="false" width="720" class="reset-el-styte" title="充提货币详情" v-model="show" :append-to-body="true"
+     <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="充提货币详情" v-model="show" :append-to-body="true"
         >
-        <div style="min-height: 160px;">
-            <!-- <div v-for="(item, index) in columnBase" :key="index" class="table-list flex flex-nowrap justify-between">
-                <span>{{ item.label }}</span>
-                <span class="w-8/12 text-center">{{ detailData[item.prop] || '-' }}</span>
-            </div> -->
-            <el-table :data="detailData" border
-                v-loading="dialogLoading">
+        <div class="py-[10px] reset-el-style-v2"  v-loading="dialogLoading" style="min-height: 100px;">
+            <el-table :data="detailData" border v-if="detailData.length">
                 <el-table-column v-for="(item, index) in columnBase" :key="index"
                     :label="item.label" align="center">
                     <template #default="scope">
-                        {{ scope.row[item.prop] ? scope.row[item.prop] : '0' }}
+                        <img class="w-[16px] h-[16px] mr-[6px] rounded-full" :src="`/images/crypto/${scope.row[item.prop].toLocaleUpperCase()}.png`" :alt="scope.row[item.prop].toLocaleUpperCase()"  v-if="item.prop == 'currency'" />
+                        <span :class="scope.row[item.prop] >= 0 ? 'success' : 'fail'" class="status" v-if="item.prop == 'balance'">
+                            {{scope.row[item.prop] > 0 ? '+' : ''}}{{ scope.row[item.prop] ? scope.row[item.prop] : '0' }}
+                        </span>
+                        <span v-else>
+                            {{ scope.row[item.prop] }}
+                        </span>
                     </template>
                 </el-table-column>
-                <template v-slot:empty>
-                    <el-empty class="nodata" description="暂无数据" />
-                </template>
             </el-table>
+            <el-empty class="nodata" v-else-if="!dialogLoading" description="暂无数据" />
         </div>
     </el-dialog>
 </template>
@@ -25,6 +24,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { dayjs } from 'element-plus'
+import { getAgentCurrency } from '/@/api/modules/business/agents.api'
 import { getGlobalCurrencyList, getGlobalCurrencyUser,getGlobalCurrencyMy } from '/@/api/modules/base.api'
 const detailData = ref([])
 const show = ref(false)
@@ -35,19 +35,18 @@ const props = defineProps({
         default: ''
     }
 })
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = ref([
-    { prop: 'currency', label: '币种', align: 'center' },
-    { prop: 'deposit', label: '充值(USDT)', align: 'center' },
-    { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
-    { prop: 'balance', label: '充提差(USDT)', align: 'center' },
+    { prop: 'currency', label: '币种',minWidth:gw(165), align: 'center' },
+    { prop: 'deposit', label: '充值',minWidth:gw(165), align: 'center' },
+    { prop: 'withdraw', label: '提现',minWidth:gw(165), align: 'center' },
+    { prop: 'balance', label: '充提差',minWidth:gw(165), align: 'center' },
 ])
-// const columnBase = reactive([
-//     { prop: 'main', label: '交易账户', width: 120, align: 'center' },
-//     { prop: 'USD', label: '美元', width: 100, align: 'center' },
-//     { prop: 'USDT', label: 'USDT', width: 100, align: 'center' },
-//     { prop: 'BTC', label: 'BTC', width: 100, align: 'center' },
-//     { prop: 'ETH', label: 'ETH', width: 100, align: 'center' },
-// ])
+
 function open(start_time,end_time,type,partyid) {
     show.value = true
     let api
@@ -61,7 +60,11 @@ function open(start_time,end_time,type,partyid) {
         api = getGlobalCurrencyList
     }else if(type === 'my'){
         api = getGlobalCurrencyMy
+    }else if(type =='agent'){
+        api = getAgentCurrency
+        send.partyid = partyid
     }
+    
     dialogLoading.value = true
         api(send).then(res => {
             detailData.value = res;

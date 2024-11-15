@@ -2,8 +2,8 @@
   <div class="h-full">
     <div class="flex justify-between h-full">
       <div class="left-tree h-full">
-        <el-input class="input-item m-b-10" clearable :prefix-icon="Search" v-model="filterText"
-            placeholder="代理\备注关键词" />
+        <el-input class="input-item m-b-10" clearable :suffix-icon="Search" v-model="filterText"
+            placeholder="代理\备注关键词" /> 
         <div class="left-tree-box">
           <el-tree ref="treeRef" accordion highlight-current :indent="10" class="filter-tree" :data="treeData"
             :filter-node-method="filterNode" node-key="id" :props="defaultProps" @nodeClick="treeNodeClick">

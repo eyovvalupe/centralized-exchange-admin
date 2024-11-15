@@ -1,12 +1,12 @@
 <template>
-  <div class="reset-el-styte h-full">
-    <div class="flex justify-between  p-2 pt-0 h-full">
+  <div class="h-full">
+    <div class="flex justify-between h-full">
       <div class="left-tree h-full">
-        <el-input class="input-item m-b-10" clearable :prefix-icon="Search" v-model="filterText"
+        <el-input class="input-item m-b-10" clearable :suffix-icon="Search" v-model="filterText"
             placeholder="代理\备注关键词" />
         <div class="left-tree-box">
           <el-tree ref="treeRef" accordion highlight-current :indent="10" class="filter-tree" :data="treeData"
-            :filter-node-method="filterNode" node-key="id" :props="defaultProps" @nodeClick="treeNodeClick">
+            :filter-node-method="filterNode" node-key="id" :props="defaultProps" :current-node-key="treeCurrInfo.id" @nodeClick="treeNodeClick">
             <template #default="{ node }">
               <p class="custom-tree-node">
                 <span> {{ node.label }}</span>
@@ -15,59 +15,57 @@
           </el-tree>
         </div>
       </div>
-      <div class="right-table h-full pt-2">
-        <div class="flex justify-between">
-          <div></div>
+      <div class="right-table h-full">
+        <div class="flex reset-el-style-v2 justify-between">
           <div>
-            <div>
-              <el-tag v-if="treeCurrInfo.remarks" type="primary" closable effect="plain" @close="closeTag" round
-                class="mr-2">
+            <el-tag v-if="treeCurrInfo.id" type="primary" closable effect="plain" @close="closeTag" round>
                 {{ treeCurrInfo?.username }}
-              </el-tag>
-              <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
-              <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
-                @click="changeSearch(1)">上月</el-button>
-              <el-input v-model="searchForm.searchValue" class="mr-2" placeholder="UID/用户名/备注" style="width: 200px;" />
-              <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-                end-placeholder="请选择结束时间" style="width: 280px;" />
-              <el-button type="primary" class="ml-2" :icon="Search" @click="searchEvent"
-                :loading="isLoading">搜索</el-button>
-            </div>
+            </el-tag>
+          </div>
+          <div>
+              <el-button class="w-[100px]" :class="{'gray-btn':currLast == 1}"  :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月数据</el-button>
+              <el-button class="w-[100px]" :class="{'gray-btn':currLast == 0}"   :type="currLast == 1 ? 'success' : 'default'"
+                  @click="changeSearch(1)">上月数据</el-button>
+             
+              <el-input class="ml-[10px]" v-model="searchForm.query"  suffix-icon="search" placeholder="UID/用户名/备注" style="width: 264px;" />
+              <el-date-picker v-model="timeRanges" type="daterange" range-separator="至" start-placeholder="请选择开始时间"
+                end-placeholder="请选择结束时间" style="width: 266px;margin-left: 10px;" />
+              <el-button type="primary" class="w-[120px] ml-[10px]" @click="searchEvent"
+                :loading="isLoading">查询</el-button>
+
           </div>
         </div>
-        <div class="mt-2">
+
+
+        <!-- <div class="title">{{treeCurrInfo.username || ''}}线下数据</div> -->
+        <div class="reset-el-style-v2 pt-[10px]">
           <el-table :data="tableData" ref="table" border :class="tableData.length ? '' : 'noborder'"
             v-loading="isLoading">
-            <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+            <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
               :class-name="item.class || ''" :align="item.align">
               <template #default="scope">
-
-                <template v-if="item.prop === 'username'">
-                  <span class="truncate cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showUserDialog')">
-                    {{ scope.row[item.prop] }}</span>
-                </template>
-                <div v-else :class="item.class || ''">
+                <div :class="item.class || ''">
                   {{ scope.row[item.prop] }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="详情" align="center" width="100">
+            <el-table-column label="详情" align="center" :min-width="gw(140)">
               <template #default="props">
-                <!-- <el-button link type="primary" @click="toogleExpand(props.row, index)">{{ isExpansion[index] ? '收起' :
-                  '展开' }}</el-button> -->
-                <el-button link type="primary" @click="showDialog(props.row, 'showAgDialog')">详情</el-button>
+                <el-button link size="default" class="underline" type="primary" @click="InfoshowDialog(props.row)">充提货币详情</el-button>
               </template>
             </el-table-column>
             <template v-slot:empty>
               <el-empty class="nodata" description="暂无数据" />
             </template>
           </el-table>
+          
+        </div>
+        <div class="py-[10px]">
           <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
         </div>
       </div>
     </div>
-    <AgentInfo v-if="dialogType.showAgDialog" :data="dialogType.info" :timeRanges="timeRanges" @close="closeDialogType" />
-    <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
+    <dialogInfo  ref="dialogInfoRef" />
   </div>
 </template>
 
@@ -76,13 +74,15 @@ export default { name: 'statisticsAgent' };
 </script>
 <script setup>
 import { getAgentList, getAgentMenu } from '/@/api/modules/business/agents.api'
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
-import AgentInfo from './AgentInfo.vue'
-import userDetail from '/@/components/userDetail/index.vue'
+import dialogInfo from './dialogInfo.vue'
+
 import { ElTree, ElMessage, dayjs } from 'element-plus'
 import { resDatatoTree } from '/@/utils'
+import { hex_md5 } from '/@/utils/md5'
 
+const dialogInfoRef = ref()
 const treeRef = ref();
 const timeRanges = ref([]);
 const tableData = ref([]);
@@ -98,17 +98,20 @@ const dialogType = reactive({
 
 const isExpansion = reactive({})
 
-const showDialog = (data, type) => {
-  if (data) {
-    dialogType.info = Object.assign({}, data);
-  } else {
-    dialogType.info = null
+const InfoshowDialog = (data) => {
+  const send = {
+    start:'',
+    end:''
+  };
+  if (timeRanges.value && timeRanges.value.length) {
+      send.start = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
+      send.end = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
   }
-  dialogType[type] = true;
+  unref(dialogInfoRef).open(send.start,send.end,'agent',data.partyid)
 }
 
 const searchForm = reactive({
-  query: '',
+  query: sessionStorage['statisticsAgentSearchQuery'] || '',
   father: '',
 })
 const defaultProps = {
@@ -118,14 +121,20 @@ const defaultProps = {
 const treeData = ref([])
 const currentLastPage = ref(1)
 const currentPage = ref(1)
+
+
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
 const columnBase = reactive([
-  { prop: 'uid', label: 'UID', align: 'center' },
-  { prop: 'username',width: 130, label: '用户名', align: 'center' },
-  { prop: 'sub_users', label: '直推', align: 'center' },
-  { prop: 'net_users', label: '网络', align: 'center' },
-  { prop: 'deposit', label: '充值', align: 'center', class: 'bg-color1' },
-  { prop: 'withdraw', label: '提现', align: 'center' },
-  { prop: 'balance', label: '充提差', align: 'center', class: 'bg-color3' },
+  { prop: 'uid', label: 'UID', align: 'center',minWidth:gw(110) },
+  { prop: 'username',width: 130, label: '代理', align: 'center',minWidth:gw(220) },
+  { prop: 'sub_users', label: '直推', align: 'center',minWidth:gw(200) },
+  { prop: 'net_users', label: '网络', align: 'center',minWidth:gw(200) },
+  { prop: 'deposit', label: '充值-USDT', align: 'center',minWidth:gw(250)},
+  { prop: 'withdraw', label: '提现-USDT', align: 'center',minWidth:gw(250) },
+  { prop: 'balance', label: '充提差-USDT', align: 'center',minWidth:gw(250) },
 ])
 const column1 = reactive([
   { prop: 'deposit_main', label: '交易账户', align: 'center' },
@@ -144,21 +153,15 @@ const column2 = reactive([
 const table = ref(null)
 const isLoading = ref(false)
 const filterText = ref('')
-const toogleExpand = (row, index) => {
-  isExpansion[index] = !isExpansion[index];
-  table.value && table.value.toggleRowExpansion(row, isExpansion[index]);
 
-}
+
 const searchEvent = () => {
-  searchForm.father = "";
-  treeCurrInfo.value = {};
   getDataList(1);
 }
 const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   for (const key in searchForm) {
     if (searchForm[key]) {
@@ -169,6 +172,25 @@ const getDataList = (page) => {
     send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
     send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
   }
+  
+  if(searchForm.query){
+    send.query = searchForm.query
+  }
+
+  sessionStorage['statisticsAgentSearchQuery'] = searchForm.query
+  
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['statisticsAgentSearch']){
+      const searchCache = JSON.parse(sessionStorage['statisticsAgentSearch'])
+      if(searchCache.cacheKey == cacheKey){
+          tableData.value = searchCache.data
+      }else{
+          isLoading.value = true
+      }
+  }else{
+      isLoading.value = true
+  }
+  
   getAgentList(send)
     .then(res => {
       isLoading.value = false
@@ -183,7 +205,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
-
+      sessionStorage['statisticsAgentSearch'] = JSON.stringify({
+          cacheKey,
+          data:res
+      })
 
     })
     .finally(() => {
@@ -191,10 +216,19 @@ const getDataList = (page) => {
     })
 }
 const getTreeList = () => {
+
+  if(sessionStorage['statisticsAgentMenu']){
+      const cache = JSON.parse(sessionStorage['statisticsAgentMenu'])
+      const tree = resDatatoTree(cache);
+      treeData.value = tree
+  }
+
   getAgentMenu({})
     .then(res => {
+      sessionStorage['statisticsAgentMenu'] = JSON.stringify(res)
       const tree = resDatatoTree(res);
       treeData.value = tree
+      
     })
     .finally(() => {
       isLoading.value = false
@@ -202,17 +236,30 @@ const getTreeList = () => {
 }
 
 const treeCurrInfo = ref({});
+if(sessionStorage['statisticsAgentTreeCurrInfo']){
+  treeCurrInfo.value = JSON.parse(sessionStorage['statisticsAgentTreeCurrInfo'])
+}
 const treeNodeClick = (item) => {
   currentPage.value = 1;
-  searchForm.params = "";
+  searchForm.query = "";
   searchForm.father = item.id;
   treeCurrInfo.value = item;
+  sessionStorage['statisticsAgentTreeCurrInfo'] = JSON.stringify({
+    id:item.id,
+    label:item.label,
+    username:item.username
+  })
   getDataList()
+
+}
+const clearTreeCurrInfo = ()=>{
+  treeCurrInfo.value = {}
+  sessionStorage['statisticsAgentTreeCurrInfo'] = ''
 }
 getTreeList();
 const closeTag = () => {
   searchForm.father = "";
-  treeCurrInfo.value = {};
+  clearTreeCurrInfo()
   if (treeData.value.length) {
     treeRef.value.setCurrentKey()
     const nodes = treeRef.value.store._getAllNodes();
@@ -220,7 +267,7 @@ const closeTag = () => {
       item.expanded = false;
     });
   }
-  changeSearch(1);
+  changeSearch(currLast.value);
 }
 const filterNode = (value, data) => {
   if (!value) return true
@@ -228,8 +275,8 @@ const filterNode = (value, data) => {
 }
 const currLast = ref(1);
 const changeSearch = (num) => {
-  treeCurrInfo.value = {};
   currLast.value = num;
+  sessionStorage['statisticsAgentCurrLast'] = num
   let arr = [];
   if (currLast.value == 0) {
     // 获取本月的开始时间
@@ -249,15 +296,13 @@ const changeSearch = (num) => {
   timeRanges.value = arr
   getDataList();
 }
-changeSearch(1);
+changeSearch(sessionStorage['statisticsAgentCurrLast'] || 0);
+
+
 watch(filterText, (val) => {
   treeRef.value.filter(val)
 })
-const closeDialogType = (isReload) => {
-  for (const key in dialogType) {
-    dialogType[key] = false
-  }
-}
+
 </script>
 <style lang="scss" scoped>
 .left-tree {
@@ -265,14 +310,40 @@ const closeDialogType = (isReload) => {
   background: #f5f5f5;
   width: 280px;
   height: 100%;
+  box-sizing: border-box;
   overflow: hidden;
+  :deep(.el-tree-node__content){
+    margin-top: 10px;
+    height: 32px;
+    font-size: 16px;
+    color:#000;
+  }
+  :deep(.el-tree > .el-tree-node + .el-tree-node){
+    border-top: 1px solid #ECECEC;
+    margin-top: 14px;
+    padding-top: 10px;
+  }
+  :deep(.el-tree-node.is-current>.el-tree-node__content){
+    background-color: #E1EAFF;
+  }
+  :deep(.el-tree-node__content>.el-tree-node__expand-icon){
+    font-size: 16px;
+    color:#000;
+    padding-right: 10px;
+  }
+}
+
+.left-tree .el-tree {
+  background: none;
+
 }
 
 .left-tree-box {
-  width: 280px;
+  width: 240px;
   overflow: auto;
-  padding-right: 20px;
+  background: none;
 }
+
 
 .input-item {
   margin-bottom: 10px;
@@ -282,23 +353,40 @@ const closeDialogType = (isReload) => {
   }
 }
 
-
-.left-tree .el-tree {
-  background: #fafafa;
-
-}
-
-.el-tree {
-  min-width: 100%;
-  display: inline-block !important;
-}
-
-.el-tree-node>.el-tree-node__children {
-  overflow: visible;
+.gray-btn{
+    background-color: #F5F5F5;
+    border-color: #F5F5F5;
+    color:#000;
+    &:hover{
+        color:#000;
+    }
 }
 
 .right-table {
-  width: calc(100% - 230px);
+  width: calc(100% - 280px);
   overflow-y: auto;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  .el-tag{
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 20px;
+    font-size: 14px;
+    :deep(.el-tag__close){
+      margin-left: 20px;
+      font-size: 18px;
+      &:hover{
+        background: none;
+        color: #2e68fa;
+      }
+    }
+    
+  }
+}
+.title{
+  font-size: 16px;
+  font-weight: 500;
+  color:#000;
+  margin-top: 20px;
 }
 </style>

@@ -565,6 +565,9 @@ th.el-table__cell.bg-color3,
     box-shadow: 0 0 0 0 var(--el-border-color) inset !important;
     border-radius: 8px;
   }
+  .el-button--primary.is-plain{
+    --el-button-bg-color:rgba(255,255,255,0);
+  }
 }
 
 .el-button.is-disabled {

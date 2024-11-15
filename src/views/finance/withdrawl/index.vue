@@ -44,7 +44,7 @@
             </template> -->
             <template v-else-if="item.prop === 'currency'">
               <div class="money-class">
-                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`" :alt="scope.row[item.prop].toUpperCase()">
+                <img :src="`/images/crypto/${scope.row[item.prop].toUpperCase()}.png`"  :alt="scope.row[item.prop].toUpperCase()">
                 <span>{{ scope.row[item.prop] }}</span>
               </div>
             </template>

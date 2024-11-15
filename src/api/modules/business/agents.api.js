@@ -24,6 +24,14 @@ export function getAgentList( data ) {
   })
 }
 
+export function getAgentCurrency( data ) {
+  return request({
+    method : 'post',
+    url : '/roles/v1/data/agent/currency',
+    data
+  })
+}
+
 
 export function apiAddAgent( data ) {
   return request( {
