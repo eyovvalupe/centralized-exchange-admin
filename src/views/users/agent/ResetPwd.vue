@@ -5,7 +5,8 @@
         <div class="w-full flex justify-between content-center">
           <el-input v-model="form.password" disabled  autocomplete="off" class="pwd-last w-10/12" placeholder="重置初始登录密码">
           <template #append>
-            <el-icon color="#014CFA" size="18px"  @click="copy(form.password)"><CopyDocument /></el-icon>
+            <div class="absolute left-0 top-0 w-full h-full z-10" @click="copy(form.password)"></div>
+            <el-icon color="#014CFA" size="18px"><CopyDocument /></el-icon>
           </template>
           </el-input>
           <el-button type="primary" class="ml-[10px] btn-large" @click="setRandomPwd">重新生成</el-button>
