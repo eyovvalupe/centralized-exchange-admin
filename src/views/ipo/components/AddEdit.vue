@@ -7,7 +7,9 @@
       </el-form-item>
       <div class="flex ml-[-10px]">
         <el-form-item label="市场" class="w-0 flex-1 ml-[10px]" prop="market">
-          <el-input v-model="form.market" autocomplete="off" />
+          <el-select v-model="form.market">
+              <el-option v-for="item in marketList" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </el-form-item>
         <el-form-item label="交易代码" class="w-0 flex-1 ml-[10px]" prop="symbol">
           <el-input v-model="form.symbol" autocomplete="off" />
@@ -91,6 +93,44 @@ const isLoading = ref(false)
 const show = ref(true)
 const statusVIP = ref(false)
 
+const marketList = ref([
+  {
+    label:"美国",
+    value:"us"
+  },
+  {
+    label:"日本",
+    value:"japan"
+  },
+  {
+    label:"印度",
+    value:"india"
+  },
+  {
+    label:"韩国",
+    value:"korea"
+  },
+  {
+    label:"德国",
+    value:"germany"
+  },
+  {
+    label:"英国",
+    value:"uk"
+  },
+  {
+    label:"新加坡",
+    value:"singapore"
+  },
+  {
+    label:"香港",
+    value:"hongkong"
+  },
+  {
+    label:"马来西亚",
+    value:"malaysia"
+  }
+])
 const form = reactive({
   company_name: '',
   market: '',
