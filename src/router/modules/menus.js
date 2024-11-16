@@ -256,10 +256,11 @@ export default [
     children: [
 
       {
-        path: '/Agent4',
-        name: 'Agent4',
+        path: '/commission',
+        name: 'commission',
+        component: () => import('/@/views/system/commission/index.vue'),
         icon: 'skzh',
-        meta: { title: '提现手续费', noCache: true, notopen: true }
+        meta: { title: '提现手续费',  auth: '405' }
       },
       {
         path: '/cryptoList',
