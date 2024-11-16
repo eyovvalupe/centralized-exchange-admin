@@ -1,42 +1,58 @@
 <template>
-    <div class="reset-el-styte">
-        <div class="flex justify-end p-2">
-            <div></div>
-            <div>
-                <el-button :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月</el-button>
-                <el-button class="mr-5" :type="currLast == 1 ? 'success' : 'default'"
-                    @click="changeSearch(1)">上月</el-button>
-                <el-date-picker v-model="timeRanges" type="daterange" range-separator="~" start-placeholder="请选择开始时间"
-                    end-placeholder="请选择结束时间" style="width: 280px;" />
-                <el-button type="primary" class="ml-2" :icon="Search" @click="changeSearch(3)"
-                    :loading="isLoading">搜索</el-button>
+ <div class="px-[20px] py-[10px]">
+        <div class="reset-el-style-v2 flex justify-end">
+            <div class="flex">
+                <el-button class="w-[100px]" :class="{'gray-btn':currLast == 1}"  :type="currLast == 0 ? 'success' : 'default'" @click="changeSearch(0)">本月数据</el-button>
+                <el-button class="w-[100px]" :class="{'gray-btn':currLast == 0}"   :type="currLast == 1 ? 'success' : 'default'"
+                    @click="changeSearch(1)">上月数据</el-button>
+                
+                <el-date-picker v-model="timeRanges" type="daterange" range-separator="至" start-placeholder="请选择开始时间"
+                    end-placeholder="请选择结束时间" style="width: 268px;margin-left:10px;" />
+
+                <el-button type="primary" class="w-[120px] ml-[10px]"  @click="changeSearch(currLast)"
+                :loading="isLoading">查询</el-button>
             </div>
         </div>
-        <div class="h-full w-full flex">
-            <div class="w-full">
-                <!-- <p class="title ml-1">充提统计</p> -->
-                <el-table :data="tableData" row-class-name="bg-one-row" border
-                    :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
-                    <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width"
-                        :label="item.label" :align="item.align">
-                        <template #default="scope">
-                            {{ scope.row[item.prop] ? scope.row[item.prop] : '0' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="160" align="center">
-                        <template #default="scope">
-                                
-                            <el-button size="default" class="data underline" link type="primary"
-                                @click="showDialog(scope.row)">
-                                充提货币详情</el-button>
-                        </template>
-                    </el-table-column>
-                    <template v-slot:empty>
-                        <el-empty class="nodata" description="暂无数据" />
-                    </template>
-                </el-table>
-                <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
+        <div class="reset-el-style-v2">
+            <div class="title">我的业绩</div>
+            <dataOveriew :all-total="allTotal" :coin-list="coinList" @openDetail="showDialog({date:'total'})" />
+            <div class="py-[10px]">
+                
+                <el-radio-group v-model="tabPosition" @change="tabChange">
+                    <el-radio-button label="online">线下代理</el-radio-button>
+                    <el-radio-button label="offline">线下用户</el-radio-button>
+                </el-radio-group>
+                
             </div>
+            <el-table :data="tableData" border
+                :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
+                <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width"
+                    :label="item.label" :align="item.align">
+                    <template #default="scope">
+                        <span v-if="item.prop == 'balance'">
+                            ss
+                        </span>
+                        <span v-else>
+                            {{ scope.row[item.prop] ? scope.row[item.prop] : '0' }}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" :min-width="gw(140)" align="center">
+                    <template #default="scope">
+                            
+                        <el-button size="default" class="data underline" link type="primary"
+                            @click="showDialog(scope.row)">
+                            充提货币详情</el-button>
+                    </template>
+                </el-table-column>
+                <template v-slot:empty>
+                    <el-empty class="nodata" description="暂无数据" />
+                </template>
+            </el-table>
+                
+        </div>
+        <div class="py-[10px]">
+            <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
         </div>
         <dialogInfo ref="dialogInfoRef" />
     </div>
@@ -46,11 +62,23 @@
 export default { name: 'statisticsAgentMy' };
 </script>
 <script setup>
-import { getglobalMyDate, getglobalTotalMy, getGlobalCurrencyList } from '/@/api/modules/base.api'
+
+import { getAgentList } from '/@/api/modules/business/agents.api'
+
+import { getglobalMyDate, getglobalTotalMy, getGlobalCurrencyMy } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
-import { Search } from '@element-plus/icons-vue'
+import dataOveriew from './components/dataOveriew.vue'
+import { apicoinList } from '/@/api/modules/crypto'
+import { hex_md5 } from '/@/utils/md5'
+const tabPosition = ref('online')
+const tabChange = ()=>{
+ 
+}
+
+
+
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:whithdrawDeposit', () => {
@@ -62,40 +90,166 @@ const currentLastPage = ref(1)
 const currentPage = ref(1)
 const dialogInfoRef = ref()
 
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
+
+const searchForm = reactive({
+  father:"",
+  query:""
+})
+
+
 const columnBase = ref([
-    { prop: 'date', label: '日期', align: 'center' },
-    { prop: 'sub_users', label: '直推', align: 'center' },
-    { prop: 'net_users', label: '网络', align: 'center' },
-    { prop: 'deposit', label: '充值(USDT)', align: 'center' },
-    { prop: 'withdraw', label: '提现(USDT)', align: 'center' },
-    { prop: 'balance', label: '充提差(USDT)', align: 'center' },
+    { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },    
+    { prop: 'partyid', label: '代理',minWidth:gw(200), align: 'center' },
+    { prop: 'sub_users', label: '直推',minWidth:gw(200), align: 'center' },
+    { prop: 'net_users', label: '网络',minWidth:gw(200), align: 'center' },
+    { prop: 'deposit', label: '充值-USDT',minWidth:gw(340), align: 'center' },
+    { prop: 'withdraw', label: '提现-USDT',minWidth:gw(340), align: 'center' },
+    { prop: 'balance', label: '充提差-USDT',minWidth:gw(340), align: 'center' },
 ])
 const isLoading = ref(false)
-let allTotal = []
+const coinList = ref([])
+const allTotal = ref({})
+const updateList = (list)=>{
+    list.map(item=>{
+        switch(item.currency.toLocaleUpperCase()){
+            case 'BTC':
+                item.color = '#f89a29'
+                break;
+            case 'ETC':
+                item.color = '#3cba3c'
+                break;
+            case 'ETH':
+                item.color = '#5f59e0'
+                break;
+            case 'DOGE':
+                item.color = '#ba9f33'
+                break;
+            case 'TRX':
+                item.color = '#ff0013'
+                break;
+            case 'DASH':
+                item.color = '#008ce7'
+                break;
+            case 'ARB':
+                item.color = '#269fef'
+                break;
+            case 'BCH':
+                item.color = '#8dc351'
+                break;
+            case 'USDT':
+                item.color = '#1ba27a'
+                break;
+            case 'LTC':
+                item.color = '#345d9d'
+                break;
+            case 'RVN':
+                item.color = '#384182'
+                break;
+        }
+    })
+    coinList.value = list
+}
+
+
 const allData = (callback) => {
-    isLoading.value = true
     const send = {};
     if (timeRanges.value && timeRanges.value.length) {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
+    const cacheKey = hex_md5(JSON.stringify(send))
+    if(sessionStorage['statisticsAgentMyAllDataSearch']){
+        const searchCache = JSON.parse(sessionStorage['statisticsAgentMyAllDataSearch'])
+        if(searchCache.cacheKey == cacheKey){
+            updateList(searchCache.data)
+        }else{
+            isLoading.value = true
+        }
+    }else{
+        isLoading.value = true
+    }
+
+    getGlobalCurrencyMy(send).then(res => {
+        res = res || []
+        if(res.length < 6){
+            apicoinList({
+                type:'crypto'
+            }).then(res2=>{
+                res2 = res2 || []
+                res2.map(item=>{
+                    if(res.length < 6 && !res.filter(v=>v.currency.toLocaleUpperCase() == item.currency.toLocaleUpperCase()).length){
+                        res.push({
+                            balance: 0,
+                            currency: item.currency,
+                            deposit: 0,
+                            withdraw: 0
+                        })
+                    }
+                })
+                sessionStorage['statisticsAgentMyAllDataSearch'] = JSON.stringify({
+                    cacheKey,
+                    data:res
+                })
+                updateList(res)
+            })
+        }else{
+            sessionStorage['statisticsAgentMyAllDataSearch'] = JSON.stringify({
+                cacheKey,
+                data:res
+            })
+            updateList(res)
+        }
+        
+    })
+
+    let hasCache = false
+    if(sessionStorage['statisticsAgentMyTotal']){
+        const totalSearchCache = JSON.parse(sessionStorage['statisticsAgentMyTotal'])
+        if(totalSearchCache.cacheKey == cacheKey){
+            allTotal.value = totalSearchCache.data
+            hasCache = true
+            callback()
+        }else{
+            isLoading.value = true
+        }
+       
+    }
     getglobalTotalMy(send).then(res => {
-        const obj = { date: '汇总数据', ...res }
-        allTotal = [obj];
-        callback()
+        allTotal.value = res
+        sessionStorage['statisticsAgentMyTotal'] = JSON.stringify({
+            cacheKey,
+            data:res
+        })
+        if(!hasCache){
+            callback()
+        }
     })
 }
 const getDataList = page => {
     if (page) {
         currentLastPage.value = page
     }
-    isLoading.value = true
     const send = { page: currentLastPage.value };
     if (timeRanges.value && timeRanges.value.length) {
         send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
         send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
     }
-    getglobalMyDate(send)
+    const cacheKey = hex_md5(JSON.stringify(send))
+    if(sessionStorage['statisticsAgentMySearch']){
+        const searchCache = JSON.parse(sessionStorage['statisticsAgentMySearch'])
+        if(searchCache.cacheKey == cacheKey){
+            tableData.value = searchCache.data
+            
+        }else{
+            isLoading.value = true
+        }
+    }else{
+        isLoading.value = true
+    }
+    getAgentList(send)
         .then(res => {
             isLoading.value = false
             if (!res || !res.length && currentLastPage.value > 1) {
@@ -108,8 +262,11 @@ const getDataList = page => {
                 return;
             }
             currentPage.value = currentLastPage.value;
-            tableData.value = allTotal.concat(res);
-
+            tableData.value = res
+            sessionStorage['statisticsAgentMySearch'] = JSON.stringify({
+                cacheKey,
+                data:res
+            })
         })
         .finally(() => {
             isLoading.value = false
@@ -142,8 +299,7 @@ changeSearch(0)
 const showDialog = (data) => {
     let start = ''
     let end = ''
-    console.log(start,end)
-    if(data.date == '汇总数据'){
+    if(data.date == 'total'){
         start = timeRanges.value[0]
         end = timeRanges.value[1]
     }else{
@@ -155,7 +311,19 @@ const showDialog = (data) => {
 }
 </script>
 <style scoped>
+.gray-btn{
+    background-color: #F5F5F5;
+    border-color: #F5F5F5;
+    color:#000;
+    &:hover{
+        color:#000;
+    }
+}
 .title{
-    font-size: 15px;
+    line-height: 22px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 400;
+    color:#000;
 }
 </style>

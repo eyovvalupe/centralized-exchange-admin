@@ -1,10 +1,11 @@
 <template>
   <div class="dashboard-container px-[20px] py-[20px]">
+
     <el-row :gutter="20" class="reset-el-style-v2">
-      <el-col :span="16">
+      <el-col :span="24">
         <div class="index-card">
           <div class="flex justify-between index-card-header">
-            <div class="font-title2 flex items-center">充值统计</div>
+            <div class="font-title2 flex items-center">平台业绩</div>
             <div class="flex items-center">
               <el-radio-group v-model="currLast" @change="changeSearch(currLast)">
                 <el-radio-button :label="0">本月数据</el-radio-button>
@@ -23,29 +24,12 @@
               />
             </div>
           </div>
-          <div class="flex items-center justify-between py-[40px] pr-[20px]">
-            <div class="card-blue card-bg">
-              <img class="group-img" src="../../assets/images/group-blue.png" alt="" />
-              <div class="group-text">充值（USDT）</div>
-              <div class="group-price">{{ totalInfo.deposit }}</div>
-              <div class="group-btn">明细</div>
-            </div>
-            <div class="card-green card-bg">
-              <img class="group-img" src="../../assets/images/group-green.png" alt="" />
-              <div class="group-text">提现（USDT）</div>
-              <div class="group-price">{{ totalInfo.withdraw }}</div>
-              <div class="group-btn">明细</div>
-            </div>
-            <div class="card-orange card-bg">
-              <img class="group-img" src="../../assets/images/group-orange.png" alt="" />
-              <div class="group-text">充提差额（USDT）</div>
-              <div class="group-price">{{ totalInfo.balance }}</div>
-              <div class="group-btn">明细</div>
-            </div>
-          </div>
+          
+          <dataOveriew v-loading="isLoading" :all-total="allTotal" :coin-list="coinList" @openDetail="showTotalDialog" />
+          
         </div>
       </el-col>
-      <el-col :span="8">
+      <!-- <el-col :span="8">
         <div class="index-card" v-if="isAdmin">
           <div class="flex justify-between index-card-header">
             <div class="font-title2 flex items-center">任务提醒</div>
@@ -68,38 +52,89 @@
             </div>
           </div>
         </div>
-      </el-col>
+      </el-col> -->
     </el-row>
+
+    <dialogInfo ref="dialogInfoRef" />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 export default { name: 'Dashboard' }
 </script>
-<script setup lang="ts">
-import { getglobalTotal } from '/@/api/modules/base.api'
+<script setup>
+import { getglobalTotal,getGlobalCurrencyList } from '/@/api/modules/base.api'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useUserStore, useServiceStore } from '/@/store'
 import { computed, ref, getCurrentInstance, watch } from 'vue'
-import { ServiceChat } from '../layout/components/service/components/common/ServiceChat'
+import dataOveriew from '../statistics/components/dataOveriew.vue'
+import dialogInfo from '../statistics/dialogInfo.vue'
+import { apicoinList } from '/@/api/modules/crypto'
 import { dayjs } from 'element-plus'
-const useService = useServiceStore()
+import { hex_md5 } from '/@/utils/md5'
+
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:dashboard', () => {})
-const userStore = useUserStore()
-const isAdmin = computed(() => !userStore.userInfo.role?.includes('agent'))
-const userInfo = computed(() => userStore.userInfo)
-const messageNumObj = computed(() => useService.messageNumObj)
+// const useService = useServiceStore()
+// const userStore = useUserStore()
+// const isAdmin = computed(() => !userStore.userInfo.role?.includes('agent'))
+// const userInfo = computed(() => userStore.userInfo)
+// const messageNumObj = computed(() => useService.messageNumObj)
 
-const shortCut = ref([
-  { name: 'RechargeOrder', badge: 'deposit', text: '充值订单', auth: '111' },
-  { name: 'withdrawlOrder', badge: 'withdraw', text: '提现订单', notArrow: false, auth: '112' },
-  { name: 'kycList', badge: 'kyc', text: '实名审核', notArrow: false, auth: '103' },
-  { name: 'notice', badge: 'support', text: '客服消息', isDialog: true, notArrow: false, auth: '601' },
-])
+// const shortCut = ref([
+//   { name: 'RechargeOrder', badge: 'deposit', text: '充值订单', auth: '111' },
+//   { name: 'withdrawlOrder', badge: 'withdraw', text: '提现订单', notArrow: false, auth: '112' },
+//   { name: 'kycList', badge: 'kyc', text: '实名审核', notArrow: false, auth: '103' },
+//   { name: 'notice', badge: 'support', text: '客服消息', isDialog: true, notArrow: false, auth: '601' },
+// ])
+
+const dialogInfoRef = ref()
+
+const coinList = ref([])
+
+const updateList = (list)=>{
+    list.map(item=>{
+        switch(item.currency.toLocaleUpperCase()){
+            case 'BTC':
+                item.color = '#f89a29'
+                break;
+            case 'ETC':
+                item.color = '#3cba3c'
+                break;
+            case 'ETH':
+                item.color = '#5f59e0'
+                break;
+            case 'DOGE':
+                item.color = '#ba9f33'
+                break;
+            case 'TRX':
+                item.color = '#ff0013'
+                break;
+            case 'DASH':
+                item.color = '#008ce7'
+                break;
+            case 'ARB':
+                item.color = '#269fef'
+                break;
+            case 'BCH':
+                item.color = '#8dc351'
+                break;
+            case 'USDT':
+                item.color = '#1ba27a'
+                break;
+            case 'LTC':
+                item.color = '#345d9d'
+                break;
+            case 'RVN':
+                item.color = '#384182'
+                break;
+        }
+    })
+    coinList.value = list
+}
 
 const currLast = ref(0)
-const totalInfo = ref({
+const allTotal = ref({
   deposit: '0',
   withdraw: '0',
   balance: '0',
@@ -110,18 +145,85 @@ const onShortCut = item => {
   Bus.emit('navbarShortCut', item)
 }
 
-const init = time_arr => {
-  const send = { start_time: '', end_time: '', page: 1 }
-  if (time_arr[0]) {
-    send.start_time = dayjs(time_arr[0]).format('YYYY-MM-DD')
-  }
-  if (time_arr[1]) {
-    send.end_time = dayjs(time_arr[1]).format('YYYY-MM-DD')
-  }
+const isLoading = ref(false)
 
-  getglobalTotal(send).then(res => {
-    totalInfo.value = res
-  })
+const allData = () => {
+    const send = {};
+    if (timeRanges.value && timeRanges.value.length) {
+        send.start_time = dayjs(timeRanges.value[0]).format('YYYY-MM-DD')
+        send.end_time = dayjs(timeRanges.value[1]).format('YYYY-MM-DD')
+    }
+
+    const cacheKey = hex_md5(JSON.stringify(send))
+    if(sessionStorage['whithdrawDepositAllDataSearch']){
+        const searchCache = JSON.parse(sessionStorage['whithdrawDepositAllDataSearch'])
+        if(searchCache.cacheKey == cacheKey){
+            updateList(searchCache.data)
+        }else{
+            isLoading.value = true
+        }
+    }else{
+        isLoading.value = true
+    }
+
+    
+    getGlobalCurrencyList(send).then(res=>{
+        res = res || []
+        if(res.length < 6){
+            apicoinList({
+                type:'crypto'
+            }).then(res2=>{
+                res2 = res2 || []
+                res2.map(item=>{
+                    if(res.length < 6 && !res.filter(v=>v.currency.toLocaleUpperCase() == item.currency.toLocaleUpperCase()).length){
+                        res.push({
+                            balance: 0,
+                            currency: item.currency,
+                            deposit: 0,
+                            withdraw: 0
+                        })
+                    }
+                })
+                sessionStorage['whithdrawDepositAllDataSearch'] = JSON.stringify({
+                    cacheKey,
+                    data:res
+                })
+                updateList(res)
+            })
+        }else{
+            sessionStorage['whithdrawDepositAllDataSearch'] = JSON.stringify({
+                cacheKey,
+                data:res
+            })
+            updateList(res)
+        }
+        
+    })
+    if(sessionStorage['whithdrawDepositTotal']){
+        const totalSearchCache = JSON.parse(sessionStorage['whithdrawDepositTotal'])
+        if(totalSearchCache.cacheKey == cacheKey){
+            allTotal.value = totalSearchCache.data
+        }else{
+            isLoading.value = true
+        }
+       
+    }
+    getglobalTotal(send).then(res => {
+        allTotal.value = res
+        sessionStorage['whithdrawDepositTotal'] = JSON.stringify({
+            cacheKey,
+            data:res
+        })
+       
+    }).finally(() => {
+        isLoading.value = false
+    })
+}
+
+const showTotalDialog = ()=>{
+    let start = timeRanges.value[0]
+    let end = timeRanges.value[1]
+    unref(dialogInfoRef).open(start,end,'platform','')
 }
 
 const changeSearch = num => {
@@ -143,7 +245,7 @@ const changeSearch = num => {
     arr = timeRanges.value
   }
   timeRanges.value = arr
-  init(arr)
+  allData()
 }
 changeSearch(0)
 </script>
@@ -152,6 +254,10 @@ changeSearch(0)
 .dashboard-container {
   position: relative;
 
+  :deep(.total-data-wrap){
+    border:0px;
+    margin-top: 0px;
+  }
   .font-title {
     font-size: 22px;
   }
