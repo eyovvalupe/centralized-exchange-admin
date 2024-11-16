@@ -87,7 +87,7 @@
             <div v-for="(item, index) in columnInfo" :key="index" class="table-list flex flex-nowrap justify-between">
               <span class="w-4/12 bg-slate-50">{{ item.label }}</span>
               <span class="w-8/12" v-if="item.prop === 'kyc'">
-                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'lock'">
+                <span class="status-bg" style="padding:4px 10px;border-radius:4px;" :class="detailData.base[item.prop] == 0 ? 'status-yellow' : 'lock'" v-if="['未实名', 'L1认证', 'L2认证'][detailData.base[item.prop]]">
                   {{ ['未实名', 'L1认证', 'L2认证'][detailData.base[item.prop]] }}
                 </span>
               </span>

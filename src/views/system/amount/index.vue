@@ -37,6 +37,9 @@
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getPlayerList" v-if="tableData.length" :currentPage="currentLastPage"  />
     </div>
     <userDetail v-if="dialogType.showUserDialog" :partyid="dialogType.info.partyid" @close="closeDialogType" />
