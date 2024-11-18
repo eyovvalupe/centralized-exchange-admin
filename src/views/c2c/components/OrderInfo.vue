@@ -8,7 +8,11 @@
           @click="activeName = 'second'">
           联系用户
           <!-- <b class="unread" v-if="form.unread">{{ form.unread }}</b> -->
-          <b class="unread" v-if="usec2cService.unreadMessage[form.order_no]">{{ usec2cService.unreadMessage[form.order_no] }}</b>
+          <div class="relative left-[20px] top-[-15px]">
+            <b class="unread" v-if="usec2cService.unreadMessage[form.order_no] > 0">{{
+              usec2cService.unreadMessage[form.order_no]
+            }}</b>
+          </div>
         </span>
       </div>
       <el-tabs v-model="activeName" class="w-full pt-[20px]">
@@ -145,12 +149,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import messageInterface from './common/messageInterface.vue'
 import sendMessage from './common/sendMessage.vue'
 import BankSet from './BankSet.vue'
-import { ServiceChatC2C } from './common/ServiceChatC2C'
 import { formatSeconds, copy } from '/@/utils'
-import { useServiceStoreC2C } from '/@/store'
 import addBank from '/@/assets/imgs/account.png'
 import { CopyDocument } from '@element-plus/icons-vue'
 import SvgIcon from '/@/components/icons/index.vue'
+import { ServiceChatC2C } from './common/ServiceChatC2C'
+import { useServiceStoreC2C } from '/@/store'
+
 const usec2cService = useServiceStoreC2C()
 
 const props = defineProps({
@@ -218,6 +223,7 @@ const timerFunc = () => {
 }
 onUnmounted(() => {
   timerIntval && clearTimeout(timerIntval)
+  usec2cService.removeUnreadMessage(props.data.order_no)
 })
 onMounted(() => {
   for (const key in form) {
@@ -233,9 +239,10 @@ onMounted(() => {
     // }
     getDataList();
     timerFunc()
-    usec2cService.setMessageList([]);
+    // usec2cService.setMessageList([]);
     usec2cService.setOrderNo(props.data.order_no)
-    ServiceChatC2C.init()
+    ServiceChatC2C.subscribe()
+    console.log("ONMOUNT")
   }
 })
 const dialogType = reactive({

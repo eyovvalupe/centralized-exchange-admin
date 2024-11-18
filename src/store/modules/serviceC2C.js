@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 const useServiceStoreC2C = defineStore({
-  // persist: {
-  //   paths: ['messageList']
-  // },
+  persist: {
+    paths: ['unreadMessage']
+  },
   id: 'serviceC2C',
   state: () => {
     return {
@@ -23,8 +23,11 @@ const useServiceStoreC2C = defineStore({
       this.isOpenningWindow[id] = false
     },
     setUnreadMessage(id) {
-      if (this.unreadMessage[id] == undefined) this.unreadMessage[id] = 1
+      if (this.unreadMessage[id] == undefined) this.unreadMessage[id] = 0
       else this.unreadMessage[id] = this.unreadMessage[id] + 1
+    },
+    removeUnreadMessage(id) {
+      this.unreadMessage[id] = this.unreadMessage[id] - 1
     },
     setClearUnreadMessage(id) {
       this.unreadMessage[id] = 0

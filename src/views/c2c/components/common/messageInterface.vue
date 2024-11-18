@@ -6,25 +6,24 @@
           <Loading />
         </el-icon>
       </p>
-      <p> 请稍候...</p>
+      <p>请稍候...</p>
     </div>
-    <main class="scroll-box" @scroll="handleScroll"
-      ref="scrollChatContainer">
-      <p class="w-full flex items-center justify-center"
-        v-if="!useServiceC2C.messageList.length">
+    <main class="scroll-box" @scroll="handleScroll" ref="scrollChatContainer">
+      <p class="w-full flex items-center justify-center" v-if="!useServiceC2C.messageList.length">
         <span class="text-[#bbb]">没有更多消息了...</span>
       </p>
       <ul v-else>
-        <li v-for="(item,i) in useServiceC2C.messageList" :key="item.id" >
-
-          <div class="time" v-if="!useServiceC2C.messageList[i-1] || dayjs(item.time).diff(useServiceC2C.messageList[i-1].time) > 60000">
-              {{ dayjs(item.time).format('YYYY-MM-DD HH:mm:ss') }}
+        <li v-for="(item, i) in useServiceC2C.messageList" :key="item.id">
+          <div
+            class="time"
+            v-if="
+              !useServiceC2C.messageList[i - 1] || dayjs(item.time).diff(useServiceC2C.messageList[i - 1].time) > 60000
+            "
+          >
+            {{ dayjs(item.time).format('YYYY-MM-DD HH:mm:ss') }}
           </div>
-          <div class="flex mb-[15px]"
-            :class="item.direction === 'send' ? '' : 'justify-end'">
-            <div class="avatar-icon" v-if="item.direction == 'send'"> {{ (item.username || '匿').substring(0, 1)
-              }}</div>
-            
+          <div class="flex mb-[15px]" :class="item.direction === 'send' ? '' : 'justify-end'">
+            <div class="avatar-icon" v-if="item.direction == 'send'">{{ (item.username || '匿').substring(0, 1) }}</div>
             <div>
               <span class="flex" :class="item.direction === 'send' ? '' : 'justify-end'">
                 <template v-if="item.type === 'img'">
@@ -32,8 +31,7 @@
                     <el-icon size="24" color="#bbb"><icon-picture /></el-icon>
                     <div class="img-loading-txt">图片加载中...</div>
                   </div>
-                  <el-image v-else lazy :preview-src-list="[item.content]" :src="item.content"
-                    class="imgMessage">
+                  <el-image v-else lazy :preview-src-list="[item.content]" :src="item.content" class="imgMessage">
                     <template #placeholder>
                       <div class="image-slot">
                         <el-icon><icon-picture /></el-icon>
@@ -46,9 +44,8 @@
                     </template>
                   </el-image>
                 </template>
-                <p v-else :class="item.direction"
-                  class="msg-con">
-                  <span>{{  item.content }}</span>
+                <p v-else :class="item.direction" class="msg-con">
+                  <span>{{ item.content }}</span>
                 </p>
               </span>
             </div>
@@ -69,33 +66,34 @@ import { dayjs } from 'element-plus'
 const useServiceC2C = useServiceStoreC2C()
 const loading = ref(false)
 onUpdated(() => {
-  scrollToBottom();
-});
+  scrollToBottom()
+})
 
-const scrollChatContainer = ref(null);
+const scrollChatContainer = ref(null)
 const scrollToBottom = () => {
-  scrollChatContainer.value.scrollTop = scrollChatContainer.value.scrollHeight;
-};
+  scrollChatContainer.value.scrollTop = scrollChatContainer.value.scrollHeight
+}
 const handleScroll = () => {
-  const container = scrollChatContainer.value;
+  const container = scrollChatContainer.value
   if (container.scrollTop + container.clientHeight === container.scrollHeight) {
     apiMsgRead({ order_no: useServiceC2C.orderNo })
   }
-};
+}
 onMounted(() => {
-  console.log("mounted ====================")
-  console.log("item data", useServiceC2C.orderNo)
+  console.log('mounted ====================')
+  console.log('item data', useServiceC2C.orderNo)
   useServiceC2C.setClearUnreadMessage(useServiceC2C.orderNo)
   useServiceC2C.setIsOpenningWindow(useServiceC2C.orderNo)
-   setTimeout(() => {
-    scrollToBottom();
-   }, 100);
+  setTimeout(() => {
+    scrollToBottom()
+  }, 100)
 })
 
 onUnmounted(() => {
-  console.log("unmounted =============> ")
+  console.log('unmounted =============> ')
   useServiceC2C.setClosedWindow(useServiceC2C.orderNo)
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -116,12 +114,12 @@ onUnmounted(() => {
   font-size: 50px;
   color: #ccc;
 }
-.img-loading{
- text-align: center;
- background: #f5f5f5;
- padding: 10px;
- border-radius: 10px;
- color: #bbb;
+.img-loading {
+  text-align: center;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 10px;
+  color: #bbb;
 }
 
 .scroll-box {
@@ -134,7 +132,6 @@ onUnmounted(() => {
 
   overflow-y: auto;
   padding: 10px 5px;
-
 }
 
 .del-tools {
@@ -159,49 +156,94 @@ onUnmounted(() => {
   min-width: 40px;
   position: relative;
   padding: 15px 12px 15px 16px;
-  background: #EFF3F8;
+  background: #eff3f8;
   line-height: 20px;
 }
-.avatar-icon{
+.avatar-icon {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background-color: rgb(200, 199, 199);
   text-align: center;
   line-height: 40px;
-  color:#fff;
+  color: #fff;
   font-size: 16px;
   margin-right: 10px;
 }
-.avatar-icon2{
-  background-color: #4377FE;
-  color:#fff;
+.avatar-icon2 {
+  background-color: #4377fe;
+  color: #fff;
   margin-left: 10px;
   margin-right: 0px;
 }
 .receive {
-  background: #4377FE;
+  background: #4377fe;
   color: #fff;
-  border-radius: 10px 0 10px 10px;
+  border-radius: 8px;
 
+  &::before {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 13px;
+    width: 0;
+    height: 0;
+    border-left: 0 solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #4377fe;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 18px;
+    width: 0;
+    height: 0;
+    border-left: 0 solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #4377fe;
+  }
 }
-
 
 .send {
-  background: #EFF3F8;
+  background: #eff3f8;
   color: #061023;
-  border-radius: 0 10px 10px 10px;
+  border-radius: 8px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 13px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 0 solid transparent;
+    border-bottom: 5px solid #eff3f8;
+  }
 
+  &::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 18px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 0 solid transparent;
+    border-top: 5px solid #eff3f8;
+  }
 }
-.time{
+
+.time {
   display: flex;
   justify-content: center;
   justify-content: center;
   padding: 10px 0;
-  color:#8F92A1;
+  color: #8f92a1;
   font-size: 14px;
 }
-.img-loading-txt{
+.img-loading-txt {
   font-size: 12px;
 }
 </style>

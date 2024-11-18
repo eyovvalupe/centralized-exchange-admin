@@ -12,6 +12,7 @@
 import { defineComponent, computed, watch } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import { useAppStore, useServiceStore, useCommonStore } from '/@/store'
+import { ServiceChatC2C } from './views/c2c/components/common/ServiceChatC2C'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 export default defineComponent({
   name: 'App',
@@ -22,6 +23,7 @@ export default defineComponent({
     const appStore = useAppStore()
     const useService = useServiceStore()
     const useCommon = useCommonStore()
+    ServiceChatC2C.init()
 
     const size = computed(() => appStore.size)
     const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
