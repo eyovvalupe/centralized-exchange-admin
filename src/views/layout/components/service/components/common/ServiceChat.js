@@ -5,6 +5,7 @@ const audio = new Audio('/tips.mp3')
 class Service {
   constructor() {
     this.socket = null
+    this.socketC2C = null;
     this.socketNum = null
     this.isConnected = false
   }
@@ -35,6 +36,9 @@ class Service {
           useService.pushNewMessageList(dt)
         })
       })
+      this.socket.on('c2corder', message => {
+        console.log(message)
+      })
     }
   }
   initNum() {
@@ -56,7 +60,7 @@ class Service {
         console.log('连接断开')
       })
       this.socketNum.on('receive', message => {
-        // console.log(message, Date.now())
+        console.log(message, Date.now())
         const { channel, type, num } = message.data
         let msg = ''
         if (channel === 'deposit') {
@@ -85,6 +89,28 @@ class Service {
       })
     }
     // return this.socketNum
+  }
+    
+  initc2c() {
+    if (!this.socketC2C) {
+      const URL = import.meta.env.VITE_PROXY_WEBSOCKET2 + '/c2cmsg'
+      this.socketC2C = io.connect(URL, {
+        transports : ['websocket'],
+        reconnectionDelayMax: 10000,
+      })
+      this.socketC2C.on('connect', () => {
+        this.isConnected = true;
+        console.log('c2c 连接成功')
+      })
+
+      this.socketC2C.on('disconnect', () => {
+        console.log('连接断开')
+        this.isConnected = false
+      })
+      this.socketC2C.on('receive', message => {
+        console.log("c2c receive || ")
+      })
+    }
   }
   // 发送消息
   sendMessage(type, message) {

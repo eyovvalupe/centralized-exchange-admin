@@ -26,7 +26,8 @@ const useServiceC2C = useServiceStoreC2C()
 
 const textContent = ref("")
 const sendchat = (type = 'text', msg) => {
-  ServiceChatC2C.sendMessage('adminsend', { type,order_no: useServiceC2C.orderNo, content: msg || textContent.value })
+  console.log("sent message ===========> ", { type, order_no: useServiceC2C.orderNo, content: msg || textContent.value })
+  ServiceChatC2C.sendMessage('adminsend', { type, order_no: useServiceC2C.orderNo, content: msg || textContent.value })
   textContent.value = ''
 }
 

@@ -31,6 +31,9 @@ class ServiceC2C {
         usec2cService.setConnected(this.isConnected)
       })
       this.socket.on('receive', message => {
+        console.log('received message =========> ', message.data[0]['order_no'])
+        usec2cService.setUnreadMessage(message.data[0]['order_no'])
+        console.log(usec2cService.unreadMessage)
         const arr = message.data;
         if (usec2cService.messageList.length) {
           const index = usec2cService.messageList.findIndex(fitem => fitem.isTmp);

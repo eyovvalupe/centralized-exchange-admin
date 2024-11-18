@@ -7,7 +7,8 @@
         <span class="tab-item is-top" :class="activeName === 'second' ? 'active' : ''"
           @click="activeName = 'second'">
           联系用户
-          <b class="unread" v-if="form.unread">{{ form.unread }}</b>
+          <!-- <b class="unread" v-if="form.unread">{{ form.unread }}</b> -->
+          <b class="unread" v-if="usec2cService.unreadMessage[form.order_no]">{{ usec2cService.unreadMessage[form.order_no] }}</b>
         </span>
       </div>
       <el-tabs v-model="activeName" class="w-full pt-[20px]">

@@ -63,7 +63,7 @@
 <script setup>
 import { Picture as IconPicture } from '@element-plus/icons-vue'
 import { useServiceStoreC2C } from '/@/store'
-import { onMounted, nextTick, ref, watch } from 'vue'
+import { onMounted, nextTick, ref, watch, onUnmounted } from 'vue'
 import { apiMsgRead } from '/@/api/modules/c2cOrder'
 import { dayjs } from 'element-plus'
 const useServiceC2C = useServiceStoreC2C()
@@ -83,9 +83,17 @@ const handleScroll = () => {
   }
 };
 onMounted(() => {
+  console.log("mounted ====================")
+  console.log("item data", useServiceC2C.orderNo)
+  useServiceC2C.setClearUnreadMessage(0)
    setTimeout(() => {
     scrollToBottom();
    }, 100);
+})
+
+onUnmounted(() => {
+  console.log("unmounted =============> ")
+  
 })
 </script>
 

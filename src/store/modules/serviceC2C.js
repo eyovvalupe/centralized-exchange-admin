@@ -9,11 +9,19 @@ const useServiceStoreC2C = defineStore({
       orderNo:'',
       isConnected: false,
       messageList:[],
+      unreadMessage: {}
     }
   },
   getters: {
   },
   actions: {
+    setUnreadMessage(id) {
+      if (this.unreadMessage[id] == undefined) this.unreadMessage[id] = 1
+      else this.unreadMessage[id] = this.unreadMessage[id] + 1
+    },
+    setClearUnreadMessage(id) {
+      this.unreadMessage[id] = 0
+    },
     setOrderNo(orderNo) {
       this.orderNo = orderNo;
     },
