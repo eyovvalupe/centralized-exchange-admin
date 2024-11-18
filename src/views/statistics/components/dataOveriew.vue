@@ -26,8 +26,8 @@
                                     {{ item.currency.toLocaleUpperCase() }}
                                 </div>
                                 <div class="charts-data-item__r">
-                                    <strong>{{item.deposit}}</strong>
-                                    <span>({{item.deposit > 0 ? Math.round(item.deposit / allTotal.deposit * 10000)/100 : '0' }}%)</span>
+                                    <strong>{{item.deposit_usdt}}</strong>
+                                    <span>({{item.deposit_ratio }}%)</span>
                                 </div>
                             </div>
                         </div>
@@ -50,8 +50,8 @@
                                     {{ item.currency.toLocaleUpperCase() }}
                                 </div>
                                 <div class="charts-data-item__r">
-                                    <strong>{{item.withdraw}}</strong>
-                                    <span>({{item.withdraw > 0 ? Math.round(item.withdraw / allTotal.withdraw * 10000)/100 : '0' }}%)</span>
+                                    <strong>{{item.withdraw_usdt}}</strong>
+                                    <span>({{item.withdraw_ratio }}%)</span>
                                 </div>
                             </div>
                         </div>
