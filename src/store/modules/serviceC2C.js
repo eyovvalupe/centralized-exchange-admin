@@ -9,12 +9,19 @@ const useServiceStoreC2C = defineStore({
       orderNo:'',
       isConnected: false,
       messageList:[],
-      unreadMessage: {}
+      unreadMessage: {},
+      isOpenningWindow: {}
     }
   },
   getters: {
   },
   actions: {
+    setIsOpenningWindow(id) {
+      this.isOpenningWindow[id] = true
+    },
+    setClosedWindow(id) {
+      this.isOpenningWindow[id] = false
+    },
     setUnreadMessage(id) {
       if (this.unreadMessage[id] == undefined) this.unreadMessage[id] = 1
       else this.unreadMessage[id] = this.unreadMessage[id] + 1

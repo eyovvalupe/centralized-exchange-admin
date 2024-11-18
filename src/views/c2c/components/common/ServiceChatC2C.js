@@ -32,7 +32,7 @@ class ServiceC2C {
       })
       this.socket.on('receive', message => {
         console.log('received message =========> ', message.data[0]['order_no'])
-        usec2cService.setUnreadMessage(message.data[0]['order_no'])
+        if (!usec2cService.isOpenningWindow[message.data[0]['order_no']]) usec2cService.setUnreadMessage(message.data[0]['order_no'])
         console.log(usec2cService.unreadMessage)
         const arr = message.data;
         if (usec2cService.messageList.length) {
