@@ -159,7 +159,9 @@ const allData = (callback) => {
                             balance: 0,
                             currency: item.currency,
                             deposit: 0,
-                            withdraw: 0
+                            deposit_usdt:0,
+                            withdraw: 0,
+                            withdraw_usdt:0
                         })
                     }
                 })
