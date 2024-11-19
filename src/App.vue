@@ -25,6 +25,8 @@ export default defineComponent({
     const useCommon = useCommonStore()
     ServiceChatC2C.init()
 
+    console.log('env =============> ', import.meta.env.VITE_PROXY_DOMAIN)
+
     const size = computed(() => appStore.size)
     const openReceiveMsgNotifi1 = computed(() => useCommon.openReceiveMsgNotifi1)
     const openReceiveMsgNotifi2 = computed(() => useCommon.openReceiveMsgNotifi2)
