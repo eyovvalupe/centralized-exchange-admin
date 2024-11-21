@@ -80,7 +80,6 @@ const handleScroll = () => {
   }
 }
 onMounted(() => {
-  console.log('mounted ====================')
   console.log('item data', useServiceC2C.orderNo)
   useServiceC2C.setClearUnreadMessage(useServiceC2C.orderNo)
   useServiceC2C.setIsOpenningWindow(useServiceC2C.orderNo)
@@ -90,7 +89,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  console.log('unmounted =============> ')
   useServiceC2C.setClosedWindow(useServiceC2C.orderNo)
 })
 
