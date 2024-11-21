@@ -241,8 +241,8 @@ onMounted(() => {
     timerFunc()
     // usec2cService.setMessageList([]);
     usec2cService.setOrderNo(props.data.order_no)
+    usec2cService.setMessageList([])
     ServiceChatC2C.subscribe()
-    console.log("ONMOUNT")
   }
 })
 const dialogType = reactive({

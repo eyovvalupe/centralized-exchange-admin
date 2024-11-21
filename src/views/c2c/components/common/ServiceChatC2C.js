@@ -30,7 +30,7 @@ class ServiceC2C {
         usec2cService.setConnected(this.isConnected)
       })
       this.socket.on('receive', message => {
-        console.log(message.data)
+        console.log('received message list using ws ====》', message.data)
         if (!usec2cService.isOpenningWindow[message.data[0]['order_no']]) {
           console.log("close")
           usec2cService.setUnreadMessage(message.data[0]['order_no'])
@@ -39,14 +39,18 @@ class ServiceC2C {
         }
         console.log(usec2cService.unreadMessage)
         const arr = message.data
-        if (usec2cService.messageList.length) {
+        if (!usec2cService.messageList.length) {
           const index = usec2cService.messageList.findIndex(fitem => fitem.isTmp)
           if (index !== -1 && arr[0].type == 'img') {
             usec2cService.messageList.splice(index, 1)
           }
-          usec2cService.pushMessageList(...arr)
-        } else {
           usec2cService.setMessageList(arr)
+        } else {
+          const index = usec2cService.messageList.findIndex(fitem => fitem.isTmp)
+          if (index !== -1 && arr[0].type == 'img') {
+            usec2cService.messageList.splice(index, 1)
+          }
+          usec2cService.setMessageList([...usec2cService.messageList, ...arr])
         }
       })
     }
@@ -73,6 +77,7 @@ class ServiceC2C {
   }
 
   subscribe() {
+    console.log('subscribe action')
     const usec2cService = useServiceStoreC2C()
     this.socket.emit('subscribe', usec2cService.orderNo)
   }
