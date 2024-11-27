@@ -3,10 +3,8 @@
     <div class="reset-el-style-v2 flex justify-end">
        <div class="flex">
           <el-input v-model="searchForm.params" class="mr-2" clearable placeholder="UID、用户、日志"  style="width: 268px;"/>
-
           <el-date-picker v-model="timeRanges" type="daterange" range-separator="至" start-placeholder="开始时间"
                       end-placeholder="结束时间" style="width: 268px;margin-left: 10px;" />
-
               <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
                 :loading="isLoading">查询</el-button>
        </div>
@@ -19,6 +17,9 @@
             <template v-if="item.prop === 'username'">
               <span class="truncate cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
+            </template>
+            <template v-else-if="item.prop === 'account'">
+              <span> {{ scope.row[item.prop] && accountMap[scope.row[item.prop]] ? accountMap[scope.row[item.prop]] : scope.row[item.prop] }}</span>
             </template>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
@@ -81,12 +82,19 @@ const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
 
+const accountMap = {
+  money:"现金账户",
+  stock:"股票账户",
+  futures:"合约账户",
+  forex:"外汇账户",
+  blocktrade:"大宗交易账户"
+}
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID', minWidth:gw(110), align: 'center' },
   { prop: 'username', label: '用户名', minWidth:gw(300), align: 'center' },
   // { prop: 'father_username', label: '代理', minWidth:gw(110), align: 'center' },
-  { prop: 'symbol', label: '账户', minWidth:gw(140), align: 'center' },
+  { prop: 'account', label: '账户', minWidth:gw(140), align: 'center' },
   { prop: 'symbol', label: '货币', minWidth:gw(140), align: 'center' },
   { prop: 'amount', label: '金额', minWidth:gw(300), align: 'center' },
   { prop: 'log', label: '日志', align: 'left',minWidth:gw(696) },

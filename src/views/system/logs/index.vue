@@ -3,13 +3,18 @@
     <div class="flex reset-el-style-v2 justify-between">
        <div></div>
        <div class="flex">
-
-          <div class="w-[264px] ml-2">
-            <el-input v-model="searchForm.operator" ref="searchInput" suffix-icon="search" placeholder="操作者" />
+          <div class="w-[168px] ml-2">
+            <el-input v-model="searchForm.params" ref="searchInput" placeholder="UID/用户名/备注" />
+          </div>  
+          <div class="w-[168px] ml-2">
+            <el-input v-model="searchForm.log" ref="searchInput" placeholder="日志" />
+          </div>
+          <div class="w-[168px] ml-2">
+            <el-input v-model="searchForm.operator" ref="searchInput" placeholder="操作者" />
           </div>
           <el-date-picker start-placeholder="开始时间" end-placeholder="结束时间" clearable v-model="timerange" class="ml-[10px]" type="daterange" style="width: 400px;"  />
           
-          <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1,2)"
         :loading="isLoading">查询</el-button>
        </div>
     </div>
@@ -18,9 +23,17 @@
         <el-table-column v-for="(item, index) in columnBase" :key="index" :label="item.label"  :min-width="item.minWidth"
           :align="item.align">
           <template #default="scope">
-            <span v-if="['uid','username'].includes(item.prop)">
-                 {{ scope.row[item.prop] }}
-                </span>
+
+            <span class="truncate cursor-pointer" v-if="item.prop === 'uid'" @click="copy(scope.row[item.prop])"> {{
+                scope.row[item.prop] }}</span>
+      
+       
+            <span v-else-if="item.prop === 'username'">
+              <span class=" cursor-pointer text-[#4377FE] underline" v-if="scope.row.role == 'user' || scope.row.role == 'guest'" @click="showDialog(scope.row, 'showInfoDialog')">{{
+                scope.row[item.prop] }}
+              </span>
+              <span v-else>{{scope.row[item.prop] }}</span>
+            </span>
            
             <span v-else-if="item.prop == 'role'">
               {{ roleOptions[scope.row[item.prop]] || '' }}
@@ -43,6 +56,9 @@
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
 
+    <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
+    @close="closeDialogType" />
+
   </div>
 </template>
 
@@ -52,21 +68,43 @@ export default { name: 'OperationLog' };
 <script setup>
 import { getList } from '/@/api/modules/system/log.api'
 import { ref, toRaw } from 'vue'
-import { Search } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
 import { copy } from '/@/utils'
 import { hex_md5 } from '/@/utils/md5'
 import { ElMessage } from 'element-plus'
+import userDetail from '/@/components/userDetail/index.vue'
+
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 const tableData = ref([]);
+const dialogType = reactive({
+  info: null,
+  showInfoDialog: false,
+})
+
+const showDialog = (data, key) => {
+  if (data) {
+    dialogType.info = Object.assign({}, data);
+  }
+  dialogType[key] = true;
+}
+const closeDialogType = (item) => {
+  for (const key in dialogType) {
+    dialogType[key] = false
+  }
+  dialogLoading.value = false;
+  if (item && item.reload) {
+  }
+}
+
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:OperationLog', () => {
   getDataList()
 })
 const searchForm = reactive({
+  params:sessionStorage['operationLogSearchParams'] || '',
+  log:sessionStorage['operationLogSearchLog'] || '',
   operator:sessionStorage['operationLogSearchOperator'] || '',
-  query: '',
   start_time: sessionStorage['operationLogSearchStartTime'] || '',
   end_time: sessionStorage['operationLogSearchEndTime'] || ''
 })
@@ -75,7 +113,6 @@ const timerange = ref([searchForm.start_time,searchForm.end_time])
 
 
 const roleOptions = {user:'真实用户',guest:'模拟用户'};
-
 
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
@@ -94,7 +131,7 @@ const columnBase = ref([
 
 const isLoading = ref(false)
 
-const getDataList = (page=1) => {
+const getDataList = (page=1,loadingType=1) => {
   if (page) {
     currentLastPage.value = page
   }
@@ -111,6 +148,7 @@ const getDataList = (page=1) => {
   }
   
   const send = toRaw(searchForm);
+  
   send.page = currentLastPage.value
 
   if (searchForm.start_time) {
@@ -119,7 +157,10 @@ const getDataList = (page=1) => {
   if (searchForm.end_time) {
     send.end_time = dayjs(searchForm.end_time).format('YYYY-MM-DD')
   }
-  sessionStorage['operationLogSearchOperator']  = searchForm.operator
+
+  sessionStorage['operationLogSearchParams'] = searchForm.params || ''
+  sessionStorage['operationLogSearchLog'] = searchForm.log || ''
+  sessionStorage['operationLogSearchOperator'] = searchForm.operator || ''
   sessionStorage['operationLogSearchStartTime'] = searchForm.start_time
   sessionStorage['operationLogSearchEndTime']   = searchForm.end_time
   const cacheKey = hex_md5(JSON.stringify(send))
@@ -133,7 +174,9 @@ const getDataList = (page=1) => {
   }else{
     isLoading.value = true
   }
-
+  if(loadingType == 2){
+    isLoading.value = true
+  }
 
   getList(send)
     .then(res => {
