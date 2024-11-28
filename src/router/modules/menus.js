@@ -7,7 +7,7 @@ export default [
     component: Layout,
     icon: 'home',
     hiddenChild: true,
-    meta: { title: '首页' },
+    meta: { title: '概览' },
     redirect: "/dashboard",
     children: [
       {
@@ -15,7 +15,7 @@ export default [
         component: () => import("/@/views/dashboard/index.vue"),
         name: "Dashboard",
         icon: 'Console',
-        meta: { title: '首页统计', auth: 0, noCache: true, }
+        meta: { title: '概览', auth: 0, noCache: true, }
       },
     ],
   }, 

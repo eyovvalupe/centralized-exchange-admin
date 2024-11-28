@@ -1,9 +1,9 @@
 <template>
   <section class="app-header">
     <!-- 第一排 -->
-    <header class="header-bg h-[70px] w-full flex text-sm pl-[20px]">
+    <header class="header-bg h-[50px] w-full flex text-sm pl-[20px]">
       <el-menu popper-class="header-menus" :default-active="activeIndex" :hide-timeout="100" :show-timeout="0"
-        :collapse-transition="false" class="h-[70px] flex-1" mode="horizontal" @select="handleSelect"
+        :collapse-transition="false" class="h-[50px] flex-1" mode="horizontal" @select="handleSelect"
         v-show="routesList.length">
         <template v-for="(item, index) in routesList" :key="index">
           <el-menu-item :hide-timeout="100" :show-timeout="0" :collapse-transition="false" :index="item.name || ''"
@@ -399,7 +399,7 @@ function goGooglePage(){
 .header-menus {
   border:0px !important;
   background: none !important;
-  top:70px !important;
+  top:50px !important;
   .el-menu {
     width: 200px;
     border-bottom-left-radius: 10px;
@@ -626,6 +626,7 @@ function goGooglePage(){
     padding: 0px;
     color: var(--el-color-primary);
     background-color: #E1EAFF !important;
+    border-radius: 4px;
     .is-icon-close{
       opacity: 1;
     }

@@ -16,7 +16,7 @@
         <div class="reset-el-style-v2">
             <div class="title">我的业绩</div>
             <dataOveriew :all-total="allTotal" :coin-list="coinList" @openDetail="showDialog({date:'total'})" />
-            <div class="py-[10px]">
+            <div class="py-[10px]" v-if="showList">
                 
                 <el-radio-group v-model="tabPosition" @change="tabChange">
                     <el-radio-button label="online">线下代理</el-radio-button>
@@ -24,7 +24,7 @@
                 </el-radio-group>
                 
             </div>
-            <el-table :data="tableData" border
+            <el-table v-if="showList" :data="tableData" border
                 :class="tableData.length ? '' : 'noborder'" v-loading="isLoading">
                 <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width"
                     :label="item.label" :align="item.align">
@@ -51,7 +51,7 @@
             </el-table>
                 
         </div>
-        <div class="py-[10px]">
+        <div class="py-[10px]" v-if="showList">
             <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
         </div>
         <dialogInfo ref="dialogInfoRef" />
@@ -62,11 +62,10 @@
 export default { name: 'statisticsAgentMy' };
 </script>
 <script setup>
-
 import { getAgentList } from '/@/api/modules/business/agents.api'
 
 import { getglobalMyDate, getglobalTotalMy, getGlobalCurrencyMy } from '/@/api/modules/base.api'
-import { ref, reactive, onMounted, computed, nextTick,unref } from 'vue'
+import { ref, unref } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import dialogInfo from './dialogInfo.vue'
 import dataOveriew from './components/dataOveriew.vue'
@@ -76,8 +75,12 @@ const tabPosition = ref('online')
 const tabChange = ()=>{
  
 }
-
-
+const props = defineProps({
+    showList:{
+        type:Boolean,
+        default:true
+    }  
+})
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -93,11 +96,6 @@ const dialogInfoRef = ref()
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
-
-const searchForm = reactive({
-  father:"",
-  query:""
-})
 
 
 const columnBase = ref([
@@ -185,7 +183,11 @@ const allData = (callback) => {
                             balance: 0,
                             currency: item.currency,
                             deposit: 0,
-                            withdraw: 0
+                            deposit_ratio:0,
+                            deposit_usdt:0,
+                            withdraw: 0,
+                            withdraw_usdt:0,
+                            withdraw_ratio:0
                         })
                     }
                 })
@@ -229,6 +231,9 @@ const allData = (callback) => {
     })
 }
 const getDataList = page => {
+    if(!props.showList){
+        return
+    }
     if (page) {
         currentLastPage.value = page
     }
