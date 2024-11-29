@@ -148,13 +148,17 @@ const selectAllMessage = async item => {
   useService.setSelectMessageStatus(false)
   useService.setChatid(item.chatid || '')
   useService.setPartyid(item.partyid || '')
-  useService.getMessageList(item.chatid).then(res => {
-    isLoading.value = false
-    clearUserList()
-  })
-  apiMsgRead({ chatid: item.chatid }).then(() => {
-    getUserListData()
-  })
+  if(item.chatid){
+    useService.getMessageList(item.chatid).then(res => {
+      isLoading.value = false
+      clearUserList()
+    })
+    apiMsgRead({ chatid: item.chatid }).then(() => {
+      getUserListData()
+    })
+  }else{
+    selectSearchUser(item)
+  }
 }
 
 const setDelel = () => {
