@@ -4,8 +4,8 @@
       <div class="w-[48px] h-[48px] min-w-[48px] rounded-[24px] bg-[#4377fe] flex justify-center items-center mr-[10px]">
         <span class="text-[20px] text-[#fff]">{{ useService.partyid ? tableData[0].username.slice(0, 1) : "匿"}}</span>
       </div>
-      <span class="text-[16px] text-[#000] font-semibold mr-[10px]">{{ useService.partyid ? tableData[0].username : "匿名用户" }}</span>
-      <div class="w-[60px] min-w-[60px] h-[20px] rounded-[10px] bg-[#4377fe] px-[10px] flex justify-between items-center cursor-pointer" v-if="useService.partyid">
+      <span class="username text-[16px] text-[#000] font-semibold mr-[10px]">{{ useService.partyid ? tableData[0].username : "匿名用户" }}</span>
+      <div class="w-[60px] min-w-[60px] h-[20px] mr-[10px] rounded-[10px] bg-[#4377fe] px-[10px] flex justify-between items-center cursor-pointer" @click="showDialog(tableData[0], 'modifyVisible')" :class="{ disabled: !checkAuthCode(10201) }" v-if="useService.partyid">
         <EditIcon />
         <span class="text-[12px] text-[#fff]">编辑</span>
       </div>
@@ -25,28 +25,49 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[50px]">{{ tableData[0].uid }}</td>
-            <td class="text-[#4377fe] min-w-[60px]">{{ tableData[0].username }}</td>
-            <td class="min-w-[30px]">真实用户</td>
-            <td>undifined</td>
-            <td>undifined</td>
-            <td>undifined</td>
+            <td class="min-w-[50px] cursor-pointer" @click="copy(tableData[0].uid)">{{ tableData[0].uid }}</td>
+            <td class=" min-w-[60px]">
+              <span class="underline cursor-pointer text-[#4377FE]"
+                @click="showDialog(tableData[0], 'showInfoDialog')">
+                {{ tableData[0].username }}
+              </span>
+              
+            </td>
+            <td class="min-w-[30px]">{{tableData[0]['role'] == 'user' ? '真实' : '模拟'}}用户</td>
+            <td><span class="underline cursor-pointer text-[#4377FE]"
+              @click="showDialog(tableData[0], 'showMoneyDialog')" v-if="tableData[0]['role'] == 'user'">查看余额</span><span v-else>N/A</span></td>
+            <td>{{tableData[0].limit}}</td>
+            <td>{{tableData[0].remarks}}</td>
             <td class="min-w-[62px]">{{ tableData[0].lastlogin.split(" ")[0] }}<br>{{ tableData[0].lastlogin.split(" ")[1] }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+  <userMoney v-if="dialogType.showMoneyDialog" :partyid="detailData.partyid" @close="closeDialogType" />
+
+  <userDetail v-if="dialogType.showInfoDialog" :partyid="detailData.partyid" @close="closeDialogType" />
+
+  <modifyDialog v-if="dialogType.modifyVisible" :visible="dialogType.modifyVisible" :editInfo="detailData"
+    @close="closeDialogType" @success="closeDialogType('reload')" />
+
+  
 </template>
 
 <script setup>
 import { Edit, MoreFilled } from '@element-plus/icons-vue'
 import { dayjs } from 'element-plus'
+import { copy } from '/@/utils'
 import { reactive, ref, watch } from 'vue'
 import { useServiceStore } from '/@/store'
 import { apiRemoveBlacklist, apiBlacklist, apiSetRemark } from '/@/api/modules/service/index.api'
 import { apiUser } from '/@/api/modules/business/player.api'
 import EditIcon from './icons/EditIcon.vue'
+import { checkAuthCode } from '/@/hooks/store.hook.js'
+import userDetail from '/@/components/userDetail/index.vue'
+import userMoney from '/@/components/userDetail/money.vue'
+import modifyDialog from '/@/views/users/player/modifyDialog.vue'
 
 const useService = useServiceStore()
 const loading = ref(false)
@@ -67,6 +88,11 @@ const tableData = ref(defaultData)
 const state = reactive({
   showBlackDialog: false,
   info: {},
+})
+const dialogType = reactive({
+  showMoneyDialog: false,
+  showInfoDialog: false,
+  modifyVisible:false
 })
 const roleOptions = [
   {
@@ -116,6 +142,27 @@ const getData = () => {
       tableData.value = defaultData
     })
 }
+
+const detailData = ref({})
+
+const showDialog = (data, key) => {
+  if (!checkAuthCode(10201)) {
+    return
+  }
+  
+  detailData.value = data
+  dialogType[key] = true
+}
+
+const closeDialogType = (isReload) => {
+  for (const key in dialogType) {
+    dialogType[key] = false
+  }
+  if (isReload) {
+    getData()
+  }
+}
+
 const setDelel = () => {
   useService.setSelectMessageStatus(!useService.isSelectMessage)
 }
@@ -149,6 +196,7 @@ watch(
   val => {
     val && getData()
     console.log('chat id --->', useService.chatid)
+    console.log('partyid --->',useService.partyid)
   },
   { immediate: true }
 )
@@ -231,5 +279,13 @@ watch(
       width: 100%;
     }
   }
+}
+.username{
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: 24px;
+  line-height: 24px;
 }
 </style>

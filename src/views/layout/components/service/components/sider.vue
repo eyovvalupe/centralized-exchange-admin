@@ -5,17 +5,17 @@
         v-model="state.userName"
         class="p-[5px] w-full h-[40px] bg-[#f5f5f5] rounded-[8px] flex items-center px-[10px]"
         placeholder="玩家名称/登录UID/用户名"
-        @keydown="e => getAllList(e.target.value)"
+        @input="e => getAllList(e.target.value)"
       />
       <div class="absolute top-[17.5px] right-[15px]" @click="() => {}">
         <SearchIcon />
       </div>
     </div>
     {{ console.log("user list ===========> ", useService.userList) }}
-    <div style="overflow-y: auto">
+    <div style="min-height: 200px;"  v-loading="loading">
       <div
         class="w-full h-[68px] rounded-[8px] p-[10px] flex items-center mb-[10px] hover:bg-[#cee9ff]"
-        v-for="item in useService.userList"
+        v-for="item in userList"
         :key="item.chatid"
         :class="useService.chatid == item.chatid ? 'bg-[#cee9ff]' : 'bg-[#fff]'"
         @click="selectAllMessage(item)"
@@ -40,7 +40,7 @@
             justify-content: space-between;
           "
         >
-          <span class="text-[12px] text-[#999999]">{{ transferTime(item.lasttime) }}</span>
+          <span class="text-[12px] text-[#999999]" v-if="item.lasttime">{{ transferTime(item.lasttime) }}</span>
           <div
             style="display: inline-block; width: 20px"
             :style="item.unread && item.unread != 0 ? 'visibility: visible;' : 'visibility: hidden;'"
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed } from 'vue'
 import { useServiceStore } from '/@/store'
 import { Search } from '@element-plus/icons-vue'
 import {
@@ -86,6 +86,7 @@ const msgUserList = ref([])
 const isSearch = ref(false)
 const isLoading = ref(false)
 const loading = ref(false)
+
 
 let timer
 const getUserListData = () => {
@@ -114,8 +115,9 @@ const getAllList = params => {
   }
   timer = setTimeout(() => {
     // loading.value = true
-    apiUserSearch(params).then(data => {
-      console.log(data)
+    apiUserSearch({
+      params
+    }).then(data => {
       loading.value = false
       msgUserList.value = data.user
     })
@@ -127,6 +129,15 @@ const clearUserList = () => {
   // dataList.value = useService.userList;
   isSearch.value = false
 }
+
+const userList = computed(()=>{
+  if(state.userName){
+    return msgUserList.value
+  }else{
+    return useService.userList
+  }
+})
+
 const selectSearchUser = async item => {
   useService.setSelectMessageStatus(false)
   await createChat(item.partyid)
@@ -216,4 +227,15 @@ const setBlack = item => {
   padding: 10px;
   overflow-y: auto;
 }
+
+
+.sider_container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sider_container::-webkit-scrollbar-thumb {
+  background-color: rgba(218, 214, 214, 0.795);
+  border-radius: 3px;
+}
+
 </style>

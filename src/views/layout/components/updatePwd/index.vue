@@ -16,7 +16,7 @@
           :placeholder="`确认${text}`"
         />
       </el-form-item>
-       <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="show" width="350">
+       <el-dialog :close-on-click-modal="false" title="操作者验证" v-if="show" v-model="show" width="350">
         <!-- <el-form ref="verifyForm" :model="form" :rules="verifyRules">
           <el-form-item :label="`Google验证码`" :label-width="formLabelWidth" required prop="googleVerify">
             <el-input
@@ -28,7 +28,7 @@
             />
           </el-form-item>
         </el-form> -->
-        <GoogleVerify @confirm="update" v-if="show" />
+        <GoogleVerify @confirm="update" @close="show=false;" />
         <!-- <template #footer>
           <p>
             <el-button @click="$emit('close')">取消</el-button>

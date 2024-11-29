@@ -9,7 +9,6 @@
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
-
         <div class="w-[264px] ml-[10px]">
           <el-input v-model="searchValue" suffix-icon="search"  placeholder="UID/用户名/备注" />
         </div>
@@ -106,7 +105,6 @@
     @close="closeDialogType" @success="closeDialogType('reload')" />
  
   <userMoney v-if="dialogType.showMoneyDialog" :partyid="detailData.partyid" @close="closeDialogType" />
-
   <userDetail v-if="dialogType.showInfoDialog" :partyid="detailData.partyid" @close="closeDialogType" />
 
 </template>
