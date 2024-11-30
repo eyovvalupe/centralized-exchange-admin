@@ -19,7 +19,7 @@
         <div class="w-[264px] ml-[10px]">
           <el-input v-model="searchForm.params" ref="searchInput" suffix-icon="search" placeholder="UID/用户名" />
         </div>
-        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
 

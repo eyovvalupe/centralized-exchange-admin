@@ -26,7 +26,7 @@
         <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
             <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
           </el-select> -->
-        <el-button type="primary" class="w-[120px] ml-2" :icon="Search" @click="getDataList(1)" :loading="isLoading">查询</el-button>
+        <el-button type="primary" class="w-[120px] ml-2" :icon="Search" @click="isLoading=true;getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
     </div>
     <div class="reset-el-style-v2 py-[10px]">
@@ -255,11 +255,11 @@ const gw = (w)=>{
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },
-  { prop: 'username', label: '用户名',minWidth:gw(140), align: 'center' },
-  { prop: 'role', label: '角色',minWidth:gw(160), align: 'center' },
-  { prop: 'name', label: '合约',minWidth:gw(240), align: 'center' },
+  { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
+  { prop: 'role', label: '角色',minWidth:gw(110), align: 'center' },
+  { prop: 'name', label: '合约',minWidth:gw(110), align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:gw(200),  align: 'center' },
-  { prop: 'settled_price', label: '买价/卖价', minWidth:gw(200), align: 'center' },
+  { prop: 'settled_price', label: '买价/卖价', minWidth:gw(300), align: 'center' },
   { prop: 'open_volume', label: '开仓张数',minWidth:gw(110), align: 'center' },
   { prop: 'margin', label: '开仓保证金',minWidth:gw(110), align: 'center' },
   { prop: 'profit', label: '订单收益/百分比',minWidth:gw(200), align: 'center' },
@@ -280,7 +280,7 @@ const showDialog = (data, key) => {
 }
  
 // 获取玩家列表 page若传则为第一页
-const getDataList = page => {
+const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
@@ -313,7 +313,6 @@ const getDataList = page => {
   }else{
     isLoading.value = true
   }
-
 
   apiQueryList(send)
     .then(res => {

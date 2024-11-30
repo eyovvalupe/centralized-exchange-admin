@@ -26,7 +26,7 @@
         <!-- <el-select v-model="searchForm.status" class="ml-2"  style="width: 100px;">
             <el-option v-for="item in optionStatus" :key="item.value" :label="item.label" :value="item.value" />
           </el-select> -->
-        <el-button type="primary" class="w-[120px] ml-2" @click="getDataList(1)" :loading="isLoading">查询</el-button>
+        <el-button type="primary" class="w-[120px] ml-2" @click="isLoading=true;getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
 
     </div>
@@ -284,7 +284,7 @@ const showDialog = (data, key) => {
 
 
 // 获取玩家列表 page若传则为第一页
-const getDataList = page => {
+const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
@@ -315,6 +315,7 @@ const getDataList = page => {
   }else{
     isLoading.value = true
   }
+
 
   sessionStorage['orderSearchTimerange'] = JSON.stringify(timeRanges.value)
   sessionStorage['orderSearchParams'] = searchForm.params

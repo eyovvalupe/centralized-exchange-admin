@@ -87,17 +87,17 @@
               >
                 <span v-if="mode == 1"
                   >{{
-                    (props.item.ratio || 0) * 100 > 0
-                      ? "+" + ((props.item.ratio || 0) * 100).toFixed(2)
-                      : ((props.item.ratio || 0) * 100).toFixed(2)
+                    (props.item.ratio || 0)  > 0
+                      ? "+" + (props.item.ratio || 0) 
+                      : (props.item.ratio || 0) 
                   }}%</span
                 >
                 <span v-else-if="mode == 2">{{
                   props.item.price || 0 > 0
-                    ? "+" + (props.item.price || 0).toFixed(2)
-                    : (props.item.price || 0).toFixed(2)
+                    ? "+" + (props.item.price || 0)
+                    : (props.item.price || 0)
                 }}</span>
-                <span v-else>{{ _formatNumber(props.item.volume) }}</span>
+                <span v-else>{{ props.item.volume }}</span>
               </div>
             </div>
           </div>
@@ -127,7 +127,7 @@
           <div class="text-center w-1/3">
             <span :class="updown === 0 ? '' : updown > 0 ? 'up' : 'down'"
               >{{ item.ratio > 0 ? "+" : ""
-              }}{{ ((item.ratio || 0) * 100).toFixed(2) }}%</span
+              }}{{ (item.ratio || 0) }}%</span
             ><br />
             <span class="text-[11px] text-[#8F92A1] font-normal"
               >涨跌比</span

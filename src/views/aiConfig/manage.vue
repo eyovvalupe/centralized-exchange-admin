@@ -12,7 +12,7 @@
         </div> -->
 
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="名称/代码" style="width: 264px;" />
-        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1,2)"
+        <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
 
       </div>
@@ -139,13 +139,11 @@ const showDialog = (data, type) => {
   dialogType[type] = true;
 }
 
-const getDataList = (page,loadingMode=1) => {
+const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  if(loadingMode == 2){ //1有缓存不显示loading，2始终显示
-    isLoading.value = true
-  }
+
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;

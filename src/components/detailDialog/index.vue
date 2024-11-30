@@ -33,7 +33,7 @@
                                 <b class="split-line"></b>
                                 <span 
                                     :class="detailData['ratio'] >= 0 ? 'success' : detailData['ratio'] < 0 ? 'failure' : ''">
-                                {{ detailData['ratio'] * 100 }}%
+                                {{ detailData['ratio'] }}%
                                 </span>
                         </span>
                         <span v-else-if="item.prop === 'stop_profit'">

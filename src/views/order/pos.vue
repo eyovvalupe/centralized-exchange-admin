@@ -196,9 +196,14 @@ const dialogType = reactive({
   closePos: false
 })
 const getDataList = () => {
-  searchStr.value = searchStrbtn.value;
-  sessionStorage['orderPosSearchValue'] = searchValue.value
-  sessionStorage['orderPosSearchStr'] = searchStr.value
+  isLoading.value = true
+  setTimeout(()=>{
+    searchStr.value = searchStrbtn.value;
+    sessionStorage['orderPosSearchValue'] = searchValue.value
+    sessionStorage['orderPosSearchStr'] = searchStr.value
+    isLoading.value = false
+  },300)
+  
 }
 const transKeyName = (val, key) => {
   let str = val;
@@ -245,11 +250,11 @@ const gw = (w)=>{
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },
-  { prop: 'username', label: '用户名',minWidth:gw(140), align: 'center' },
-  { prop: 'role', label: '角色',minWidth:gw(160), align: 'center' },
-  { prop: 'symbol', label: '股票代码',minWidth:gw(240), align: 'center' },
+  { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
+  { prop: 'role', label: '角色',minWidth:gw(120), align: 'center' },
+  { prop: 'symbol', label: '股票代码',minWidth:gw(120), align: 'center' },
   { prop: 'offset', label: '开仓', minWidth: gw(200), align: 'center' },
-  { prop: 'settled_price', label: '买价/现价', minWidth:gw(200), align: 'center' },
+  { prop: 'settled_price', label: '买价/现价', minWidth:gw(300), align: 'center' },
   { prop: 'unsold_volume', label: '可售数量', minWidth:gw(120), align: 'center' },
   { prop: 'surplus_margin', label: '剩余保证金',minWidth:gw(120), align: 'center' },
   { prop: 'profit', label: '订单收益/百分比', minWidth:gw(200), align: 'center' },
