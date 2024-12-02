@@ -8,14 +8,14 @@ export function getList(data) {
   } )
 }
 
-export function futureSell( data ) {
+export function blocktradeSell( data ) {
   return request( {
     method : 'post',
     url : '/roles/v1/blocktrade/m/sell',
     data
   } )
 }
-export function getFutureList( data ) {
+export function getBlocktradeList( data ) {
   return request( {
     method : 'post',
     url : '/roles/v1/blocktrade/config/items',

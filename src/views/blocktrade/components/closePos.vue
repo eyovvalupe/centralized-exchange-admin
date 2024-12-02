@@ -17,7 +17,7 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, watch, computed, defineEmits, h } from 'vue'
-import { futureSell } from '/@/api/modules/contract'
+import { blocktradeSell } from '/@/api/modules/blocktrade'
 import { getSessionToken } from '/@/api/modules/base.api'
 
 const props = defineProps({
@@ -53,7 +53,7 @@ const comfirmSubmit = () => {
       let token = '';
       getSessionToken().then((res) => {
         token = res;
-        futureSell({
+        blocktradeSell({
           order_no: props.orderNo,
           ...form,
           token

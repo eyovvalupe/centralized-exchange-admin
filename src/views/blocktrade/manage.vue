@@ -11,7 +11,7 @@
             :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         </div> -->
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="大宗商品名称/交易代码" style="width: 264px;" />
-        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1)"
+        <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
     </div>
@@ -34,14 +34,7 @@
               <span v-else-if="item.prop === 'status'" class="status-bg" :class="scope.row['status']">
                 {{ statusObj[scope.row[item.prop]] }}
               </span>
-              <!-- <span v-else-if="item.prop==='issue_start_date'">
-                <el-tag type="info" size="small"> {{  dayjs(scope.row['issue_start_date']).format('YYYY-MM-DD') }}</el-tag>
-                <span class="mx-1">~</span>
-                <el-tag type="info" size="small"> {{ dayjs(scope.row['issue_end_date']).format('YYYY-MM-DD')  }}</el-tag>
-              </span> -->
-              <!-- <span v-else-if="item.prop === 'company_name'"  class="underline cursor-pointer text-[#4377FE]" @click="copy(scope.row[item.prop])">
-                {{ scope.row[item.prop] }}
-              </span> -->
+           
               <span v-else>
                 {{ scope.row[item.prop] }}
               </span>
@@ -95,6 +88,7 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import Edit from './components/Edit.vue'
 import StockList from './components/StockList.vue'
+import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -109,8 +103,8 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  params: sessionStorage['blocktradeParams'] || '',
+  status: sessionStorage['blocktradeStatus'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -139,7 +133,6 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -147,6 +140,23 @@ const getDataList = (page) => {
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
+
+  sessionStorage['blocktradeParams'] = searchForm.params || ''
+  sessionStorage['blocktradeStatus'] = searchForm.status
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['blocktrade']){
+    const searchCache = JSON.parse(sessionStorage['blocktrade'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
+  }
+
+
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -160,11 +170,14 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
-      res = res || []
       res.map(item=>{
         item.lever = item.lever ? item.lever.split(',') : []
       })
-      tableData.value = res || []
+      sessionStorage['blocktrade'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
+      tableData.value = res
     })
     .finally(() => {
       isLoading.value = false

@@ -11,7 +11,7 @@
             :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
         </div> -->
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="合约名称/交易代码" style="width: 264px;" />
-        <el-button type="primary" class="ml-[10px] w-[120px]" @click="getDataList(1)"
+        <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
     </div>
@@ -90,14 +90,12 @@ export default { name: 'contract' };
 </script>
 <script setup>
 import { getList, apiDel } from '/@/api/modules/contract'
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
-import { copy } from '/@/utils'
+import { ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import Edit from './components/Edit.vue'
 import StockList from './components/StockList.vue'
-import store from '../../store'
+import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
 const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
@@ -112,8 +110,8 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  params: '',
-  status: 'all'
+  params: sessionStorage['contractParams'] || '',
+  status: sessionStorage['contractStatus'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -142,13 +140,26 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
   }
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
+  }
+  sessionStorage['contractParams'] = searchForm.params || ''
+  sessionStorage['contractStatus'] = searchForm.status
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['contract']){
+    const searchCache = JSON.parse(sessionStorage['contract'])
+    if(searchCache.cacheKey == cacheKey){
+      tableData.value = searchCache.data
+    }else{
+      isLoading.value = true
+    }
+  }else{
+    isLoading.value = true
   }
   getList(send)
     .then(res => {
@@ -163,11 +174,14 @@ const getDataList = (page) => {
         return;
       }
       currentPage.value = currentLastPage.value;
-      res = res || []
       res.map(item=>{
         item.lever = item.lever ? item.lever.split(',') : []
       })
-      tableData.value = res || []
+      sessionStorage['contract'] = JSON.stringify({
+        cacheKey,
+        data:res
+      })
+      tableData.value = res
     })
     .finally(() => {
       isLoading.value = false

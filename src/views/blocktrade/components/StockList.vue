@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { getFutureList } from '/@/api/modules/blocktrade'
+import { getBlocktradeList } from '/@/api/modules/blocktrade'
 import { ref, reactive, onMounted } from 'vue'
 import Edit from './Edit.vue'
 const emit = defineEmits(['close', 'success'])
@@ -101,7 +101,7 @@ const getDataList = (page) => {
   if (searchForm.params) {
     send.params = searchForm.params;
   }
-  getFutureList(send)
+  getBlocktradeList(send)
     .then(res => {
       isLoading.value = false
       if (!res || !res.length && currentLastPage.value > 1) {
