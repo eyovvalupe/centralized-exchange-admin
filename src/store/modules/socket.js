@@ -10,7 +10,9 @@ const useSocketStore = defineStore({
       aiOrderList: [],
       stockOrderList: [],
       futureOrderList: [],
-      contractList: []
+      blocktradeOrderList: [],
+      contractList: [],
+      blocktradeList:[]
     }
   },
   actions: {

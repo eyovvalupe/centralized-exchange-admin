@@ -142,6 +142,7 @@ export default [
         icon: 'Console',
         meta: { title: '合约场控', auth: '232', noCache: true, }
       },
+     
       {
         path: '/aiPos',
         component: () => import('/@/views/ai/pos.vue'),
@@ -162,6 +163,28 @@ export default [
         name: 'aiIndex',
         icon: 'Console',
         meta: { title: '交易机器人场控', auth: '231', noCache: true, }
+      },
+      {
+        path: '/blocktradePos',
+        component: () => import('/@/views/blocktrade/pos.vue'),
+        name: 'blocktradePos',
+        icon: 'heyue1',
+        meta: { title: '大宗商品订单管理', auth: '231', noCache: true, border: true }
+      }, 
+      {
+        path: '/blocktradeSearch',
+        component: () => import('/@/views/blocktrade/search.vue'),
+        name: 'blocktradeSearch',
+        icon: 'heyue1',
+        meta: { title: '大宗商品历史订单', auth: '231', noCache: true, hidden: true }
+      }, 
+      
+      {
+        path: '/blocktradeIndex',
+        component: () => import('/@/views/blocktrade/index.vue'),
+        name: 'blocktradeIndex',
+        icon: 'Console',
+        meta: { title: '大宗商品场控', auth: '232', noCache: true, }
       },
       {
         path: '/foreignOrder',
@@ -312,6 +335,14 @@ export default [
         name: 'aiConfig',
         icon: 'Robots',
         meta: { title: '交易机器人', auth: '404' },
+      },
+      {
+        path: '/blocktrade',
+        component: Layout,
+        component: () => import('/@/views/blocktrade/manage.vue'),
+        name: 'blocktrade',
+        icon: 'heyue2',
+        meta: { title: '大宗商品', auth: '403' },
       },
       {
         path: '/foreignExchange',

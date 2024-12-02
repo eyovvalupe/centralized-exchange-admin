@@ -35,6 +35,8 @@ const marketName = computed(()=>{
         return '股票选择'
     }else if(props.marketType == 'futures'){
         return '合约选择'
+    }else if(props.marketType == 'blocktrade'){
+        return '大宗商品选择'
     }
     return ''
 })

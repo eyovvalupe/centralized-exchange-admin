@@ -42,6 +42,11 @@ ws.on('futuresorder', ({ data, code }) => {
     socketStore.setDataList('futureOrderList', data)
   }
 })
+ws.on('blocktradeorder', ({ data, code }) => {
+  if (code == 200) {
+    socketStore.setDataList('blocktradeOrderList', data)
+  }
+})
 ws.on('aiquantorder', ({ data, code }) => {
   if (code == 200) {
     socketStore.setDataList('aiOrderList', data)
@@ -56,6 +61,11 @@ ws.on('c2corder', ({ data, code }) => {
 ws.on('futures_control_list', ({ data, code }) => {
   if (code == 200) {
     socketStore.setDataList('futureList', data)
+  }
+})
+ws.on('blocktradecontrol', ({ data, code }) => {
+  if (code == 200) {
+    socketStore.setDataList('blocktradeList', data)
   }
 })
 const height = ref('calc( 100vh - 90px)')
