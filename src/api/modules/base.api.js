@@ -60,6 +60,27 @@ export function getRealtime(symbol) {
     url: '/anon/v1/ticker/realtime?symbol='+symbol,
   })
 }
+
+// 获取 K 线历史数据
+export const _kline = (params = {}) => {
+  return request({
+    method: 'get',
+    url: '/anon/v1/ticker/kline',
+    params
+  })
+  
+};
+
+// 获取分时图历史数据
+export const _time = (params = {}) => {
+  return request({
+    method: 'get',
+    url: '/anon/v1/ticker/time',
+    params
+  })
+ 
+};
+
 export function getGlobalCurrencyList(data) {
   return request({
     method: 'post',

@@ -1,14 +1,19 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" title="调整价格" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="调整价格" v-model="show" :append-to-body="true"
+    style="left: 50%;margin-left: -80px;"
     @close="emit('close', false)">
-    <div class="flex justify-between pt-[10px]" v-loading="loading">
-      <div class="w-7/12">
+    <div class="stock-popup">
+      <MarketInfo type="constract" :symbol="form.symbol" v-if="form.symbol" /> 
+    </div>
+    <div class="pt-[10px]" v-loading="loading">
         <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
           <el-form-item label="名称">
-            <el-input v-model="form.name" disabled autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="代码">
-            <el-input v-model="form.symbol" disabled autocomplete="off" />
+            <div class="el-input el-input--large">
+              <div class="el-input__wrapper symbol-info">
+                <div class="name">{{form.name}}</div>
+                <div class="symbol">{{ form.symbol }}</div>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item label="调整值" required prop="adjust">
             <el-input-number class="input-number" :controls="false" v-model="form.adjust" autocomplete="off" />
@@ -27,11 +32,15 @@
                 <template #suffix>秒</template>
               </el-input-number>
             </div>
-            <small class="color-[#666] mt-[8px]">0为即时生效</small>
+            <div class="time_list">
+              <div class="time_item" v-for="item in  timeOptions" :key="item.value" @click="form.second=item.value">{{ item.label }}</div>
+            </div>
+            <div class="color-[#666]">0为即时生效</div>
           </el-form-item>
         </el-form>
-      </div>
-      <div class="w-5/12 ml-4 right-box">
+      
+    </div>
+    <div class="right-box">
         <!-- <div>
           <h2 class="mb-2">已生效</h2>
           <div class="table-list flex flex-nowrap justify-between">
@@ -46,22 +55,21 @@
         <div>
           <h2 class="my-2">待生效</h2>
           <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">未生效调整</span>
-            <span class="w-6/12 text-left status blue">{{ formRight.unadjusted }}</span>
+            <span style="width:40%;font-weight: normal;" class="text-right">未生效调整</span>
+            <span style="width:60%;" class="text-left status blue">{{ formRight.unadjusted }}</span>
           </div>
           <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">生效时间</span>
-            <span class="w-6/12 text-left status blue">{{ formRight.second }}秒</span>
+            <span style="width:40%;font-weight: normal;" class="text-right">生效时间</span>
+            <span style="width:60%;" class="text-left status blue">{{ formRight.second }}秒</span>
           </div>
           <div class="table-list flex flex-nowrap justify-between">
-            <span style="width: 50%;font-weight: normal;" class="text-right">未生效百分比</span>
-            <span class="w-6/12 text-left status blue">{{ percentMath }}%</span>
+            <span style="width:40%;font-weight: normal;" class="text-right">未生效百分比</span>
+            <span style="width:60%;" class="text-left status blue">{{ percentMath }}%</span>
           </div>
         </div>
-      </div>
     </div>
     <template #footer>
-      <div  class="pb-[10px] pr-[10px]">
+      <div  class="pb-[10px] pr-[10px] pt-[30px]">
         <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
         <el-button type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
       </div>
@@ -74,6 +82,7 @@ import { apiAdjustg, apiDetial } from '/@/api/modules/contract'
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { ElMessage, dayjs } from 'element-plus'
 import { useSocketStore } from '/@/store'
+import MarketInfo from '../../../components/market/MarketInfo.vue'
 const socketStore = useSocketStore()
 
 const props = defineProps({
@@ -86,6 +95,33 @@ const ruleForm = ref(null)
 const loading = ref(false)
 const isLoading = ref(false)
 const show = ref(true)
+
+const timeOptions = ref([
+  {
+    label:'1分钟',
+    value:60
+  },
+  {
+    label:'3分钟',
+    value:180
+  },
+  {
+    label:'10分钟',
+    value:600
+  },
+  {
+    label:'1小时',
+    value:3600
+  },
+  {
+    label:'6小时',
+    value:6 * 3600
+  },
+  {
+    label:'24小时',
+    value:24 * 3600
+  }
+])
 
 const form = ref({
   name: '',
@@ -174,3 +210,54 @@ watch(() => socketStore.sokcetWS, (ws) => {
   }
 }, { immediate: true })
 </script>
+
+<style lang="scss" scoped>
+.symbol-info{
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  align-items: flex-start;
+  justify-content: center;
+  .name{
+    font-size: 14px;
+    color:#000;
+  }
+  .symbol{
+    color:#999;
+  }
+
+}
+
+.stock-popup{
+  position: absolute;
+  left:-386px;
+  width: 376px;
+  background-color: #fff;
+  height: 100%;
+  top:0;
+  border-radius: var(--el-dialog-border-radius);
+}
+
+.time_list{
+  display: flex;
+  gap:14px;
+  margin-top: 10px;
+}
+.time_item{
+  width: 65px;
+  height: 32px;
+  line-height: 30px;
+  border:1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  color:#666;
+  cursor: pointer;
+  transition: .3s;
+  &:hover{
+    background-color: #4377FE;
+    color:#fff;
+    border-color: #4377FE;
+  }
+}
+</style>

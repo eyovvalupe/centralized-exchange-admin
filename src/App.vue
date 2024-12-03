@@ -1237,4 +1237,22 @@ small {
   min-height: 32px !important;
 }
 
+// 涨跌效果
+.up {
+  color: #03BC59 !important;
+}
+
+.up_bg {
+  background-color: #03BC59 !important;
+}
+
+.down_bg {
+  background-color: #F33764 !important;
+}
+
+.down {
+  color: #F33764 !important;
+}
+
+
 </style>
