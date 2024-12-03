@@ -200,10 +200,11 @@
   const item = ref({})
 
   const showDate = computed(() => {
+    const timestamp = new Date().getTime()
     // 展示的数据时间
-    if (item.value.timestamp || item.value.ts) {
+    if (item.value.timestamp || item.value.ts || timestamp) {
       return formatTimestamp(
-        item.value.timestamp || item.value.ts,
+        item.value.timestamp || item.value.ts || timestamp,
         item.value.timezone
       );
     }
