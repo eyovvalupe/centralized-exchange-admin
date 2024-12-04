@@ -2,14 +2,18 @@
   <div class="px-[20px] py-[10px]">
     <div class="flex justify-between reset-el-style-v2">
       <div>
-        <el-button type="primary" icon="plus"  plain @click="showDialog(null, 'showDialog')">新增合约</el-button>
-        <el-button class="ml-[10px]" type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
+        <el-button type="primary" icon="plus"  plain @click="showDialog(null, 'showDialog')">合约配置</el-button>
+        <el-button class="ml-[10px]" type="primary" plain @click="showDialog(null, 'showCfgDialog')">合约交易参数</el-button>
       </div>
       <div class="flex">
-        <!-- <div class="mr-10">
-          <el-button :type="searchForm.status == item.value ? 'success' : 'default'" v-for="(item) in optionStatus"
-            :key="item.value" @click="changeSearch(item.value)">{{ item.label }}</el-button>
-        </div> -->
+        
+        <div class="w-[168px] mr-[10px]">
+          <el-select v-model="searchForm.type" @change="getDataList(1)">
+            <el-option v-for="(item) in typeOptions"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="合约名称/交易代码" style="width: 264px;" />
         <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
@@ -22,9 +26,11 @@
           <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :width="item.width" :label="item.label"
             :align="item.align">
             <template #default="scope">
-             
-              <span v-if="item.prop === 'vip'">
-                <span class="status-tag primary" v-for="v in scope.row['lever']" :key="v" v-show="v > 1">
+              <span v-if="item.prop === 'type'">
+                {{ typeMap[scope.row.type] || '--' }}
+              </span>
+              <span v-else-if="item.prop === 'vip'">
+                <span class="status-tag primary" v-for="v in scope.row['lever']" :key="v">
                   {{ v + 'X' }}
                 </span>
               </span>
@@ -47,7 +53,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" :min-width="minWidth" align="center">
+          <el-table-column label="操作" :min-width="gw(90)" align="center">
             <template #default="scope">
               <span class="flex justify-center align-middle">
                 <el-button link type="primary"  size="default" class="underline" @click="showDialog(scope.row, 'showEditDialog')">修改</el-button>
@@ -102,6 +108,32 @@ const Bus = getCurrentInstance().appContext.config.globalProperties.$mitt
 Bus.on('update:contract', () => {
   getDataList()
 })
+
+const typeOptions = ref([
+  {
+    label:"所有类型",
+    value:"all"
+  },
+  {
+    label:"加密货币",
+    value:"crypto"
+  },
+  {
+    label:"外汇",
+    value:"forex "
+  },
+  {
+    label:"大宗商品",
+    value:"blocktrade"
+  }
+])
+
+const typeMap = ref({
+  crypto:'加密货币',
+  forex:'外汇',
+  blocktrade:'大宗商品'
+})
+
 const dialogType = reactive({
   showEditDialog: false,
   showCfgDialog: false,
@@ -110,22 +142,26 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
+  type:sessionStorage['contractType'] || "all",
   params: sessionStorage['contractParams'] || '',
   status: sessionStorage['contractStatus'] || 'all'
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
 
-const minWidth = 120
+const gw = (w)=>{
+  return Math.round(1400/1920 * w)
+}
 
 const columnBase = ref([
-  { prop: 'name',minWidth, label: '合约名称', align: 'center' },
-  { prop: 'symbol',minWidth, label: '合约代码', align: 'center' },
-  { prop: 'vip',minWidth:180, label: '杠杆', align: 'center' },
-  { prop: 'pip',minWidth, label: '最小变化点差', align: 'center' },
-  { prop: 'pip_value',minWidth, label: '点值', align: 'center' },
-  { prop: 'price_multiple',minWidth, label: '价格系数', align: 'center' },
-  { prop: 'volume_multiple',minWidth, label: '成交量系数', align: 'center' }
+  { prop: 'type',minWidth:gw(100), label: '类型', align: 'center' },
+  { prop: 'name',minWidth:gw(140), label: '合约名称', align: 'center' },
+  { prop: 'symbol',minWidth:gw(140), label: '合约代码', align: 'center' },
+  { prop: 'vip',minWidth:gw(320), label: '杠杆', align: 'center' },
+  { prop: 'pip',minWidth:gw(140), label: '最小变化点差', align: 'center' },
+  { prop: 'pip_value',minWidth:gw(140), label: '点值', align: 'center' },
+  { prop: 'price_multiple',minWidth:gw(90), label: '价格系数', align: 'center' },
+  { prop: 'volume_multiple',minWidth:gw(90), label: '成交量系数', align: 'center' }
 ])
 const isLoading = ref(false)
 const showDialog = (data, type) => {
@@ -136,6 +172,8 @@ const showDialog = (data, type) => {
   }
   dialogType[type] = true;
 }
+
+
 const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
@@ -144,11 +182,15 @@ const getDataList = (page) => {
   if (searchForm.params) {
     send.params = searchForm.params;
   }
+  if (searchForm.type !== 'all') {
+    send.type = searchForm.type;
+  }
   if (searchForm.status !== 'all') {
     send.status = searchForm.status;
   }
   sessionStorage['contractParams'] = searchForm.params || ''
   sessionStorage['contractStatus'] = searchForm.status
+  sessionStorage['contractType'] = searchForm.type
 
   const cacheKey = hex_md5(JSON.stringify(send))
   if(sessionStorage['contract']){

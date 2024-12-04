@@ -1216,6 +1216,7 @@ small {
 }
 
 .search-box .el-input,
+.search-box .el-select__wrapper,
 .search-box .el-input__wrapper,
 .search-box .search-date-picker {
   height: 32px !important;

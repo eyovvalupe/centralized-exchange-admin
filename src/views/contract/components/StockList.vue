@@ -1,8 +1,15 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="700" title="品种选择" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="900" title="品种选择" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
-    <div class="flex justify-end search-box">
+    <div class="flex justify-end search-box reset-el-style-v2">
       <div class="flex">
+        <div class="w-[168px] mr-[10px]">
+          <el-select v-model="searchForm.type" @change="getDataList(1)">
+            <el-option v-for="(item) in typeOptions"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
+
         <el-input prefix-icon="search" v-model="searchForm.params" placeholder="合约名称/交易代码" style="width: 264px;" />
         <el-button type="primary" class="w-[80px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
@@ -12,7 +19,8 @@
         <el-table-column v-for="(item, index) in columnBase" :key="index" :min-width="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            {{ scope.row[item.prop] || 'N/A' }}
+            <span v-if="item.prop == 'type'">{{ typeMap[scope.row.type] || '--'}}</span>
+            <span>{{ scope.row[item.prop] || 'N/A' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="80" align="center">
@@ -55,14 +63,40 @@ const props = defineProps({
   }
 })
 
+const typeOptions = ref([
+  {
+    label:"所有类型",
+    value:"all"
+  },
+  {
+    label:"加密货币",
+    value:"crypto"
+  },
+  {
+    label:"外汇",
+    value:"forex "
+  },
+  {
+    label:"大宗商品",
+    value:"blocktrade"
+  }
+])
+
+const typeMap = ref({
+  crypto:'加密货币',
+  forex:'外汇',
+  blocktrade:'大宗商品'
+})
 
 const columnBase = ref([
+  { prop: 'type', label: '类型', align: 'center', minWidth: 80 },  
   { prop: 'name', label: '名称', align: 'center', minWidth: 80 },
   { prop: 'symbol', label: '代码', align: 'center', minWidth: 80 },
-  { prop: 'price', label: '最新价', align: 'center', minWidth: 80 },
-  { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: 100 },
+  { prop: 'price', label: '最新价', align: 'center', minWidth: 120 },
+  { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: 120 },
 ])
 const searchForm = reactive({
+  type:"all",
   params: ''
 })
 const currentPage = ref(1)
@@ -101,6 +135,9 @@ const getDataList = (page) => {
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
+  }
+  if(searchForm.type != 'all'){
+    send.type = searchForm.type
   }
   getFutureList(send)
     .then(res => {

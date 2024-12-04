@@ -8,10 +8,19 @@
         <el-form-item label="持仓手续费(%)" required prop="holding_fee">
           <el-input-number class="input-number" :controls="false" :min="0" v-model="form.holding_fee"  autocomplete="off" />
         </el-form-item>
-        <small class="txt-gray2">00:00 UTC、08:00 UTC、16:00 UTC 收取</small>
+        <div class="text-[12px] txt-gray2 mt-[-8px] pb-[20px]">00:00 UTC、08:00 UTC、16:00 UTC 收取</div>
+
+        <el-form-item label="强平线(%)" required prop="closingline">
+          <el-input-number  class="input-number" :max="100" :min="0" @blur="form.closingline <= 0 ? form.closingline = '' : ''" :controls="false" v-model="form.closingline" >
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="每张金额" required prop="amountper">
+          <el-input-number  class="input-number" :min="0" @blur="form.amountper <= 0 ? form.amountper = '' : ''" :controls="false" v-model="form.amountper" >
+          </el-input-number>
+        </el-form-item>
     </el-form>
     <template #footer>
-      <div class="pb-[10px] pr-[10px] mt-[30px]">
+      <div class="py-[10px] pr-[10px]">
         <el-button @click="emit('close', false)" class="w-[98px]" round>取消</el-button>
         <el-button type="primary" class="w-[98px]" round @click="handleGoogle" :loading="isLoading">确定 </el-button>
       </div>
@@ -42,6 +51,8 @@ const showGoogle = ref(false)
 const form = ref({
   open_fee: '',
   holding_fee: '',
+  closingline:null,
+  amountper:null
 })
  
 
