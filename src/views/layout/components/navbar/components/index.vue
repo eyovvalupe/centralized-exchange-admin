@@ -64,9 +64,21 @@ const props = defineProps({
   },
 })
 
+const userStore = useUserStore()
+
+const googlebind = computed(() => userStore.userInfo.googlebind)
+
 function open() {
   show.value = true
-  getGoogleCode()
+  if(!googlebind.value){
+    getGoogleCode().then(res => {
+      link.value = res.googlesecretqr
+      qrcode.value = res.googlesecret
+      
+    }).finally(() => {
+      loadingPage.value = false;
+    })
+  }
 }
 const rules = ref({
   // first: [
@@ -89,9 +101,7 @@ const rules = ref({
   //   }
   // ]
 })
-const userStore = useUserStore()
 
-const googlebind = computed(() => userStore.userInfo.googlebind)
 
 const googleDialogShow = computed({
   get: () => props.dialogShow,
@@ -225,17 +235,6 @@ function sixthChange(e) {
     int5.value.focus()
   }
 }
-getGoogleCode().then(res => {
-  link.value = res.googlesecretqr
-  qrcode.value = res.googlesecret
-  // if (res.googlebind) {
-  //   useUserStore().LOGOUT()
-  //   router.replace('/login')
-  // }
-}).finally(() => {
-  loadingPage.value = false;
-})
-
 function loginHandle() {
   // ruleForm.value.validate((valid, fields) => {
   //   if (valid) {

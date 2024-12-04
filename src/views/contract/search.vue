@@ -10,6 +10,12 @@
         <el-button class="ml-[10px]" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
       <div class="flex items-center">
+          <div class="w-[168px] mr-[10px]">
+            <el-select v-model="searchForm.type" @change="getDataList(1)">
+              <el-option v-for="(item) in typeOptions"
+              :key="item.value" :value="item.value" :label="item.label"></el-option>
+            </el-select>
+          </div>
           <div class="w-[168px]">
             <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
               <el-option  v-for="(item) in option"
@@ -54,6 +60,10 @@
               <span>{{ scope.row.settled_price || '--' }}</span>
             </span>
 
+            <span v-else-if="item.prop == 'type'">
+              {{ typeMap[scope.row.type] || '--' }}
+            </span>
+
             <span v-else-if="item.prop === 'username'">
               <span class=" cursor-pointer text-[#4377FE] underline"
                 @click="showDialog(scope.row, 'showInfoDialog')">{{
@@ -68,6 +78,11 @@
                 </span>
               </el-tooltip>
             </template>
+
+            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] }}
+            </span>
+            
          
             <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
@@ -110,6 +125,8 @@
     </div>
     <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
   </div>
+
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :contract="true" :orderNo="orderNo" @close="closeDialogType" />
@@ -124,8 +141,9 @@ import { copy } from '/@/utils'
 import AddLock from './components/AddLock.vue'
 import detailDialog from '/@/components/detailDialog/index.vue'
 import userDetail from '/@/components/userDetail/index.vue'
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { ElDialog, ElMessage, dayjs } from 'element-plus'
+import MarketQuotations from './components/MarketQuotations'
+import { ref, reactive } from 'vue'
+import { ElMessage, dayjs } from 'element-plus'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useRouter } from 'vue-router'
 import { hex_md5 } from '/@/utils/md5'
@@ -197,12 +215,14 @@ const option = [
 ]
 const dialogType = reactive({
   info:null,
+  showQuotationsDialog:false,
   showDialog: false,
   showLockDialog:false,
   showInfoDialog:false,
   title: ''
 })
 const searchForm = reactive({
+  type: sessionStorage['futuresSearchType'] || 'all',
   params: sessionStorage['futuresSearchParams'] || '',
   role: sessionStorage['futuresSearchRole'] || 'all',
   status: sessionStorage['futuresSearchStatus'] || 'all'
@@ -249,6 +269,32 @@ const transKeyName = (val, key) => {
   str = obj[val] || val;
   return str;
 }
+
+const typeMap = ref({
+  crypto:'加密货币',
+  forex:'外汇',
+  blocktrade:'大宗商品'
+})
+
+const typeOptions = ref([
+  {
+    label:"所有类型",
+    value:"all"
+  },
+  {
+    label:"加密货币",
+    value:"crypto"
+  },
+  {
+    label:"外汇",
+    value:"forex"
+  },
+  {
+    label:"大宗商品",
+    value:"blocktrade"
+  }
+])
+
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
@@ -257,6 +303,7 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },
   { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
   { prop: 'role', label: '角色',minWidth:gw(110), align: 'center' },
+  { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
   { prop: 'name', label: '合约',minWidth:gw(110), align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:gw(200),  align: 'center' },
   { prop: 'settled_price', label: '买价/卖价', minWidth:gw(300), align: 'center' },
@@ -289,12 +336,16 @@ const getDataList = (page) => {
   if (searchForm.params) {
     send.params = searchForm.params
   }
+  if (searchForm.type !== 'all') {
+    send.type = searchForm.type
+  }
   if (searchForm.role !== 'all') {
     send.role = searchForm.role
   }
   if (searchForm.params !== 'all') {
     send.params = searchForm.params
   }
+  sessionStorage['futuresSearchType'] = searchForm.type
   sessionStorage['futuresSearchParams'] = searchForm.params
   sessionStorage['futuresSearchTimeTanges'] = JSON.stringify(timeRanges.value)
   if(timeRanges.value && timeRanges.value.length){

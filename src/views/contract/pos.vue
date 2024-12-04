@@ -2,6 +2,7 @@
   <div class="px-[20px] py-[10px]">
     <div class="flex reset-el-style-v2  justify-between">
       <div class="flex items-center">
+      
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
@@ -11,9 +12,15 @@
         <!-- <el-button :type="checkAuthCode(232)?'success':'info'" :disabled="!checkAuthCode(232)"  @click="showDialog(null, 'showCtrDialog')">合约场控</el-button> -->
       </div>
       <div class="flex items-center">
+        <div class="w-[168px] mr-[10px]">
+          <el-select v-model="searchType" @change="getDataList(1)">
+            <el-option v-for="(item) in typeOptions"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
         <div class="w-[168px]">
-          <el-select v-model="searchValue" @change="changeSearch(searchValue)">
-            <el-option v-for="(item) in optionStatus"
+          <el-select v-model="searchRole" @change="getDataList(1)">
+            <el-option v-for="(item) in roleOptions"
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
@@ -41,6 +48,9 @@
                 {{ scope.row['ratio'] }}%
               </span>
             </span>
+            <span v-else-if="item.prop == 'type'">
+              {{ typeMap[scope.row.type] || '--' }}
+            </span>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
                 scope.row[item.prop] }}</span>
@@ -63,11 +73,10 @@
               </span>
             </span>
             <span v-else-if="item.prop === 'role'" class="status-bg" :class="scope.row[item.prop]=='guest'?'status-yellow':''">
-              {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
+              {{ roleOptions.find(f => f.value == scope.row[item.prop]).label }}
             </span> 
-            <span v-else-if="item.prop === 'symbol'">
-              {{ scope.row['symbol'] }}
-              <!-- <b class="split-line"></b>{{ scope.row['market'] }} -->
+            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] }}
             </span>
             
           
@@ -132,6 +141,8 @@
       </el-table>
     </div>
   </div>
+  
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <Price :data="dialogType.info" v-if="dialogType.showPriceDialog" @close="closeDialogType" />
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <contractCtr v-if="dialogType.showCtrDialog" @close="closeDialogType" />
@@ -151,16 +162,15 @@ import detailDialog from '/@/components/detailDialog/index.vue'
 import contractCtr from './components/contractCtr.vue'
 import Price from './components/Price.vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { ElDialog, ElMessage, dayjs } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
+import MarketQuotations from './components/MarketQuotations'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
 import { useSocketStore } from '/@/store'
 const socketStore = useSocketStore()
-const optionStatus = [
+const roleOptions = [
   {
     value: 'all',
     label: '所有用户',
@@ -183,15 +193,21 @@ const tabChange = ()=>{
 }
 
 const dialogLoading = ref(false)
-const searchValue = ref(sessionStorage['futuresPosSearchValue'] || 'all')
+const searchType = ref(sessionStorage['futuresPosSearchType'] || 'all')
+const searchRole = ref(sessionStorage['futuresPosSearchRole'] || 'all')
 const searchStr = ref(sessionStorage['futuresPosSearchStr'] || '')
 const searchStrbtn = ref(searchStr.value)
 
 const tableData = computed(() => {
   let list = socketStore.futureOrderList || []
-  if (searchValue.value !== 'all') {
-    list = socketStore.futureOrderList.filter(f => f.role == searchValue.value)
+
+  if (searchType.value !== 'all') {
+    list = socketStore.futureOrderList.filter(f => f.type == searchType.value)
   }
+  if (searchRole.value !== 'all') {
+    list = socketStore.futureOrderList.filter(f => f.role == searchRole.value)
+  }
+ 
   if (searchStr.value) {
     list = socketStore.futureOrderList.filter(f => {
       return f.username.indexOf(searchStr.value) !== -1 || f.uid.indexOf(searchStr.value) !== -1
@@ -202,6 +218,7 @@ const tableData = computed(() => {
 
 const dialogType = reactive({
   info: null,
+  showQuotationsDialog:false,
   showInfoDialog: false,
   showPriceDialog: false,
   showLockDialog: false,
@@ -214,7 +231,9 @@ const getDataList = () => {
   isLoading.value = true
   setTimeout(()=>{
     searchStr.value = searchStrbtn.value;
-    sessionStorage['futuresPosSearchStr'] = searchStr.value
+    sessionStorage['futuresPosSearchType'] = searchType.value
+    sessionStorage['futuresPosSearchRole'] = searchRole.value
+    sessionStorage['futuresPosSearchStr']  = searchStr.value
     isLoading.value = false
   },300)
   
@@ -258,6 +277,31 @@ const transKeyName = (val, key) => {
   return str;
 }
 
+const typeOptions = ref([
+  {
+    label:"所有类型",
+    value:"all"
+  },
+  {
+    label:"加密货币",
+    value:"crypto"
+  },
+  {
+    label:"外汇",
+    value:"forex"
+  },
+  {
+    label:"大宗商品",
+    value:"blocktrade"
+  }
+])
+
+const typeMap = ref({
+  crypto:'加密货币',
+  forex:'外汇',
+  blocktrade:'大宗商品'
+})
+
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
@@ -266,6 +310,7 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(100), align: 'center' },
   { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
   { prop: 'role', label: '角色',minWidth:gw(110), align: 'center' },
+  { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
   { prop: 'name', label: '合约',minWidth:gw(110), align: 'center' },
   { prop: 'offset', label: '开仓',minWidth: gw(200), align: 'center' },
   { prop: 'settled_price', label: '买价/现价', minWidth:gw(300), align: 'center' },
@@ -297,11 +342,7 @@ const closeDialogType = (item) => {
   if (item && item.reload) {
   }
 }
-const changeSearch = (s) => {
-  searchValue.value = s;
-  sessionStorage['futuresPosSearchValue'] = s
 
-}
 watch(() => socketStore.sokcetWS, (ws) => {
   if (ws) {
     socketStore.send('futuresorder', 'sub')

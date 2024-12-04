@@ -70,13 +70,11 @@
       <div class="info_header" v-else>
         <div class="top">
           <!-- 标题 -->
-          <div class="title flex justify-between" v-if="type == 'stock'">
-            <div class="title_name">{{ item.symbol || "--" }}</div>
-            <div> {{ item.name || "--" }}</div>
-          </div>
-          <div class="title" v-else>
+          <div class="title flex justify-between items-center">
             <div class="title_name">{{ item.name || "--" }}</div>
+            <div>{{ item.symbol || "--" }}</div>
           </div>
+        
           <!-- 详情 -->
          
         </div>
@@ -286,20 +284,15 @@
         margin-bottom: 10px;
         border-bottom: 1px solid #ECECEC;
         .title {
-          pointer-events: none;
-          position: absolute;
-          width: calc(100% - 80px);
-          top: 50%;
-          transform: translateY(-50%) translateX(-50%);
-          left: 50%;
-          text-align: center;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+          width: 100%;
+          display: flex;
           overflow: hidden;
           font-size: 12px;
           line-height: 16px;
           font-weight: 400;
           color: #8f92a1;
+          box-sizing: border-box;
+          padding: 0 16px;
   
           .title_name {
             color: #061023;

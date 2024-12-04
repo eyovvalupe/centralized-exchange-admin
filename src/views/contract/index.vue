@@ -1,15 +1,29 @@
 <template>
   <div class="px-[20px] py-[10px]">
-    <div class="reset-el-style-v2">
+    <div class="reset-el-style-v2 flex justify-between">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
           <el-radio-button label="contractPos">合约持仓单</el-radio-button>
           <el-radio-button label="contractSearch">合约历史订单</el-radio-button>
           <el-radio-button label="contractIndex">合约场控</el-radio-button>
         </el-radio-group>
+      </div>
+      <div class="flex items-center">
+        <div class="w-[168px] mr-[10px]">
+          <el-select v-model="searchType" @change="getDataList(1)">
+            <el-option v-for="(item) in typeOptions"
+            :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </div>
         
+        <div class="w-[264px] ml-[10px]">
+          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="名称/代码" />
+        </div>
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+          :loading="isLoading">查询</el-button>
       </div>
     </div>
+
     <div class="reset-el-style-v2 py-[10px]">
       <el-table :data="tableData" border :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
@@ -24,6 +38,13 @@
                 {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
               </span>
             </span>
+            <span v-else-if="item.prop == 'type'">
+              {{ typeMap[scope.row.type] || '--' }}
+            </span>
+            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] }}
+            </span>
+
             <span v-else-if="item.prop === 'issue_price_min'">
               {{ scope.row['issue_price_max'] }}
             </span>
@@ -62,6 +83,7 @@
       </el-table>
     </div>
   </div>
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <Price :data="dialogType.info" v-if="dialogType.showDialog" @close="closeDialogType" />
   <Volume :data="dialogType.info" v-if="dialogType.showVolumeDialog" @close="closeDialogType" />
 </template>
@@ -72,19 +94,46 @@ export default { name: 'contractIndex' };
 <script setup>
 import { apiClear } from '/@/api/modules/contract'
 import { ref, reactive, onMounted, computed, onUnmounted, watch } from 'vue'
-import { Search, Plus } from '@element-plus/icons-vue'
 import Price from './components/Price.vue'
 import Volume from './components/Volume.vue'
+import MarketQuotations from './components/MarketQuotations'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import { useSocketStore } from '/@/store'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const socketStore = useSocketStore()
 const isLoading = ref(false)
+const searchType = ref(sessionStorage['futuresCtrSearchType'] || 'all')
+const searchStr = ref(sessionStorage['futuresCtrSearchStr'] || '')
+const searchStrbtn = ref(searchStr.value)
+
 const tableData = computed(() => {
-  return socketStore.futureList || []
+  let list = socketStore.futureList || []
+
+  if (searchType.value !== 'all') {
+    list = socketStore.futureOrderList.filter(f => f.type == searchType.value)
+  }
+  if (searchStr.value) {
+    list = socketStore.futureOrderList.filter(f => {
+      return (f.name && f.name.indexOf(searchStr.value) !== -1) || (f.symbol && f.symbol.indexOf(searchStr.value) !== -1)
+    })
+  }
+  return list
 });
+
+const getDataList = () => {
+  isLoading.value = true
+  setTimeout(()=>{
+    searchStr.value = searchStrbtn.value;
+    sessionStorage['futuresCtrSearchType'] = searchType.value
+    sessionStorage['futuresCtrSearchStr']  = searchStr.value
+    isLoading.value = false
+  },300)
+  
+}
+
 const dialogType = reactive({
+  showQuotationsDialog:false,
   showDialog: false,
   showVolumeDialog: false,
   info: null
@@ -97,8 +146,35 @@ const tabChange = ()=>{
   })
 }
 
-const minWidth = 120
+
+const typeMap = ref({
+  crypto:'加密货币',
+  forex:'外汇',
+  blocktrade:'大宗商品'
+})
+
+const typeOptions = ref([
+  {
+    label:"所有类型",
+    value:"all"
+  },
+  {
+    label:"加密货币",
+    value:"crypto"
+  },
+  {
+    label:"外汇",
+    value:"forex"
+  },
+  {
+    label:"大宗商品",
+    value:"blocktrade"
+  }
+])
+
+const minWidth = 100
 const columnBase = ref([
+  { prop: 'type', label: '类型', align: 'center',minWidth },  
   { prop: 'name', label: '名称', align: 'center',minWidth },
   { prop: 'symbol', label: '代码', align: 'center', minWidth },
   { prop: 'old_price', label: '原价格(调整前)',minWidth:165, align: 'center' },

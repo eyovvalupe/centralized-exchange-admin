@@ -3,7 +3,7 @@
     style="left: 50%;margin-left: -80px;"
     @close="emit('close', false)">
     <div class="stock-popup">
-      <MarketInfo type="constract" :symbol="form.symbol" v-if="form.symbol" /> 
+      <MarketInfo type="constract" :symbol="data.symbol" v-if="data.symbol" /> 
     </div>
     <div class="pt-[10px]" v-loading="loading">
         <el-form :model="form" :rules="rules" label-position="top" ref="ruleForm">
