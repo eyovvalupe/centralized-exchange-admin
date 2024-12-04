@@ -20,7 +20,7 @@
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop == 'type'">{{ typeMap[scope.row.type] || '--'}}</span>
-            <span>{{ scope.row[item.prop] || 'N/A' }}</span>
+            <span v-else>{{ scope.row[item.prop] || 'N/A' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="80" align="center">
@@ -74,7 +74,7 @@ const typeOptions = ref([
   },
   {
     label:"外汇",
-    value:"forex "
+    value:"forex"
   },
   {
     label:"大宗商品",
@@ -90,9 +90,9 @@ const typeMap = ref({
 
 const columnBase = ref([
   { prop: 'type', label: '类型', align: 'center', minWidth: 80 },  
-  { prop: 'name', label: '名称', align: 'center', minWidth: 80 },
+  { prop: 'name', label: '名称', align: 'center', minWidth: 90 },
   { prop: 'symbol', label: '代码', align: 'center', minWidth: 80 },
-  { prop: 'price', label: '最新价', align: 'center', minWidth: 120 },
+  { prop: 'price', label: '最新价', align: 'center', minWidth: 110 },
   { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: 120 },
 ])
 const searchForm = reactive({

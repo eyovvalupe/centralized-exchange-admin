@@ -120,7 +120,7 @@ const typeOptions = ref([
   },
   {
     label:"外汇",
-    value:"forex "
+    value:"forex"
   },
   {
     label:"大宗商品",

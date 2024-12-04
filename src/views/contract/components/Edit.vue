@@ -12,8 +12,8 @@
           </el-form-item>
           <div class="flex">
             <el-form-item label="最小变化点差" required class="mr-2 w-1/2" prop="pip">
-              <el-input-number v-model="form.pip" class="input-number"   :controls="false" @focus="setFocus('priceMath')"
-                @blur="form.pip <= 0 ? form.pip = '' : '';celarFocus" />
+              <el-input v-model="form.pip" @focus="setFocus('priceMath')"
+                @blur="isNaN(form.pip) || form.pip <= 0 ? form.pip = '' : '';celarFocus" />
             </el-form-item>
             <el-form-item label="点值" required class="w-1/2" prop="pip_value">
               <el-input-number class="input-number" @blur="form.pip_value <= 0 ? form.pip_value = '' : '';" :controls="false" v-model="form.pip_value"   />
@@ -99,7 +99,7 @@ const celarFocus = () => {
 }
 const getData = () => {
   apiConfig().then(res => {
-    const lever_arr = res.lever.split(',');
+    const lever_arr = res.lever ? res.lever.split(',') : [] 
     const obj = { ...res };
     obj.lever = lever_arr;
     configData.value = obj;
@@ -134,7 +134,6 @@ const volumeMath = computed(() => {
 })
 
 onMounted(() => {
-  console.log(JSON.stringify(props.data.pip.toString()))
   for (const key in form) {
     if (props.data && props.data[key] !== undefined) {
       if(key == 'pip'){
