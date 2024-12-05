@@ -50,6 +50,7 @@
 import { getFutureList } from '/@/api/modules/ai'
 import { ref, reactive, onMounted } from 'vue'
 import Edit from './Edit.vue'
+import {ElMessage} from 'element-plus'
 const emit = defineEmits(['close', 'success'])
 const props = defineProps({
   data: { // 行数据

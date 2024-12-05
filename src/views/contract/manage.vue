@@ -14,7 +14,7 @@
           </el-select>
         </div>
 
-        <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="合约名称/交易代码" style="width: 264px;" />
+        <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="合约名称/合约代码" style="width: 264px;" />
         <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>

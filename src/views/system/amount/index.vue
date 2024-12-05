@@ -2,7 +2,7 @@
   <div class="px-[20px] py-[10px]">
     <div class="reset-el-style-v2 flex justify-end">
        <div class="flex">
-          <el-input v-model="searchForm.params" class="mr-2" clearable placeholder="UID、用户、日志"  style="width: 268px;"/>
+          <el-input v-model="searchForm.params" class="mr-2" clearable placeholder="UID/用户名/日志"  style="width: 268px;"/>
           <el-date-picker v-model="timeRanges" type="daterange" range-separator="至" start-placeholder="开始时间"
                       end-placeholder="结束时间" style="width: 268px;margin-left: 10px;" />
               <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"

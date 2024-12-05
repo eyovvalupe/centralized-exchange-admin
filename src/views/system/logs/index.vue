@@ -4,7 +4,7 @@
        <div></div>
        <div class="flex">
           <div class="w-[168px] ml-2">
-            <el-input v-model="searchForm.params" ref="searchInput" placeholder="UID/用户名/备注" />
+            <el-input v-model="searchForm.params" ref="searchInput" placeholder="UID/用户名" />
           </div>  
           <div class="w-[168px] ml-2">
             <el-input v-model="searchForm.log" ref="searchInput" placeholder="日志" />

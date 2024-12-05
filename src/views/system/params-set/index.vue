@@ -66,7 +66,7 @@ const gw = (w)=>{
 
 const currentPage = ref(1)
 const columnBase = ref([
-  { prop: 'name', label: '名称', align: 'left',minWidth:gw(300) },
+  { prop: 'name', label: '参数名称', align: 'left',minWidth:gw(300) },
   // { prop: 'code', label: '代码', align: 'center',minWidth:gw(200) },
   { prop: 'value', label: '值', align: 'left',minWidth:gw(500)  },
   { prop: 'remark', label: '说明', align: 'left',minWidth:gw(940) },

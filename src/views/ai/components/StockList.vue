@@ -3,7 +3,7 @@
     @close="emit('close', false)">
     <div class="flex justify-end search-box">
       <div class="flex">
-        <el-input v-model="searchForm.params" class="mr-2" placeholder="合约名称/交易代码" style="width: 264px;" />
+        <el-input v-model="searchForm.params" class="mr-2" placeholder="名称/交易代码" style="width: 264px;" />
         <el-button type="primary" :icon="Search" @click="getDataList(1)" :loading="isLoading">搜索</el-button>
       </div>
     </div>
@@ -43,6 +43,7 @@
 import { getFutureList } from '/@/api/modules/contract'
 import { ref, reactive, onMounted } from 'vue'
 import Edit from './Edit.vue'
+import {ElMessage} from 'element-plus'
 const emit = defineEmits(['close', 'success'])
 const props = defineProps({
   data: { // 行数据

@@ -45,6 +45,7 @@
 <script setup>
 import { getBlocktradeList } from '/@/api/modules/blocktrade'
 import { ref, reactive, onMounted } from 'vue'
+import {ElMessage} from 'element-plus'
 import Edit from './Edit.vue'
 const emit = defineEmits(['close', 'success'])
 const props = defineProps({

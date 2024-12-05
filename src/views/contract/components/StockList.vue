@@ -10,7 +10,7 @@
           </el-select>
         </div>
 
-        <el-input prefix-icon="search" v-model="searchForm.params" placeholder="合约名称/交易代码" style="width: 264px;" />
+        <el-input prefix-icon="search" v-model="searchForm.params" placeholder="合约名称/合约代码" style="width: 264px;" />
         <el-button type="primary" class="w-[80px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
     </div>
@@ -54,7 +54,7 @@
 import { getFutureList } from '/@/api/modules/contract'
 import { ref, reactive, onMounted } from 'vue'
 import Edit from './Edit.vue'
-import { Search } from '@element-plus/icons-vue'
+import {ElMessage} from 'element-plus'
 const emit = defineEmits(['close', 'success'])
 const props = defineProps({
   data: { // 行数据
@@ -90,8 +90,8 @@ const typeMap = ref({
 
 const columnBase = ref([
   { prop: 'type', label: '类型', align: 'center', minWidth: 80 },  
-  { prop: 'name', label: '名称', align: 'center', minWidth: 90 },
-  { prop: 'symbol', label: '代码', align: 'center', minWidth: 80 },
+  { prop: 'name', label: '合约名称', align: 'center', minWidth: 90 },
+  { prop: 'symbol', label: '合约代码', align: 'center', minWidth: 80 },
   { prop: 'price', label: '最新价', align: 'center', minWidth: 110 },
   { prop: 'amount', label: '交易金额(24H)', align: 'center', minWidth: 120 },
 ])
