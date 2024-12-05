@@ -1,6 +1,5 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="400" class="market-quotations-popup" v-model="show" :append-to-body="true"
-    style="left: 50%;margin-left: -80px;"
     @closed="emit('close', false)">
     <div class="market-popup">
       <el-icon size="20px" class="market-popup__close" @click="show=false;"><Close /></el-icon>

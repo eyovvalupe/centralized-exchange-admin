@@ -421,6 +421,19 @@ th.el-table__cell.bg-color3,
     line-height: 40px;
   }
 
+  .el-tag{
+    height: 28px;
+  }
+  .el-input--small{
+    height: 28px;
+    min-height: 28px;
+    line-height: 28px;
+    
+    .el-input__wrapper{
+      border-radius: 4px;
+    }
+  }
+
   .btn-large,
   .el-input--large + .el-button--large,
   .el-input--large:not(.el-textarea),

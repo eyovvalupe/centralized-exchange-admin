@@ -2,8 +2,9 @@
   <div class="px-[20px] py-[10px]">
     <div class="flex justify-between reset-el-style-v2">
       <div>
-        <el-button type="primary" icon="plus"  plain @click="showDialog(null, 'showDialog')">合约配置</el-button>
-        <el-button class="ml-[10px]" type="primary" plain @click="showDialog(null, 'showCfgDialog')">合约交易参数</el-button>
+        <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">合约交易参数</el-button>
+        <el-button type="primary" icon="plus"  plain @click="showDialog(null, 'showDialog')">添加合约</el-button>
+        
       </div>
       <div class="flex">
         
@@ -39,6 +40,9 @@
               </span>
               <span v-else-if="item.prop === 'status'" class="status-bg" :class="scope.row['status']">
                 {{ statusObj[scope.row[item.prop]] }}
+              </span>
+              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop == 'name'">
+                {{ scope.row.name }}
               </span>
               <!-- <span v-else-if="item.prop==='issue_start_date'">
                 <el-tag type="info" size="small"> {{  dayjs(scope.row['issue_start_date']).format('YYYY-MM-DD') }}</el-tag>
@@ -86,6 +90,7 @@
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
   <Config v-if="dialogType.showCfgDialog" :data="dialogType.info" @close="closeDialogType" />
   <StockList v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
    <el-dialog :close-on-click-modal="false" title="操作者验证" v-model="dialogType.showGoogle" width="320" @close="closeDialogType">
     <GoogleVerify class="agentGoogle" @confirm="handleSubmit" @close="closeDialogType" v-if="dialogType.showGoogle" />
   </el-dialog>
@@ -101,6 +106,7 @@ import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import Edit from './components/Edit.vue'
 import StockList from './components/StockList.vue'
+import MarketQuotations from './components/MarketQuotations'
 import { hex_md5 } from '/@/utils/md5'
 
 const tableData = ref([]);
@@ -135,6 +141,7 @@ const typeMap = ref({
 })
 
 const dialogType = reactive({
+  showQuotationsDialog:false,
   showEditDialog: false,
   showCfgDialog: false,
   showDialog: false,
@@ -154,7 +161,7 @@ const gw = (w)=>{
 }
 
 const columnBase = ref([
-  { prop: 'type',minWidth:gw(100), label: '类型', align: 'center' },
+  // { prop: 'type',minWidth:gw(100), label: '类型', align: 'center' },
   { prop: 'name',minWidth:gw(140), label: '合约名称', align: 'center' },
   { prop: 'symbol',minWidth:gw(140), label: '合约代码', align: 'center' },
   { prop: 'vip',minWidth:gw(320), label: '杠杆', align: 'center' },

@@ -10,12 +10,12 @@
         <el-button class="ml-[10px]" :type="checkAuthCode(232)?'primary':'info'" plain :disabled="!checkAuthCode(232)" icon="plus" @click="showDialog(null, 'showLockDialog')">创建锁定单</el-button>
       </div>
       <div class="flex items-center">
-          <div class="w-[168px] mr-[10px]">
+          <!-- <div class="w-[168px] mr-[10px]">
             <el-select v-model="searchForm.type" @change="getDataList(1)">
               <el-option v-for="(item) in typeOptions"
               :key="item.value" :value="item.value" :label="item.label"></el-option>
             </el-select>
-          </div>
+          </div> -->
           <div class="w-[168px]">
             <el-select v-model="searchForm.role" @change="changeSearch(searchForm.role)">
               <el-option  v-for="(item) in option"
@@ -79,7 +79,7 @@
               </el-tooltip>
             </template>
 
-            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
               {{ scope.row['name'] }}
             </span>
             
@@ -303,7 +303,7 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(110), align: 'center' },
   { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
   { prop: 'role', label: '角色',minWidth:gw(110), align: 'center' },
-  { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
+  // { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
   { prop: 'name', label: '合约',minWidth:gw(110), align: 'center' },
   { prop: 'offset', label: '开仓',minWidth:gw(200),  align: 'center' },
   { prop: 'settled_price', label: '买价/卖价', minWidth:gw(300), align: 'center' },

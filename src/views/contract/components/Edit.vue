@@ -30,8 +30,15 @@
             </el-form-item>
           </div>
           <el-form-item label="杠杆" required prop="lever">
-            <el-input v-model="form.lever" placeholder="支持多个，英文逗号隔开" 
-              @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" />
+            <el-tag type="primary" class="mr-[6px] mb-[6px]" size="default" @close="levers.splice(i,1)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
+            <div>
+              <el-input-number class="mr-[6px] mb-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="small" :controls="false" v-if="addLevel" />
+              <el-button type="primary" class="mb-[6px]" size="small" v-if="addLevel" @click="saveLevel">保存</el-button>
+              <el-button type="primary" class="mb-[6px]" size="small" icon="plus" @click="addLevel = true;" v-else>添加</el-button>
+            </div>
+            <!-- <el-input v-model="form.lever" placeholder="支持多个，英文逗号隔开" 
+              @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" /> -->
+            
           </el-form-item>
         </el-form>
       </div>
@@ -83,6 +90,9 @@ const props = defineProps({
 const isEdit = computed(()=>{
   return props.data && props.data.id ? true : false
 })
+const addLevel = ref(false)
+const levelVal = ref(null)
+const levers = ref([])
 const fouseName = ref('');
 const ruleForm = ref(null)
 const loading = ref(false)
@@ -91,6 +101,22 @@ const show = ref(true)
 const showGoogle = ref(false)
 const configData = ref({ lever: [] })
 const realtimeData = ref({})
+
+const saveLevel = ()=>{
+  if(levelVal.value == null || levelVal.value <= 0){
+    return
+  }
+  if(levers.value.indexOf(levelVal.value) > -1){
+    return ElMessage({
+          offset: 200,
+          message: '杠杆已存在',
+          type: 'tips'
+      })
+  }
+  levers.value.push(levelVal.value)
+  addLevel.value = false
+  levelVal.value = null
+}
 const setFocus = (name) => {
   fouseName.value = name;
 }
@@ -143,6 +169,8 @@ onMounted(() => {
           form[key] = val
           continue
         }
+      }else if(key == 'lever'){
+        levers.value = props.data[key]
       }
       form[key] = props.data[key]
     }
@@ -186,6 +214,14 @@ const handleSubmit = async (googlecode) => {
   }
 }
 const handleGoogle = () => {
+  if(!levers.value.length){
+    return ElMessage({
+      type: 'tips',
+      message: '请添加杠杆',
+      offset: 200
+    })
+  }
+  form.lever = levers.value.join(',')
   ruleForm.value.validate(async valid => {
     if (valid) {
       showGoogle.value = true;

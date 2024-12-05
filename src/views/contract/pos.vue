@@ -12,12 +12,12 @@
         <!-- <el-button :type="checkAuthCode(232)?'success':'info'" :disabled="!checkAuthCode(232)"  @click="showDialog(null, 'showCtrDialog')">合约场控</el-button> -->
       </div>
       <div class="flex items-center">
-        <div class="w-[168px] mr-[10px]">
+        <!-- <div class="w-[168px] mr-[10px]">
           <el-select v-model="searchType" @change="getDataList(1)">
             <el-option v-for="(item) in typeOptions"
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
-        </div>
+        </div> -->
         <div class="w-[168px]">
           <el-select v-model="searchRole" @change="getDataList(1)">
             <el-option v-for="(item) in roleOptions"
@@ -75,11 +75,10 @@
             <span v-else-if="item.prop === 'role'" class="status-bg" :class="scope.row[item.prop]=='guest'?'status-yellow':''">
               {{ roleOptions.find(f => f.value == scope.row[item.prop]).label }}
             </span> 
-            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
               {{ scope.row['name'] }}
             </span>
             
-          
             <span class="flex items-center " v-else-if="['offset'].includes(item.prop)">
               {{ transKeyName(scope.row['lever_type'], 'lever_type') }}
               <b class="split-line"></b>
@@ -310,7 +309,7 @@ const columnBase = ref([
   { prop: 'uid', label: 'UID',minWidth:gw(100), align: 'center' },
   { prop: 'username', label: '用户名',minWidth:gw(160), align: 'center' },
   { prop: 'role', label: '角色',minWidth:gw(110), align: 'center' },
-  { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
+  // { prop: 'type', label: '类型',minWidth:gw(110), align: 'center' },
   { prop: 'name', label: '合约',minWidth:gw(110), align: 'center' },
   { prop: 'offset', label: '开仓',minWidth: gw(200), align: 'center' },
   { prop: 'settled_price', label: '买价/现价', minWidth:gw(300), align: 'center' },

@@ -9,15 +9,15 @@
         </el-radio-group>
       </div>
       <div class="flex items-center">
-        <div class="w-[168px] mr-[10px]">
+        <!-- <div class="w-[168px] mr-[10px]">
           <el-select v-model="searchType" @change="getDataList(1)">
             <el-option v-for="(item) in typeOptions"
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
-        </div>
+        </div> -->
         
         <div class="w-[264px] ml-[10px]">
-          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="名称/代码" />
+          <el-input v-model="searchStrbtn" ref="searchInput" suffix-icon="search" placeholder="合约名称/合约代码" />
         </div>
         <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
           :loading="isLoading">查询</el-button>
@@ -41,12 +41,15 @@
             <span v-else-if="item.prop == 'type'">
               {{ typeMap[scope.row.type] || '--' }}
             </span>
-            <span class="cursor-pointer" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
               {{ scope.row['name'] }}
             </span>
 
             <span v-else-if="item.prop === 'issue_price_min'">
               {{ scope.row['issue_price_max'] }}
+            </span>
+            <span :class="{'txt-yellow':scope.row[item.prop] > 0,'font-bold':scope.row[item.prop] > 0}" v-else-if="item.prop == 'unadjusted' || item.prop == 'second'">
+              {{ scope.row[item.prop] }}
             </span>
             <span v-else>
               {{ scope.row[item.prop] }}
@@ -174,9 +177,9 @@ const typeOptions = ref([
 
 const minWidth = 100
 const columnBase = ref([
-  { prop: 'type', label: '类型', align: 'center',minWidth },  
-  { prop: 'name', label: '名称', align: 'center',minWidth },
-  { prop: 'symbol', label: '代码', align: 'center', minWidth },
+  // { prop: 'type', label: '类型', align: 'center',minWidth },  
+  { prop: 'name', label: '合约名称', align: 'center',minWidth },
+  { prop: 'symbol', label: '合约代码', align: 'center', minWidth },
   { prop: 'old_price', label: '原价格(调整前)',minWidth:165, align: 'center' },
   { prop: 'price', label: '最新价格(调整后)',minWidth:165, align: 'center' },
   { prop: 'unadjusted', label: '未生效调整', align: 'center', minWidth },

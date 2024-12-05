@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="900" title="品种选择" v-model="show" :append-to-body="true"
+   <el-dialog :close-on-click-modal="false" width="900" title="添加合约" v-model="show" :append-to-body="true"
     @close="emit('close', false)">
     <div class="flex justify-end search-box reset-el-style-v2">
       <div class="flex">
@@ -9,7 +9,6 @@
             :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
-
         <el-input prefix-icon="search" v-model="searchForm.params" placeholder="合约名称/合约代码" style="width: 264px;" />
         <el-button type="primary" class="w-[80px] ml-[10px]" @click="getDataList(1)" :loading="isLoading">查询</el-button>
       </div>
@@ -27,7 +26,7 @@
           <template #default="scope">
             <span class="flex justify-center align-middle">
               <el-button link class="underline"  size="default" :type="scope.row['status'] == 1 ? '' :'primary'" :disabled="scope.row['status'] == 1"
-                @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
+                @click="showDialog(scope.row, 'showEditDialog')">{{ scope.row['status'] == 1 ? '已添加' : '添加' }}</el-button>
             </span>
           </template>
         </el-table-column>
@@ -36,16 +35,13 @@
         </template>
       </el-table>
     </div>
-    <template #footer>
-      <div class="flex justify-between p-[10px] items-center" v-if="tableData.length" >
-        <Pagination @changePage="getDataList" style="padding-top: 0px;" :currentPage="currentLastPage" />
-        <div class="flex">
-          <el-button @click="emit('close', false)" round class="w-[98px]">取消</el-button>
-          <el-button type="primary" class="w-[98px]" round @click="handleSubmit" :loading="isLoading">确定 </el-button>
-        </div>
-       
+    <div class="flex justify-between pt-[20px] pb-[5px] items-center" v-if="tableData.length" >
+      <Pagination @changePage="getDataList" style="padding-top: 0px;" :currentPage="currentLastPage" />
+      <div class="flex">
+        <el-button type="primary" class="w-[98px]" round @click="emit('close', false)">关闭 </el-button>
       </div>
-    </template>
+      
+    </div>
   </el-dialog>
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
@@ -108,7 +104,9 @@ const isLoading = ref(true)
 
 const showDialog = (data, type) => {
   if (data) {
-    dialogType.info = Object.assign({}, data);
+    dialogType.info = Object.assign({
+      pip_value:data.pip
+    }, data);
   } else {
     dialogType.info = null
   }
