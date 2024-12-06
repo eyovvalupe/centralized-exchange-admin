@@ -62,7 +62,9 @@
               </span>
             </span>
             <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
-              {{ scope.row['symbol'] }}
+              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')">
+                {{ scope.row['symbol'] }}
+             </span>
               <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] || '--' }}</span>
             </span>
         
@@ -126,6 +128,7 @@
       </el-table>
     </div>
   </div>
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <closePos v-if="dialogType.closePos" :dataInfo="dialogType.info" :orderNo="orderNo" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :orderNo="orderNo" @close="closeDialogType" />
@@ -145,6 +148,7 @@ import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
 import AddLock from './components/AddLock.vue'
+import MarketQuotations from '../contract/components/MarketQuotations'
 import { useSocketStore } from '/@/store'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -190,6 +194,7 @@ const tableData = computed(() => {
 
 const dialogType = reactive({
   info: null,
+  showQuotationsDialog:false,
   showInfoDialog: false,
   showLockDialog: false,
   showDialog: false,

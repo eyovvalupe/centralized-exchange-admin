@@ -150,7 +150,6 @@
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"  @close="closeDialogType" />
 
 </template>
-
 <script>
 export default { name: 'contractPos' };
 </script>

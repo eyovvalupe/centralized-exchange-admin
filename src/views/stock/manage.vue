@@ -3,9 +3,16 @@
     <div class="flex reset-el-style-v2 justify-between">
       <div>
         <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
-        <el-button class="ml-[10px]" v-for="market in marketList" :key="market" type="info" plain @click="openTimeDialog(market)">{{marketTitleMap[market]}}</el-button>
+        <!-- <el-button class="ml-[10px]" v-for="market in countryList" :key="market" type="info" plain @click="openTimeDialog(market)">{{countryTitleMap[market]}}</el-button> -->
       </div>
       <div class="flex">
+        <div class="w-[168px] mr-[10px]">
+          <el-select v-model="searchForm.country" @change="getDataList(1)">
+            <el-option value="all" label="所有国家"></el-option>
+            <el-option v-for="(country) in countryList"
+            :key="country" :value="country" :label="countryTitleMap[country]"></el-option>
+          </el-select>
+        </div>
         <div class="w-[264px]">
           <el-input v-model="searchForm.symbol" suffix-icon="search" placeholder="股票代码"  />
         </div>
@@ -19,7 +26,10 @@
         <el-table-column v-for="(item, index) in columnBase" :min-width="item.minWidth" :key="index" :width="item.width" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'enabled'" class="status" :class="scope.row[item.prop]==1?'success':'fail'">
+            <span v-if="item.prop === 'country'">
+              {{ countryTitleMap[scope.row.country] }}
+            </span>
+            <span v-else-if="item.prop === 'enabled'" class="status" :class="scope.row[item.prop]==1?'success':'fail'">
               {{ scope.row[item.prop]==1 ? '启用' : '禁用' }}
             </span>
             <span v-else>
@@ -43,7 +53,7 @@
   </div>
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
   <Config v-if="dialogType.showCfgDialog" :data="dialogType.info" @close="closeDialogType" />
-  <ConfigTime :market="market" :title="marketTitleMap[market]" v-if="dialogType.showTimeDialog" :data="dialogType.info" @close="closeDialogType" />
+  <ConfigTime :market="market" :title="countryTitleMap[market]" v-if="dialogType.showTimeDialog" :data="dialogType.info" @close="closeDialogType" />
 </template>
 
 <script>
@@ -52,8 +62,7 @@ export default { name: 'stockManage' };
 <script setup>
 import {  getList } from '/@/api/modules/stock/index.api'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Search,Plus } from '@element-plus/icons-vue'
-import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
+import { ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import ConfigTime from './components/ConfigTime.vue'
 import Edit from './components/Edit.vue'
@@ -73,23 +82,24 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
+  country:'all',
   params: '',
   symbol: ''
 })
-const marketTitleMap = ref({
-  us:"美国市场",
-  japan:"日本市场",
-  india:"印度市场",
-  korea:"韩国市场",
-  germany:"德国市场",
-  uk:"英国市场",
-  singapore:"新加坡市场",
-  hongkong:"香港市场",
-  malaysia:'马来西亚市场'
+const countryTitleMap = ref({
+  us:"美国",
+  japan:"日本",
+  india:"印度",
+  korea:"韩国",
+  germany:"德国",
+  uk:"英国",
+  singapore:"新加坡",
+  hongkong:"香港",
+  malaysia:'马来西亚'
 })
 
-const marketList = computed(()=>{
-  return Object.keys(marketTitleMap.value)
+const countryList = computed(()=>{
+  return Object.keys(countryTitleMap.value)
 })
 const currentPage = ref(1)
 const currentLastPage = ref(1)
@@ -98,9 +108,10 @@ const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
 const columnBase = ref([
-  { prop: 'name', label: '公司名称', align: 'center',minWidth:gw(500) },
-  { prop: 'symbol', label: '股票代码', align: 'center',minWidth:gw(500) },
-  { prop: 'exchange', label: '交易所', align: 'center',minWidth:gw(544) },
+  { prop: 'country', label: '国家', align: 'center',minWidth:gw(200) },
+  { prop: 'market', label: '市场', align: 'center',minWidth:gw(200) },
+  { prop: 'name', label: '公司名称', align: 'center',minWidth:gw(400) },
+  { prop: 'symbol', label: '股票代码', align: 'center',minWidth:gw(400) },
   { prop: 'enabled', label: '状态', align: 'center',minWidth:gw(200) }
 ])
 const isLoading = ref(false)
@@ -128,6 +139,9 @@ const getDataList = (page) => {
   }
   if (searchForm.symbol) {
     send.symbol = searchForm.symbol;
+  }
+  if(searchForm.country != 'all'){
+    send.country = searchForm.country
   }
   getList(send)
     .then(res => {

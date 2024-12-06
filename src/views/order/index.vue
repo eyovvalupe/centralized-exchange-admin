@@ -70,7 +70,9 @@
               </el-tooltip>
             </template>
             <span class="flex flex-col" v-else-if="item.prop === 'symbol'">
-              {{ scope.row['symbol'] }}
+              <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')">
+                {{ scope.row['symbol'] }}
+             </span>
               <span class="text-gray-400 text-[11px] leading-none">{{ scope.row['name'] || '--' }}</span>
             </span>
           
@@ -115,6 +117,7 @@
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <AddLock v-if="dialogType.showLockDialog" @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid" @close="closeDialogType" />
   <detailDialog v-if="dialogType.showDialog" :orderNo="orderNo" @close="closeDialogType" />
@@ -132,6 +135,7 @@ import detailDialog from '/@/components/detailDialog/index.vue'
 import { Search } from '@element-plus/icons-vue'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
+import MarketQuotations from '../contract/components/MarketQuotations'
 import { useRouter } from 'vue-router'
 import { hex_md5 } from '/@/utils/md5'
 
@@ -200,6 +204,7 @@ const option = [
 ]
 const dialogType = reactive({
   info: null,
+  showQuotationsDialog:false,
   showDialog: false,
   showInfoDialog:false,
   showLockDialog:false,
