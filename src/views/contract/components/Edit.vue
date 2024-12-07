@@ -10,7 +10,31 @@
           <el-form-item label="代码" prop="symbol">
             <el-input v-model="form.symbol" disabled autocomplete="off" />
           </el-form-item>
+          <el-form-item label="交易货币" prop="currency">
+            <el-select v-model="form.currency">
+              <el-option
+                v-for="item in currencyList"
+                :key="item.currency"
+                :label="item.name"
+                :value="item.currency"
+              >
+                
+                <div class="flex items-center">
+                  <img class="w-[20px] h-[20px] mr-[10px] rounded-full" :src="`/images/crypto/${item.currency.toLocaleUpperCase()}.png`" :alt="item.currency.toLocaleUpperCase()" />
+                  {{ item.name }}
+                </div>
+              </el-option>
+
+              <template #label="{ label, value }">
+                <div class="flex items-center">
+                  <img class="w-[20px] h-[20px] mr-[10px] rounded-full" :src="`/images/crypto/${value.toLocaleUpperCase()}.png`" :alt="value.toLocaleUpperCase()" />
+                  {{ label }}
+                </div>
+              </template>
+            </el-select>
+          </el-form-item>
           <div class="flex">
+            <el-form-item></el-form-item>
             <el-form-item label="最小变化点差" required class="mr-2 w-1/2" prop="pip">
               <el-input v-model="form.pip" @focus="setFocus('priceMath')"
                 @blur="isNaN(form.pip) || form.pip <= 0 ? form.pip = '' : '';celarFocus" />
@@ -30,15 +54,7 @@
             </el-form-item>
           </div>
           <el-form-item label="杠杆" required prop="lever">
-            <el-tag type="primary" class="mr-[6px] mb-[6px]" size="default" @close="levers.splice(i,1)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
-            <div>
-              <el-input-number class="mr-[6px] mb-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="small" :controls="false" v-if="addLevel" />
-              <el-button type="primary" class="mb-[6px]" size="small" v-if="addLevel" @click="saveLevel">保存</el-button>
-              <el-button type="primary" class="mb-[6px]" size="small" icon="plus" @click="addLevel = true;" v-else>添加</el-button>
-            </div>
-            <!-- <el-input v-model="form.lever" placeholder="支持多个，英文逗号隔开" 
-              @focus="setFocus('lever')" @blur="celarFocus" autocomplete="off" /> -->
-            
+            <LeverSet v-model:lever="form.lever" />
           </el-form-item>
         </el-form>
       </div>
@@ -66,7 +82,7 @@
     <template #footer>
       <div class="p-[10px]">
         <el-button round @click="emit('close', false)" class="w-[98px]">取消</el-button>
-        <el-button round type="primary" class="w-[98px]" @click="handleGoogle" :loading="isLoading">确定 </el-button>
+        <el-button round type="primary" class="w-[98px]" :disabled="loading" @click="handleGoogle" :loading="isLoading">确定 </el-button>
       </div>
     </template>
   </el-dialog>
@@ -76,11 +92,12 @@
 </template>
 
 <script setup>
-import { apiAdd, apiEdit, apiConfig } from '/@/api/modules/contract'
+import { apiAdd, apiEdit, apiConfig,apiGet } from '/@/api/modules/contract'
 import { getRealtime } from '/@/api/modules/base.api'
 import { ref, reactive, onMounted, computed, onUnmounted } from 'vue'
 import { ElMessage, dayjs } from 'element-plus'
-
+import {getGlobalWalletList} from '/@/api/modules/base.api'
+import LeverSet from '../../../components/market/LeverSet.vue'
 const props = defineProps({
   data: { // 行数据
     type: Object,
@@ -90,9 +107,7 @@ const props = defineProps({
 const isEdit = computed(()=>{
   return props.data && props.data.id ? true : false
 })
-const addLevel = ref(false)
-const levelVal = ref(null)
-const levers = ref([])
+
 const fouseName = ref('');
 const ruleForm = ref(null)
 const loading = ref(false)
@@ -102,21 +117,6 @@ const showGoogle = ref(false)
 const configData = ref({ lever: [] })
 const realtimeData = ref({})
 
-const saveLevel = ()=>{
-  if(levelVal.value == null || levelVal.value <= 0){
-    return
-  }
-  if(levers.value.indexOf(levelVal.value) > -1){
-    return ElMessage({
-          offset: 200,
-          message: '杠杆已存在',
-          type: 'tips'
-      })
-  }
-  levers.value.push(levelVal.value)
-  addLevel.value = false
-  levelVal.value = null
-}
 const setFocus = (name) => {
   fouseName.value = name;
 }
@@ -131,7 +131,7 @@ const getData = () => {
     configData.value = obj;
   })
   getRealtime(form.symbol).then(res => {
-    realtimeData.value = res[0];
+    realtimeData.value = res[0] || {};
   })
 }
 const form = reactive({
@@ -143,8 +143,21 @@ const form = reactive({
   volume_multiple: 1,
   lever:'',
   googlecode: '',
+  currency:""
 })
 
+const currencyList = ref([])
+
+const getCurrencyList = ()=>{
+  getGlobalWalletList({
+    dedup:true,
+    type:''
+  }).then(data=>{
+    currencyList.value = data || []
+  })
+}
+
+getCurrencyList()
 
 const profitMath = (lever) => {
   // 价格的change/最小变价位*点值*杠杆
@@ -159,22 +172,39 @@ const volumeMath = computed(() => {
   return ((realtimeData.value.volume || 0) * (form.volume_multiple || 0)).toFixed(2)
 })
 
-onMounted(() => {
+const initForm = (_data)=>{
   for (const key in form) {
-    if (props.data && props.data[key] !== undefined) {
+    if (_data && _data[key] !== undefined) {
       if(key == 'pip'){
-        let val = props.data[key].toString()
+        let val = _data[key].toString()
         if(val.indexOf('-') > -1){
-          val = props.data[key].toFixed(val.split('-')[1])
+          val = _data[key].toFixed(val.split('-')[1])
           form[key] = val
           continue
         }
-      }else if(key == 'lever'){
-        levers.value = props.data[key]
       }
-      form[key] = props.data[key]
+      form[key] = _data[key]
     }
   }
+}
+
+onMounted(() => {
+  if(isEdit.value){
+    loading.value = true
+    apiGet({
+      symbol:props.data.symbol
+    }).then(_data=>{
+      initForm(_data)
+      
+    }).finally(()=>{
+      loading.value = false
+    })
+  }else{
+    initForm(props.data)
+    
+  }
+  
+  
   getData();
 })
 const trigger = ['blur', 'change']
@@ -182,6 +212,7 @@ const trigger = ['blur', 'change']
 const rules = {
   name: [{ required: true, message: '', trigger }],
   symbol: [{ required: true, message: '', trigger }],
+  currency:[{ required: true, message: '', trigger }],
   pip: [{ required: true, message: '', trigger }],
   pip_value: [{ required: true, message: '', trigger }],
   price_multiple: [{ required: true, message: '', trigger }],
@@ -214,14 +245,13 @@ const handleSubmit = async (googlecode) => {
   }
 }
 const handleGoogle = () => {
-  if(!levers.value.length){
+  if(!form.lever){
     return ElMessage({
       type: 'tips',
       message: '请添加杠杆',
       offset: 200
     })
   }
-  form.lever = levers.value.join(',')
   ruleForm.value.validate(async valid => {
     if (valid) {
       showGoogle.value = true;

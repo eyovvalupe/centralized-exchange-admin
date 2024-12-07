@@ -46,6 +46,13 @@ export function apiDel( data ) {
     data
   } )
 }
+export function apiGet( data ) {
+  return request( {
+    method : 'post',
+    url : '/roles/v1/futures/config/get',
+    data
+  } )
+}
 export function apiConfig( data ) {
   return request( {
     method : 'post',

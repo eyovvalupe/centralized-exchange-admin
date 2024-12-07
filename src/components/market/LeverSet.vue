@@ -1,6 +1,6 @@
 <template>
    <div class="mt-[-6px] flex flex-wrap">
-        <el-tag type="primary" class="mr-[6px] mt-[6px]" size="default" @close="levers.splice(i,1);addLevel=false;levelVal='';" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
+        <el-tag type="primary" class="mr-[6px] mt-[6px]" size="default" @close="onclose(i)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
         <div>
              <el-input-number class="mr-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="small" :controls="false" v-if="addLevel" />
             <el-button type="primary" size="small" v-if="addLevel" @click="saveLevel">保存</el-button>
@@ -35,6 +35,12 @@ const saveLevel = ()=>{
   levers.value.push(levelVal.value)
   addLevel.value = false
   levelVal.value = null
+  emits('update:lever',levers.value.join(','))
+}
+const onclose = (i)=>{
+  levers.value.splice(i,1);
+  addLevel.value = false;
+  levelVal.value = '';
   emits('update:lever',levers.value.join(','))
 }
 </script>
