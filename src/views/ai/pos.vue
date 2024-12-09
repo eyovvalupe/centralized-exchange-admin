@@ -27,13 +27,11 @@
     <div class="reset-el-style-v2 pt-[10px]">
       <el-table :data="tableData" :border="tableData.length > 0" :class="tableData.length ? '' : 'noborder'"
         v-loading="isLoading">
-        <el-table-column v-for="(item, index) in columnBase" :key="index" :width="item.width" :label="item.label"
+        <el-table-column v-for="(item, index) in columnBase" :key="index" :minWidth="item.minWidth" :label="item.label"
           :align="item.align">
           <template #default="scope">
-            <span v-if="item.prop === 'profit'" style="lpine-height: 20px;">
-              <span class="w-100 block">
-                {{ scope.row['amountreturn'] }}
-              </span>
+            <span v-if="item.prop === 'profit'">
+                {{ scope.row['amountreturn'] }} USDT
             </span>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
@@ -45,23 +43,21 @@
                 scope.row[item.prop] }}
               </span>
             </span>
-            <span v-else-if="item.prop === 'symbol'">
-              {{ scope.row['symbol'] }}
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] }}
             </span>
             <span v-else-if="item.prop === 'date'">
               {{ dayjs(scope.row[item.prop]).format('MM-DD hh:mm:ss') }}
             </span>
-            <!-- <span v-else-if="item.prop === 'role'">
-              {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
-            </span> -->
-            <span v-else-if="['offset'].includes(item.prop)">
-              <!-- {{ transKeyName(scope.row['lever_type'], 'lever_type') }} -->
-              <!-- <b class="split-line"></b> -->
-             <!-- <span class="status-bg" :class="scope.row[item.prop]">
+           
+            <span class="status-bg" :class="[scope.row[item.prop] == 'long' ? 'success' : 'short']" v-else-if="['offset'].includes(item.prop)">
+       
               {{ transKeyName(scope.row[item.prop], item.prop) }}
-             </span> 
-              {{ scope.row['lever'] }}X -->
-              {{ transKeyName(scope.row[item.prop], item.prop) }}
+            </span>
+            <span class="flex" v-else-if="['status'].includes(item.prop)">
+              <span class="status-bg plain" :class="scope.row[item.prop]">
+                {{ transKeyName(scope.row[item.prop], item.prop) }}
+              </span>
             </span>
             <span v-else-if="item.prop === 'role'" class="status-bg" :class="scope.row[item.prop]=='guest'?'status-yellow':''">
               {{ optionStatus.find(f => f.value == scope.row[item.prop]).label }}
@@ -71,8 +67,13 @@
                 v-if="scope.row['open_price'] == 'limit'"></b>{{ scope.row['price'] }}
             </span>
             <span v-else-if="item.prop === 'time'">
-              {{ scope.row[item.prop] }}{{ optionsTime.find(f => f.value == scope.row['unit']).label }}
+              {{ scope.row[item.prop] }} {{ optionsTime.find(f => f.value == scope.row.unit).label }}
+
             </span>
+            <span v-else-if="item.prop === 'endtime'">
+              {{ scope.row[item.prop] }} 秒
+            </span>
+        
             <span v-else-if="item.prop === 'margin'">
               {{ transKeyName(scope.row[item.prop], item.prop) }}
               <!-- <b class="split-line"></b>{{ scope.row['unlock'] }} -->
@@ -94,6 +95,7 @@
       </el-table>
     </div>
   </div>
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <EditPrice v-if="dialogType.showCtrDialog" :data="dialogType.info"  @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"  @close="closeDialogType" />
 
@@ -110,6 +112,7 @@ import { Search, Plus } from '@element-plus/icons-vue'
 import { copy } from '/@/utils'
 import userDetail from '/@/components/userDetail/index.vue'
 import { checkAuthCode } from '/@/hooks/store.hook.js'
+import MarketQuotations from '../contract/components/MarketQuotations'
 import { useSocketStore } from '/@/store'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -163,6 +166,7 @@ const tableData = computed(() => {
 });
 const dialogType = reactive({
   info: null,
+  showQuotationsDialog:false,
   showInfoDialog: false,
   showLockDialog: false,
   showCtrDialog: false,
@@ -176,6 +180,7 @@ const getDataList = () => {
     isLoading.value = false
   },300)
 }
+
 const transKeyName = (val, key) => {
   let str = val;
   let obj = {};
@@ -216,23 +221,26 @@ const transKeyName = (val, key) => {
   return str;
 }
 
+
+
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
 
 const columnBase = ref([
   { prop: 'uid', label: 'UID', minWidth: gw(110),align: 'center' },
-  { prop: 'username', label: '用户名', minWidth: gw(140), align: 'center' },
-  { prop: 'role', label: '角色',minWidth: gw(200), align: 'center' },
-  // { prop: 'father_username',minWidth: gw(200), label: '代理', align: 'center' },
-  { prop: 'name', label: '名称',minWidth: gw(240), align: 'center' },
+  { prop: 'username', label: '用户名', minWidth: gw(160), align: 'center' },
+  { prop: 'role', label: '角色',minWidth: gw(140), align: 'center' },
+  { prop: 'name', label: '名称',minWidth: gw(160), align: 'center' },
   { prop: 'offset', label: '开仓', minWidth: gw(140), align: 'center' },
   { prop: 'lever', label: '网格', minWidth: gw(140), align: 'center' },
   { prop: 'time', label: '时间区间', minWidth: gw(140), align: 'center' },
   { prop: 'amount', label: '投资金额', minWidth: gw(140),align: 'center' },
   { prop: 'endtime', label: '剩余时间', minWidth: gw(140), align: 'center' },
-  { prop: 'profit', label: '预期盈亏',minWidth: gw(220), align: 'center' },
-  { prop: 'status', label: '用户场控', minWidth: gw(140), align: 'center' }
+  { prop: 'profit', label: '预期盈亏',minWidth: gw(230), align: 'center' },
+  { prop: 'date', label: '时间', minWidth: gw(140), align: 'center' },
+  { prop: 'status', label: '用户场控', minWidth: gw(140), align: 'center' },
+  
 ])
 
 const isLoading = ref(false)

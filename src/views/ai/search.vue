@@ -45,8 +45,10 @@
             <span v-else-if="item.prop === 'offset'" :class="scope.row[item.prop]" class="status-bg">
               {{ optionOffset[scope.row[item.prop]] }}
             </span>
-            
-            <span v-else-if="item.prop === 'role'">
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')" v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] }}
+            </span>
+            <span v-else-if="item.prop === 'role'" class="status-bg" :class="scope.row[item.prop]=='guest'?'status-yellow':''">
               {{ option.find(f => f.value == scope.row[item.prop]).label }}
             </span>
             <span v-else-if="item.prop === 'time'">
@@ -73,6 +75,8 @@
     </div>
   </div>
   
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
+
   <EditPrice v-if="dialogType.showCtrDialog" :data="dialogType.info"  @close="closeDialogType" />
   <userDetail v-if="dialogType.showInfoDialog && dialogType.info" :partyid="dialogType.info.partyid"
     @close="closeDialogType" />
@@ -91,6 +95,7 @@ import { copy } from '/@/utils'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElDialog, ElMessage, dayjs } from 'element-plus'
 import userDetail from '/@/components/userDetail/index.vue'
+import MarketQuotations from '../contract/components/MarketQuotations'
 import { useRouter } from 'vue-router'
 import { hex_md5 } from '/@/utils/md5'
 
@@ -166,6 +171,7 @@ const option = [
 ]
 const dialogType = reactive({
   info: null,
+  showQuotationsDialog:false,
   showDialog: false,
   showInfoDialog: false,
   showLockDialog: false,
