@@ -19,7 +19,7 @@
           <template #default="scope">
             <span class="flex justify-center align-middle">
               <el-button link class="underline"  size="default" :type="scope.row['status'] == 1 ? '' :'primary'" :disabled="scope.row['status'] == 1"
-                @click="showDialog(scope.row, 'showEditDialog')">添加</el-button>
+                @click="showDialog(scope.row, 'showEditDialog')">{{scope.row['status'] == 1 ? '已添加' : '添加'}}</el-button>
             </span>
           </template>
         </el-table-column>

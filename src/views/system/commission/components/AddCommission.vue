@@ -1,7 +1,7 @@
 <template>
-    <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="props.data && props.data.id ? '编辑' : '新增'" v-model="show" :append-to-body="true"
+    <el-dialog :close-on-click-modal="false" width="600" class="reset-el-styte" :title="props.data && props.data.id ? '编辑' : '新增'" v-model="show" :append-to-body="true"
     @closed="emit('close', {reload})">
-        <div class="py-[10px]">
+        <div class="soll-list soll-list-y max-h-[800px] py-[10px]">
             <el-form :model="form" label-position="top" :rules="rules" ref="ruleForm" v-loading="loading">
                 <el-form-item label="货币" required prop="symbol">
                     <el-select v-model="form.symbol">
@@ -18,15 +18,47 @@
                         </template>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="手续费模式" required prop="symbol">
+                <el-form-item label="手续费模式" ref="valueRef" required prop="value">
                     <el-radio-group v-model="form.mode" @change="modeChange">
                         <el-radio value="percent">百分比</el-radio>
                         <el-radio value="fixed">固定手续费</el-radio>
                     </el-radio-group>
+
+                    <div class="w-full pt-[10px]" v-if="form.mode == 'percent'">
+                        <div class="flex items-center mt-[10px]" v-for="(item,i) in percentList" :key="i">
+                            <el-input-number class="input-number" @blur="item.end <= 0 ? item.end = null : ''" :controls="false" @change="valueChange()" v-model="item.end" placeholder="输入金额" />
+                            <div class="mx-[10px]">
+                                :
+                            </div>
+                            <el-input-number class="input-number" :min="0" :controls="false" @change="valueChange()" v-model="item.value" placeholder="手续费">
+                                <template #suffix>
+                                %
+                                </template>
+                            </el-input-number>
+                            <el-button v-if="i == percentList.length-1" @click="percentList.push({end:null,value:null})" class="w-[48px] ml-[10px] !h-[48px]" type="primary" icon="plus"></el-button>
+                            <el-button v-else @click="percentList.splice(i,1)" class="w-[48px] ml-[10px] !h-[48px]" type="danger" icon="minus"></el-button>
+                        </div>
+                    </div>
+                    <div class="w-full pt-[10px]" v-else>
+                        <div class="flex items-center mt-[10px]" v-for="(item,i) in fixedList" :key="i">
+                            <el-input-number class="input-number" :min="0" :controls="false" @change="valueChange()" v-model="item.start" placeholder="起始金额" />
+                            <div class="mx-[10px]">
+                                - 
+                            </div>
+                            <el-input-number class="input-number" :min="0" :controls="false" @change="valueChange()" v-model="item.end" placeholder="结束金额" />
+                            <div class="mx-[10px]">
+                                :
+                            </div>
+                            <el-input-number @change="valueChange()" class="input-number" :min="0" :controls="false" v-model="item.value" placeholder="固定手续费" />
+                           
+                            <el-button v-if="i == fixedList.length-1" @click="fixedList.push({start:null,end:null,value:null})" class="w-[48px] ml-[10px] !h-[48px]" type="primary" icon="plus"></el-button>
+                            <el-button v-else @click="fixedList.splice(i,1)" class="w-[48px] ml-[10px] !h-[48px]" type="danger" icon="minus"></el-button>
+                        </div>
+
+                    </div>
+
                     <div class="pt-[10px] w-full">
-                        <el-input v-model="form.value" v-if="form.mode == 'percent'" placeholder="请输入金额百分比" />
-                        <el-input v-model="form.value" v-else placeholder="请输入固定手续费" />
-                        <div class="tips" v-if="form.mode == 'percent'">金额百分比: <span class="text-[#EF8401]">0.005,100</span>。5%手续费，封顶100</div>
+                        <div class="tips" v-if="form.mode == 'percent'">金额百分比: <span class="text-[#EF8401]">100,5</span>。5%手续费，封顶100</div>
                         <div class="tips" v-else>固定手续费：<span class="text-[#EF8401]">0,100,10;100,100000000,30</span> 。0-100 手续费10 ，100-100000000手续费 30 </div>
                     </div>
                 </el-form-item>
@@ -50,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref,onMounted, nextTick } from 'vue';
 import { ElMessage } from 'element-plus'
 import { getGlobalWalletList } from '/@/api/modules/base.api'
 import { withdrawConfigAdd,withdrawConfigUpdate } from '/@/api/modules/system/withdraw.api'
@@ -61,18 +93,95 @@ const props = defineProps({
   }
 })
 
+const valueRef = ref(null)
 const form = reactive({
   symbol: null,
   mode:'percent',
   value: null,
   min: 1
 })
+
+const percentList = ref([
+    {
+        end:null,
+        value:null
+    }
+])
+const fixedList = ref([
+    {
+        start:null,
+        end:null,
+        value:null
+    }
+])
+
+const valueChange = ()=>{
+    let val = ''
+    if(form.mode == 'percent'){
+        percentList.value.map(v=>{
+            if(v.end > 0 && v.value){
+                val += val ? ';'+v.value + ',' + v.end : v.value + ',' + v.end
+            }
+        })
+        form.value = val
+    }else{
+        fixedList.value.map(v=>{
+            if(v.start >= 0 && v.end > v.start && v.value){
+                val += val ? ';'+v.start+','+v.end + ',' + v.value : v.start+','+v.end + ',' + v.value
+            }
+        })
+        form.value = val
+    }
+}
+
+const initList = ()=>{
+    let list = []
+    let arr = form.value ? form.value.split(';') : []
+    if(form.mode == 'percent'){
+        arr.map(v=>{
+            list.push({
+                end:v.split(',')[1] || null,
+                value:v.split(',')[0] || null
+            })
+        })
+        if(!list.length){
+            list = [
+                {
+                    end:null,
+                    value:null
+                }
+            ]
+        }
+        percentList.value = list
+    }else{
+        arr.map(v=>{
+            list.push({
+                start:v.split(',')[0] || null,
+                end:v.split(',')[1] || null,
+                value:v.split(',')[2] || null
+            })
+        })
+        if(!list.length){
+            list = [
+                {
+                    start:null,
+                    end:null,
+                    value:null
+                }
+            ]
+        }
+        fixedList.value = list
+    }
+}
+
 onMounted(() => {
   for (const key in form) {
     if (props.data && props.data[key] !== undefined) {
       form[key] = props.data[key]
     }
   }
+  
+  initList()
  
 })
 
@@ -82,7 +191,14 @@ const modeChange = ()=>{
     }else{
         form.value = ''
     }
+    initList()
+    valueChange()
+    nextTick(()=>{
+        valueRef && valueRef.value.clearValidate()
+    })
 }
+
+
 const emit = defineEmits(['close'])
 const showGoogle = ref(false)
 

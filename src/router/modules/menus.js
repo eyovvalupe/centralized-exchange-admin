@@ -336,22 +336,7 @@ export default [
         icon: 'Robots',
         meta: { title: '交易机器人', auth: '404' },
       },
-      {
-        path: '/blocktrade',
-        component: Layout,
-        component: () => import('/@/views/blocktrade/manage.vue'),
-        name: 'blocktrade',
-        icon: 'heyue2',
-        meta: { title: '大宗商品', auth: '403' },
-      },
-      {
-        path: '/foreignExchange',
-        component: Layout,
-        component: () => import('/@/views/aiConfig/manage.vue'),
-        name: 'foreignExchange',
-        icon: 'foreignOrder',
-        meta: { title: '外汇', noCache: true, notopen: true  },
-      },
+      
       // {
       //   path: '/aiTimeConfig',
       //   component: Layout,

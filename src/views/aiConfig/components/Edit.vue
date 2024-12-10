@@ -1,5 +1,5 @@
 <template>
-   <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
+   <el-dialog :close-on-click-modal="false" width="700" class="reset-el-styte" :title="(!props.data || !props.data.id) ? '新增' : '修改'" v-model="show"
     :append-to-body="true" @close="emit('close', false)">
    <div class="soll-list soll-list-y max-h-[520px]">
       <el-form :model="form" :rules="rules" label-position="top" class="pt-[10px]" ref="ruleForm" v-loading="loading">
@@ -26,7 +26,7 @@
           </el-form-item>
         </div>
         <el-form-item label="开始运行日期" required prop="starttime">
-          <el-date-picker v-model="form.starttime" type="date" placeholder="请选择日期" />
+          <el-date-picker class="!w-full" v-model="form.starttime" type="date" placeholder="请选择日期" />
         </el-form-item>
         <p class="text-base pb-[20px] text-[#000]">波动机器人</p>
         <div class="flex ml-[-10px]">
@@ -34,28 +34,56 @@
             <el-input-number :precision="0" v-model="form.pernumpeople" :min="0" class="input-number" :controls="false" @blur="form.pernumpeople <= 0 ? form.pernumpeople = '' : ''" autocomplete="off" />
           </el-form-item>
           <el-form-item label="收益金额增加" required class="ml-[10px] flex-1 w-0" prop="perincome">
-            <el-input-number v-model="form.perincome" :controls="false" @blur="form.perincome <= 0 ? form.perincome = '' : ''" autocomplete="off" />
+            <el-input-number class="input-number" v-model="form.perincome" :controls="false" @blur="form.perincome <= 0 ? form.perincome = '' : ''" autocomplete="off" />
           </el-form-item>
           <el-form-item label="小时/次" required class="ml-[10px] flex-1 w-0" prop="perhour">
-            <el-input-number :precision="0" v-model="form.perhour" :controls="false" @blur="form.perhour <= 0 ? form.perhour = '' : ''"  autocomplete="off" />
+            <el-input-number class="input-number" :precision="0" v-model="form.perhour" :controls="false" @blur="form.perhour <= 0 ? form.perhour = '' : ''"  autocomplete="off" />
           </el-form-item>
         </div>
         <div class="flex ml-[-10px]">
           <el-form-item label="历史收益率波动" required class="flex-1 w-0 ml-[10px]" prop="ratereturn">
+            <el-row>
+              <el-col :span="11">
+                <el-input-number class="input-number" :max="100" :controls="false" v-model="form2.ratereturn_start" @blur="form2.ratereturn_start < 0 ? form2.ratereturn_start = null : ''"  @change="rangeChange('ratereturn')" autocomplete="off">
+                  <template #suffix>
+                    %
+                  </template>
+                </el-input-number>
+              </el-col>
+              <el-col :span="2">
+                <div class="text-center text-[16px] leading-[48px]"> ~ </div>
+              </el-col>
+              <el-col :span="11">
+                <el-input-number :max="100" @change="rangeChange('ratereturn')" class="input-number" :controls="false" @blur="form2.ratereturn_end <= 0 ? form2.ratereturn_end = null : ''"  v-model="form2.ratereturn_end" autocomplete="off">
+                  <template #suffix>
+                    %
+                  </template>
+                </el-input-number>
+              </el-col>
+            </el-row>
             
-            <el-input v-model="form.ratereturn" autocomplete="off">
-                <template #append>
-                  %
-                </template>
-            </el-input>
-
           </el-form-item>
           <el-form-item label="24小时收益率波动" required class="flex-1 w-0 ml-[10px]" prop="ratereturn24h">
-            <el-input  v-model="form.ratereturn24h"  autocomplete="off">
-              <template #append>
-                  %
-                </template>
-            </el-input>
+            <el-row>
+              <el-col :span="11">
+                <el-input-number :max="100" class="input-number" :controls="false" v-model="form2.ratereturn24h_start" @blur="form2.ratereturn24h_start < 0 ? form2.ratereturn24h_start = null : ''" @change="rangeChange('ratereturn24h')" autocomplete="off">
+                  <template #suffix>
+                    %
+                  </template>
+                </el-input-number>
+              </el-col>
+              <el-col :span="2">
+                <div class="text-center text-[16px] leading-[48px]"> ~ </div>
+              </el-col>
+              <el-col :span="11">
+                <el-input-number :max="100" class="input-number" :controls="false" v-model="form2.ratereturn24h_end" @blur="form2.ratereturn24h_end <= 0 ? form2.ratereturn24h_end = null : ''" @change="rangeChange('ratereturn24h')" autocomplete="off">
+                  <template #suffix>
+                    %
+                  </template>
+                </el-input-number>
+              </el-col>
+            </el-row>
+            
           </el-form-item>
         </div>
         <small class="text-gray-400">* 逗号隔开，波动区间在值1和值2之间</small>
@@ -103,7 +131,15 @@ const form = reactive({
   perincome: null,
   perhour: null,
   ratereturn: '',
-  ratereturn24h: ''
+  ratereturn24h: '',
+  
+})
+
+const form2 = reactive({
+  ratereturn_start:null,
+  ratereturn_end:null,
+  ratereturn24h_start:null,
+  ratereturn24h_end:null
 })
 onMounted(() => {
   for (const key in form) {
@@ -115,6 +151,14 @@ onMounted(() => {
     apiDetial({ symbol: props.data.symbol }).then(res => {
       for (const key in res) {
         form[key] = res[key]
+      }
+      if(form.ratereturn){
+        form2.ratereturn_start = form.ratereturn.split(',')[0] || null
+        form2.ratereturn_end = form.ratereturn.split(',')[1] || null
+      }
+      if(form.ratereturn24h){
+        form2.ratereturn24h_start = form.ratereturn24h.split(',')[0] || null
+        form2.ratereturn24h_end = form.ratereturn24h.split(',')[1] || null
       }
     })
   }
@@ -133,6 +177,22 @@ const rules = {
   perhour: [{ required: true, message: '', trigger }],
   ratereturn: [{ required: true, message: '', trigger }],
   ratereturn24h: [{ required: true, message: '', trigger }],
+}
+
+const rangeChange = (key)=>{
+  if(key == 'ratereturn'){
+    if(form2.ratereturn_start >= 0 && form2.ratereturn_end > form2.ratereturn_start){
+      form.ratereturn = form2.ratereturn_start + ',' + form2.ratereturn_end
+    }else{
+      form.ratereturn = ''
+    }
+  }else if(key == 'ratereturn24h'){
+    if(form2.ratereturn24h_start >= 0 && form2.ratereturn24h_end > form2.ratereturn24h_start){
+      form.ratereturn24h = form2.ratereturn24h_start + ',' + form2.ratereturn24h_end
+    }else{
+      form.ratereturn24h = ''
+    }
+  }
 }
 
 const emit = defineEmits(['close', 'success'])
