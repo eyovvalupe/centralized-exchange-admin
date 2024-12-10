@@ -119,14 +119,14 @@ const valueChange = ()=>{
     let val = ''
     if(form.mode == 'percent'){
         percentList.value.map(v=>{
-            if(v.end > 0 && v.value){
+            if(v.end > 0 && v.value !== null && v.value !== ''){
                 val += val ? ';'+v.value + ',' + v.end : v.value + ',' + v.end
             }
         })
         form.value = val
     }else{
         fixedList.value.map(v=>{
-            if(v.start >= 0 && v.end > v.start && v.value){
+            if(v.start >= 0 && v.end > v.start && v.value !== null && v.value !== ''){
                 val += val ? ';'+v.start+','+v.end + ',' + v.value : v.start+','+v.end + ',' + v.value
             }
         })
