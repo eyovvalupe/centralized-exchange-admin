@@ -41,11 +41,21 @@
           </el-form-item>
         </div>
         <div class="flex ml-[-10px]">
-          <el-form-item label="历史收益率波动(%)" required class="flex-1 w-0 ml-[10px]" prop="ratereturn">
-            <el-input v-model="form.ratereturn" autocomplete="off" />
+          <el-form-item label="历史收益率波动" required class="flex-1 w-0 ml-[10px]" prop="ratereturn">
+            
+            <el-input v-model="form.ratereturn" autocomplete="off">
+                <template #append>
+                  %
+                </template>
+            </el-input>
+
           </el-form-item>
-          <el-form-item label="24小时收益率波动(%)" required class="flex-1 w-0 ml-[10px]" prop="ratereturn24h">
-            <el-input v-model="form.ratereturn24h" autocomplete="off" />
+          <el-form-item label="24小时收益率波动" required class="flex-1 w-0 ml-[10px]" prop="ratereturn24h">
+            <el-input  v-model="form.ratereturn24h"  autocomplete="off">
+              <template #append>
+                  %
+                </template>
+            </el-input>
           </el-form-item>
         </div>
         <small class="text-gray-400">* 逗号隔开，波动区间在值1和值2之间</small>

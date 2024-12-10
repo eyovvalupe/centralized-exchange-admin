@@ -105,6 +105,7 @@
     }
     .el-input-group__append, .el-input-group__prepend{
       --el-input-border-radius:8px;
+      padding: 0 15px;
     }
     .el-textarea{
       --el-input-border-radius:8px;

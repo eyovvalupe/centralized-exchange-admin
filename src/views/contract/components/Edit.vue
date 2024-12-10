@@ -40,7 +40,7 @@
                 @blur="isNaN(form.pip) || form.pip <= 0 ? form.pip = '' : '';celarFocus" />
             </el-form-item>
             <el-form-item label="点值" required class="w-1/2" prop="pip_value">
-              <el-input-number class="input-number" @blur="form.pip_value <= 0 ? form.pip_value = '' : '';" :controls="false" v-model="form.pip_value"   />
+              <el-input class="input-number" @blur="isNaN(form.pip_value) || form.pip_value <= 0 ? form.pip_value = '' : '';" :controls="false" v-model="form.pip_value"   />
             </el-form-item>
           </div>
           <div class="flex" v-if="!isEdit">
@@ -175,7 +175,7 @@ const volumeMath = computed(() => {
 const initForm = (_data)=>{
   for (const key in form) {
     if (_data && _data[key] !== undefined) {
-      if(key == 'pip'){
+      if(key == 'pip' || key == 'pip_value'){
         let val = _data[key].toString()
         if(val.indexOf('-') > -1){
           val = _data[key].toFixed(val.split('-')[1])

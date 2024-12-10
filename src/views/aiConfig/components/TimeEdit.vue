@@ -12,8 +12,24 @@
           </el-select>
         </el-form-item>
       </div>
-      <el-form-item label="盈亏范围(%)" required  prop="rangereturn">
-          <el-input v-model="form.rangereturn" autocomplete="off" />
+      <el-form-item label="盈亏范围"  prop="rangereturn">
+          <el-row :gutter="10">
+            <el-col :span="12">
+              <el-input-number :controls="false" :max="100" @blur="onblur('start')" class="input-number" v-model="rangereturn.start" autocomplete="off">
+                <template #suffix>
+                  %
+                </template>
+              </el-input-number>
+            </el-col>
+            <el-col :span="12">
+              <el-input-number :controls="false" :max="100" @blur="onblur('end')" class="input-number" v-model="rangereturn.end" autocomplete="off">
+                <template #suffix>
+                  %
+                </template>
+                </el-input-number>
+            </el-col>
+          </el-row>
+          
           <small class="text-gray-400 pt-[10px]">* 逗号隔开，盈亏在两个数值之间浮动</small>
         </el-form-item>
     </el-form>
@@ -53,6 +69,11 @@ const options = [
   { value : 'h', label : '小时' },
   { value : 'd', label : '天' }
 ]
+const rangereturn = reactive({
+  start:null,
+  end:null
+})
+
 const form = reactive({
   rangereturn: '',
   time: 1,
@@ -62,6 +83,9 @@ onMounted(() => {
   for (const key in form) {
     if (props.data && props.data[key] !== undefined) {
       form[key] = props.data[key]
+
+      rangereturn.start = form.rangereturn ? form.rangereturn.split(',')[0] : null
+      rangereturn.end = form.rangereturn ? form.rangereturn.split(',')[1] : null
     }
   }
 })
@@ -80,6 +104,7 @@ const handleSubmit = async (googlecode) => {
   isLoading.value = true
   showGoogle.value = false
   try {
+    form.value.rangereturn = rangereturn1.value + ','+rangereturn2.value
     const send = { ...form, googlecode };
     if (props.data && props.data.id) {
       send.id = props.data.id;
@@ -96,7 +121,18 @@ const handleSubmit = async (googlecode) => {
     isLoading.value = false
   }
 }
+const onblur = (key)=>{
+  if(rangereturn[key] <= 0){
+    rangereturn[key] = ''
+  }
+  if(rangereturn.start && rangereturn.end){
+    form.rangereturn = rangereturn.start + ',' + rangereturn.end
+  }else{
+    form.rangereturn = ''
+  }
+}
 const handleGoogle = () => {
+ 
   ruleForm.value.validate(async valid => {
     if (valid) {
       let haserr=''

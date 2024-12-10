@@ -14,7 +14,6 @@
         <el-input v-model="searchForm.params"  suffix-icon="search"  placeholder="名称/代码" style="width: 264px;" />
         <el-button type="primary" class="ml-[10px] w-[120px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
-
       </div>
     </div>
     <div class="reset-el-style-v2 pt-[10px]">
@@ -26,6 +25,10 @@
             <span v-if="item.prop === 'locked'" :style="{ color: !scope.row[item.prop] ? 'green' : '#ff0000' }">
               {{ scope.row[item.prop] ? '禁用' : '启用' }}
             </span>
+            <span class="underline cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showQuotationsDialog')"  v-else-if="item.prop === 'name'">
+              {{ scope.row['name'] || scope.row.symbol }}
+            </span>
+           
             <span v-else-if="item.prop === 'vip'">
               <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : ''">
                 {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
@@ -71,6 +74,7 @@
     </div>
     <div class="py-[10px]"><Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" /></div>
   </div>
+  <MarketQuotations :symbol="dialogType.info.symbol" v-if="dialogType.showQuotationsDialog" @close="closeDialogType" />
   <TimeCtr v-if="dialogType.showTimeCtrDialog" :data="dialogType.info" @close="closeDialogType" />
   <Edit v-if="dialogType.showEditDialog" :data="dialogType.info" @close="closeDialogType" />
   <StockList v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
@@ -85,10 +89,8 @@ export default { name: 'aiConfig' };
 <script setup>
 import { getList, apiDel } from '/@/api/modules/ai'
 import { ref, reactive, onMounted, computed, nextTick } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
-import { copy } from '/@/utils'
 import { ElMessageBox, ElMessage, dayjs } from 'element-plus'
-
+import MarketQuotations from '../contract/components/MarketQuotations'
 import TimeCtr from './components/TimeCtr.vue'
 import Edit from './components/Edit.vue'
 import StockList from './components/StockList.vue'
@@ -100,6 +102,7 @@ Bus.on('update:contract', () => {
   getDataList()
 })
 const dialogType = reactive({
+  showQuotationsDialog:false,
   showEditDialog: false,
   showTimeCtrDialog: false,
   showDialog: false,
