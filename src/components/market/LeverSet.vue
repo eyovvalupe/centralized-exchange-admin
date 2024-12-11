@@ -1,10 +1,10 @@
 <template>
    <div class="mt-[-6px] flex flex-wrap">
-        <el-tag type="primary" class="mr-[6px] mt-[6px]" size="default" @close="onclose(i)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
+        <el-tag type="primary" class="mr-[6px] mt-[6px]" size="large" @close="onclose(i)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
         <div>
-             <el-input-number class="mr-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="small" :controls="false" v-if="addLevel" />
-            <el-button type="primary" size="small" v-if="addLevel" @click="saveLevel">保存</el-button>
-            <el-button type="primary" size="small" icon="plus" @click="addLevel = true;" v-else>添加</el-button>
+             <el-input-number class="mr-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="default" :controls="false" v-if="addLevel" />
+            <el-button type="primary" class="w-[74px]" size="default" v-if="addLevel" @click="saveLevel">保存</el-button>
+            <el-button type="primary" class="w-[74px]" size="default" icon="plus" @click="addLevel = true;" v-else>添加</el-button>
         </div>
    </div>
 </template>

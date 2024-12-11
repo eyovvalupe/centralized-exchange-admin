@@ -41,14 +41,27 @@ export default [
         icon: 'user',
         meta: { title: '用户', auth: '102', noCache: true, keepAlive: true }
       },
-      
-     
-      // {
-      //   path: '/xxx',
-      //   name: 'withdrawlOrder',
-      //   icon: 'tx',
-      //   meta: { title: '市场活动配置', notopen: true, border: true, auth: '' }
-      // },
+      {
+        path: '/kycList',
+        component: () => import('/@/views/users/kyc/index.vue'),
+        name: 'kycList',
+        icon: 'smrz',
+        meta: { title: '实名审核', auth: '103'}
+      },
+      {
+        path: '/RechargeOrder',
+        component: () => import('/@/views/finance/deposit/index.vue'),
+        name: 'RechargeOrder',
+        icon: 'RechargeOrder',
+        meta: { title: '充值订单', auth: '111', noCache: true,border:true, }
+      },
+      {
+        path: '/withdrawlOrder',
+        component: () => import('/@/views/finance/withdrawl/index.vue'),
+        name: 'withdrawlOrder',
+        icon: 'withdrawl',
+        meta: { title: '提现订单', auth: '112', noCache: true }
+      },
       {
         path: '/c2cOrder',
         component: () => import('/@/views/c2c/order.vue'),
@@ -68,7 +81,7 @@ export default [
         component: () => import('/@/views/c2c/merchant.vue'),
         name: 'c2cMerchant',
         icon: 'c2cMerchant',
-        meta: { title: '买币商户', auth: '121',border: true  }
+        meta: { title: '买币商户', auth: '121'  }
       },
       {
         path: '/c2cAd',
@@ -256,12 +269,20 @@ export default [
       //   icon: 'gpk',
       //   meta: { title: '交易品种库', auth: '401' }
       // },
+    
+      {
+        path: '/stockTimeConfig',
+        name: 'stockTimeConfig',
+        icon: 'gpk',
+        component: () => import('/@/views/stock/timeConfig.vue'),
+        meta: { title: '市场休市配置', auth: '401', border: true,hidden:true }
+      },
       {
         path: '/stockManage',
         name: 'stockManage',
         icon: 'gpk',
         component: () => import('/@/views/stock/manage.vue'),
-        meta: { title: '股票', auth: '401', border: true }
+        meta: { title: '股票管理', auth: '401', border: true }
       },
       {
         path: '/contract',
@@ -325,27 +346,6 @@ export default [
         icon: 'HistoryData',
         meta: { title: '操作日志', auth: '521', border: true, noCache: true, subTitle: '日志' }
 
-      },
-      {
-        path: '/RechargeOrder',
-        component: () => import('/@/views/finance/deposit/index.vue'),
-        name: 'RechargeOrder',
-        icon: 'RechargeOrder',
-        meta: { title: '充值订单', auth: '111', noCache: true,hidden:true }
-      },
-      {
-        path: '/withdrawlOrder',
-        component: () => import('/@/views/finance/withdrawl/index.vue'),
-        name: 'withdrawlOrder',
-        icon: 'withdrawl',
-        meta: { title: '提现订单', auth: '112', noCache: true,hidden:true }
-      },
-      {
-        path: '/kycList',
-        component: () => import('/@/views/users/kyc/index.vue'),
-        name: 'kycList',
-        icon: 'smrz',
-        meta: { title: '实名审核', auth: '103',hidden:true}
       }
     ]
   }

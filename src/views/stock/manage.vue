@@ -1,8 +1,16 @@
 <template>
    <div class="px-[20px] py-[10px]">
     <div class="flex reset-el-style-v2 justify-between">
+
+      <div class="flex items-center">
+        <el-radio-group v-model="tabPosition" @change="tabChange">
+          <el-radio-button label="stockManage">股票管理</el-radio-button>
+          <el-radio-button label="stockTimeConfig">市场休市配置</el-radio-button>
+        </el-radio-group>
+        <el-button type="primary" class="ml-[10px]" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
+      </div>
+
       <div>
-        <el-button type="primary" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
         <!-- <el-button class="ml-[10px]" v-for="market in countryList" :key="market" type="info" plain @click="openTimeDialog(market)">{{countryTitleMap[market]}}</el-button> -->
       </div>
       <div class="flex">
@@ -14,7 +22,7 @@
           </el-select>
         </div>
         <div class="w-[264px]">
-          <el-input v-model="searchForm.symbol" suffix-icon="search" placeholder="股票代码"  />
+          <el-input v-model="searchForm.symbol" suffix-icon="search" placeholder="公司名称/股票代码"  />
         </div>
         <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
           :loading="isLoading">查询</el-button>
@@ -66,7 +74,16 @@ import { ElMessage, dayjs } from 'element-plus'
 import Config from './components/Config.vue'
 import ConfigTime from './components/ConfigTime.vue'
 import Edit from './components/Edit.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+
+const tabPosition = ref('stockManage')
+const tabChange = ()=>{
+  router.replace({
+    name:tabPosition.value
+  })
+}
 
 const market = ref("us")
 

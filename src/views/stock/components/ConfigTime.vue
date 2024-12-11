@@ -66,12 +66,12 @@ const rules = {
 }
 
 const emit = defineEmits(['close', 'success'])
-const getData=()=>{
+const getData = ()=>{
   loading.value = true;
   apiTimeConfig({
     market:props.market
   }).then(res=>{
-    form.value = res;
+    form.value = res[0];
     loading.value = false;
   })
 }

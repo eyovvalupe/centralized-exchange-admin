@@ -424,6 +424,14 @@ th.el-table__cell.bg-color3,
   .el-tag{
     height: 28px;
   }
+  .el-tag--large{
+    border-radius: 8px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .el-tag--large .el-tag__close{
+    margin-left: 6px;
+  }
   .el-input--small{
     height: 28px;
     min-height: 28px;
