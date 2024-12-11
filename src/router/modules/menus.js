@@ -282,7 +282,7 @@ export default [
         name: 'stockManage',
         icon: 'gpk',
         component: () => import('/@/views/stock/manage.vue'),
-        meta: { title: '股票管理', auth: '401', border: true }
+        meta: { title: '股票', auth: '401', border: true }
       },
       {
         path: '/contract',
