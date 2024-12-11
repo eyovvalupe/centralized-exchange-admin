@@ -115,14 +115,14 @@
               </el-dropdown-item>
               <el-dropdown-item divided @click="goGooglePage">
                 <span class="underline">
-                  绑定谷歌验证码
+                  谷歌验证器
                 </span>
               </el-dropdown-item>
               <el-dropdown-item @click="showDialog('loginPassword')">
-                <span class="underline">修改登录密码</span>
+                <span class="underline">登录密码</span>
               </el-dropdown-item>
               <el-dropdown-item @click="showDialog('verifyPassword')">
-                <span class="underline">修改交易密码</span>
+                <span class="underline">交易密码</span>
               </el-dropdown-item>
                <div class="dropdown-split-line"></div>
               <el-dropdown-item divided @click="logout">
@@ -208,8 +208,8 @@ const dialogVisible = ref(false)
 const sound = ref(useService.playVoice)
 const messageNumObj = computed(() => useService.messageNumObj)
 const shortCut = ref([
-  { name: 'RechargeOrder', icon: "recharge", badge: 'deposit', text: '充值', type: 'badge',auth:'111' },
-  { name: 'withdrawlOrder', icon: "withdraw", badge: 'withdraw', text: '提现', type: 'badge', notArrow: false,auth:'112' },
+  { name: 'RechargeOrder', icon: "recharge", badge: 'deposit', text: '充值订单', type: 'badge',auth:'111' },
+  { name: 'withdrawlOrder', icon: "withdraw", badge: 'withdraw', text: '提现订单', type: 'badge', notArrow: false,auth:'112' },
   { name: 'kycList', icon: "realname", badge: 'kyc', text: '实名审核', type: 'badge', notArrow: false,auth:'103' },
   { name: 'notice', icon: "service", badge: 'support', text: '客服', type: 'badge', isDialog: true, notArrow: false,auth:'601' }
 ])
