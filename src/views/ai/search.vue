@@ -54,6 +54,9 @@
             <span v-else-if="item.prop === 'time'">
               {{ scope.row[item.prop] }}{{ optionsTime.find(f => f.value == scope.row['unit']).label }}
             </span>
+            <span v-else-if="item.prop == 'profit'"  :class="scope.row[item.prop] >= 0 ? 'success' : 'failure'">
+              {{scope.row[item.prop] >= 0 ? '+' : ''}}{{ scope.row[item.prop] }}
+            </span>
             <span v-else>
               {{ scope.row[item.prop] }}
             </span>

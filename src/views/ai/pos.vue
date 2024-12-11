@@ -31,7 +31,7 @@
           :align="item.align">
           <template #default="scope">
             <span v-if="item.prop === 'profit'">
-                {{ scope.row['amountreturn'] }} USDT
+                正负 {{ scope.row['amountreturn'] }} USDT
             </span>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{
@@ -239,7 +239,7 @@ const columnBase = ref([
   { prop: 'endtime', label: '剩余时间', minWidth: gw(140), align: 'center' },
   { prop: 'profit', label: '预期盈亏',minWidth: gw(230), align: 'center' },
   { prop: 'date', label: '时间', minWidth: gw(140), align: 'center' },
-  { prop: 'status', label: '用户场控', minWidth: gw(140), align: 'center' },
+  { prop: '', label: '用户场控', minWidth: gw(140), align: 'center' },
   
 ])
 
