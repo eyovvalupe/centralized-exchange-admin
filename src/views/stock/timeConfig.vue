@@ -7,7 +7,7 @@
            <el-radio-button label="stockManage">股票管理</el-radio-button>
            <el-radio-button label="stockTimeConfig">市场休市配置</el-radio-button>
          </el-radio-group>
-         <el-button type="primary" class="ml-[10px]" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
+         <el-button type="primary" class="ml-[10px]" plain @click="showDialog(null, 'showCfgDialog')">股票交易参数配置</el-button>
        </div>
  
        <div>
@@ -51,6 +51,7 @@
  import ConfigTime from './components/ConfigTime.vue'
  import { useRouter } from 'vue-router'
  import { apiTimeConfig } from  '/@/api/modules/stock/index.api'
+ import { hex_md5 } from '/@/utils/md5'
  const router = useRouter()
  
  const tabPosition = ref('stockTimeConfig')
@@ -70,6 +71,8 @@
    info: null
  })
 
+ const isLoading = ref(false)
+
  const countryTitleMap = ref({
    us:"美国",
    japan:"日本",
@@ -83,29 +86,47 @@
  })
  
 const getDataList = ()=>{
-    apiTimeConfig({
+
+    const send = {
         market:''
-    }).then(res=>{
+    }
+    const cacheKey = hex_md5(JSON.stringify(send))
+    if(sessionStorage['stockTimeConfig']){
+        const searchCache = JSON.parse(sessionStorage['stockTimeConfig'])
+        if(searchCache.cacheKey == cacheKey){
+          tableData.value = searchCache.data
+        }else{
+            isLoading.value = true
+        }
+    }else{
+        isLoading.value = true
+    }
+
+    apiTimeConfig(send).then(res=>{
         const data = []
         Object.keys(countryTitleMap.value).map(k=>{
             let curritem = {}
             if(res && res.length){
                 res.map(item=>{
-                    
                     if(item.market == k){
                         curritem = item
                     }
                 })
             }
-          
             data.push({
                 market:k,
                 name:countryTitleMap.value[k],
                 ...curritem
             })
             tableData.value = data
+            sessionStorage['stockTimeConfig'] = JSON.stringify({
+                cacheKey,
+                data
+            })
         })
-       
+        
+    }).finally(()=>{
+      isLoading.value = false
     })
    
 }
@@ -118,7 +139,7 @@ getDataList()
    { prop: 'name', label: '市场', align: 'center',minWidth:gw(200) },
    { prop: 'closeddates', label: '休市日期', align: 'center',minWidth:gw(400) }
  ])
- const isLoading = ref(false)
+
  const showDialog = (data, type) => {
    if (data) {
      dialogType.info = Object.assign({ id: 1 }, data);

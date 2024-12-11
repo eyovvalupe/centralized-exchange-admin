@@ -7,12 +7,9 @@
           <el-radio-button label="stockManage">股票管理</el-radio-button>
           <el-radio-button label="stockTimeConfig">市场休市配置</el-radio-button>
         </el-radio-group>
-        <el-button type="primary" class="ml-[10px]" plain @click="showDialog(null, 'showCfgDialog')">交易参数配置</el-button>
+        <el-button type="primary" class="ml-[10px]" plain @click="showDialog(null, 'showCfgDialog')">股票交易参数配置</el-button>
       </div>
 
-      <div>
-        <!-- <el-button class="ml-[10px]" v-for="market in countryList" :key="market" type="info" plain @click="openTimeDialog(market)">{{countryTitleMap[market]}}</el-button> -->
-      </div>
       <div class="flex">
         <div class="w-[168px] mr-[10px]">
           <el-select v-model="searchForm.country" @change="getDataList(1)">
@@ -24,7 +21,7 @@
         <div class="w-[264px]">
           <el-input v-model="searchForm.symbol" suffix-icon="search" placeholder="公司名称/股票代码"  />
         </div>
-        <el-button type="primary" class="w-[120px] ml-[10px]" @click="getDataList(1)"
+        <el-button type="primary" class="w-[120px] ml-[10px]" @click="isLoading=true;getDataList(1)"
           :loading="isLoading">查询</el-button>
       </div>
     </div>
@@ -75,7 +72,7 @@ import Config from './components/Config.vue'
 import ConfigTime from './components/ConfigTime.vue'
 import Edit from './components/Edit.vue'
 import { useRouter } from 'vue-router'
-
+ import { hex_md5 } from '/@/utils/md5'
 const router = useRouter()
 
 const tabPosition = ref('stockManage')
@@ -99,9 +96,9 @@ const dialogType = reactive({
   info: null
 })
 const searchForm = reactive({
-  country:'all',
-  params: '',
-  symbol: ''
+  country:sessionStorage['stockManageCountry'] || 'all',
+  params: sessionStorage['stockManageParams'] || '',
+  symbol: sessionStorage['stockManageSymbol'] || ''
 })
 const countryTitleMap = ref({
   us:"美国",
@@ -149,7 +146,6 @@ const getDataList = (page) => {
   if (page) {
     currentLastPage.value = page
   }
-  isLoading.value = true
   const send = { page: currentLastPage.value };
   if (searchForm.params) {
     send.params = searchForm.params;
@@ -160,6 +156,23 @@ const getDataList = (page) => {
   if(searchForm.country != 'all'){
     send.country = searchForm.country
   }
+
+  sessionStorage['stockManageParams'] = searchForm.params || ''
+  sessionStorage['stockManageSymbol'] = searchForm.symbol || ''
+  sessionStorage['stockManageCountry'] = searchForm.country
+
+  const cacheKey = hex_md5(JSON.stringify(send))
+  if(sessionStorage['stockManage']){
+      const searchCache = JSON.parse(sessionStorage['stockManage'])
+      if(searchCache.cacheKey == cacheKey){
+        tableData.value = searchCache.data
+      }else{
+          isLoading.value = true
+      }
+  }else{
+      isLoading.value = true
+  }
+  
   getList(send)
     .then(res => {
       isLoading.value = false
@@ -174,6 +187,10 @@ const getDataList = (page) => {
       }
       currentPage.value = currentLastPage.value;
       tableData.value = res || []
+      sessionStorage['stockManage'] = JSON.stringify({
+          cacheKey,
+          data:tableData.value
+      })
     })
     .finally(() => {
       isLoading.value = false
