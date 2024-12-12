@@ -43,6 +43,10 @@
             <span v-else-if="item.prop == 'market'">
               {{ marketMap[scope.row.market] || '--' }}
             </span>
+            <span class="flex items-center" v-else-if="item.prop == 'currency'">
+              <img class="w-[20px] h-[20px] mr-[10px] rounded-full" :src="`/images/crypto/${scope.row.currency.toLocaleUpperCase()}.png`" :alt="scope.row.currency.toLocaleUpperCase()" />
+              {{ scope.row.currency }}
+            </span>
             <span class="cursor-pointer" @click="copy(scope.row[item.prop])" v-else-if="item.prop == 'keyword'">
               {{ scope.row[item.prop] }}
             </span>
@@ -182,6 +186,7 @@ const columnBase = ref([
   { prop: 'issue_price_min', label: '认购价格', align: 'center', minWidth:gw(120) },
   { prop: 'listing_date', label: '上市日期', align: 'center', minWidth:gw(150) },
   { prop: 'listed_price', label: '上市价格', align: 'center', minWidth:gw(150) },
+  { prop: 'currency', label: '认购货币', align: 'center', minWidth:gw(150) },
   { prop: 'vip', label: 'VIP杠杆', align: 'center', minWidth:gw(120) },
   { prop: 'keyword', label: 'VIP密钥', align: 'center',minWidth:gw(120) },
   // { prop: 'lever', label: '认购杠杆', align: 'center', width:90 },

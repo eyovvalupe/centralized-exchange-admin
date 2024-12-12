@@ -1,9 +1,9 @@
 <template>
-   <div class="mt-[-6px] flex flex-wrap">
+   <div class="mt-[-6px] flex flex-wrap lever-set">
         <el-tag type="primary" class="mr-[6px] mt-[6px]" size="large" @close="onclose(i)" v-for="(level,i) in levers" closable :key="level">{{ level }}X</el-tag>
         <div>
-             <el-input-number class="mr-[6px]" style="width:50px;" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="default" :controls="false" v-if="addLevel" />
-            <el-button type="primary" class="w-[74px]" size="default" v-if="addLevel" @click="saveLevel">保存</el-button>
+             <el-input-number class="mr-[6px]" @blur="levelVal <= 0 ? levelVal='' : ''" v-model="levelVal" size="default" :controls="false" v-if="addLevel" />
+            <el-button type="primary" class="w-[60px]" size="default" v-if="addLevel" @click="saveLevel">保存</el-button>
             <el-button type="primary" class="w-[74px]" size="default" icon="plus" @click="addLevel = true;" v-else>添加</el-button>
         </div>
    </div>
@@ -44,3 +44,14 @@ const onclose = (i)=>{
   emits('update:lever',levers.value.join(','))
 }
 </script>
+
+<style lang="scss" scoped>
+.lever-set .el-input-number {
+  width: 50px;
+}
+.lever-set .el-input-number :deep(.el-input){
+  height: 32px;
+  min-height: 32px;
+  line-height: 32px;
+}
+</style>
