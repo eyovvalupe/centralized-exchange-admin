@@ -1,6 +1,6 @@
 <template>
    <el-dialog :close-on-click-modal="false" width="500" class="reset-el-styte" title="调整价格" v-model="show" :append-to-body="true"
-    style="left: 50%;margin-left: -80px;"
+    style="left: 50%;margin-left: 0;"
     @close="emit('close', false)">
     <div class="stock-popup">
       <MarketInfo type="constract" :symbol="data.symbol" v-if="data.symbol" /> 
@@ -230,8 +230,8 @@ watch(() => socketStore.sokcetWS, (ws) => {
 
 .stock-popup{
   position: absolute;
-  left:-386px;
-  width: 376px;
+  left:-510px;
+  width: 500px;
   background-color: #fff;
   height: 100%;
   top:0;

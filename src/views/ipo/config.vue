@@ -7,7 +7,7 @@
           <el-radio-button label="ipoCfg">IPO订单配置</el-radio-button>
         </el-radio-group>
          <el-button plain  type="primary" :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showDialog')" icon="plus">新增</el-button>
-        <el-button type="info" plain :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button>
+        <!-- <el-button type="info" plain :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button> -->
       </div>
 
       <div class="flex justify-end">
@@ -39,6 +39,12 @@
               <span class="status-bg plain" :class="scope.row['lever'] > 1 ? 'status-yellow' : 'done'">
                 {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
               </span>
+            </span>
+            <span v-else-if="item.prop == 'market'">
+              {{ marketMap[scope.row.market] || '--' }}
+            </span>
+            <span class="cursor-pointer" @click="copy(scope.row[item.prop])" v-else-if="item.prop == 'keyword'">
+              {{ scope.row[item.prop] }}
             </span>
             <span v-else-if="item.prop === 'issue_price_min'">
               {{ scope.row['issue_price_max'] }}
@@ -135,6 +141,17 @@ const statusObj = ref({
   'issuing': '可认购',
   'done': '认购结束',
   'listed': '已上市'
+})
+const marketMap = ref({
+  us:"美国",
+  japan:"日本",
+  india:"印度",
+  korea:"韩国",
+  germany:"德国",
+  uk:"英国",
+  singapore:"新加坡",
+  hongkong:"香港",
+  malaysia:'马来西亚'
 })
 
 const optionStatus = [
