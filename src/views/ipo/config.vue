@@ -3,8 +3,8 @@
     <div class="flex reset-el-style-v2 justify-between">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
-          <el-radio-button label="ipoIndex">IPO发行管理</el-radio-button>
-          <el-radio-button label="ipoCfg">IPO订单配置</el-radio-button>
+          <el-radio-button label="ipoIndex">股票IPO管理</el-radio-button>
+          <el-radio-button label="ipoCfg">IPO发行配置</el-radio-button>
         </el-radio-group>
          <el-button plain  type="primary" :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showDialog')" icon="plus">新增</el-button>
         <!-- <el-button type="info" plain :disabled="!checkAuthCode(22101)" class="ml-[10px]" @click="showDialog(null, 'showIpoDialog')">IPO参数</el-button> -->
@@ -94,6 +94,7 @@
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
+  
   <AddEditUser v-if="dialogType.showDialog" :data="dialogType.info" @close="closeDialogType" />
   <ipoEditModel v-if="dialogType.showIpoDialog" :data="dialogType.info" @close="closeDialogType" />
 

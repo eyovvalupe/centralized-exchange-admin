@@ -3,8 +3,8 @@
     <div class="flex reset-el-style-v2 justify-between">
       <div class="flex items-center">
         <el-radio-group v-model="tabPosition" @change="tabChange">
-          <el-radio-button label="ipoIndex">IPO发行管理</el-radio-button>
-          <el-radio-button label="ipoCfg">IPO订单配置</el-radio-button>
+          <el-radio-button label="ipoIndex">股票IPO管理</el-radio-button>
+          <el-radio-button label="ipoCfg">IPO发行配置</el-radio-button>
         </el-radio-group>
       </div>
       <div class="flex justify-end">
@@ -32,30 +32,24 @@
           :align="item.align">
           <template #default="scope">
             <template v-if="item.prop === 'username'">
-              <span class="truncate cursor-pointer text-[#4377FE]" @click="showDialog(scope.row, 'showUserDialog')"> {{
+              <span class="truncate cursor-pointer text-[#4377FE] underline" @click="showDialog(scope.row, 'showUserDialog')"> {{
                 scope.row[item.prop] }}</span>
             </template>
             <span v-else-if="item.prop === 'issue_price_min'">
               {{ scope.row['issue_price_min'] + '~' + scope.row['issue_price_max'] }}
             </span>
-            <span v-else-if="item.prop === 'vip'">
-              <span class="status-bg" :class="scope.row['lever'] > 1 ? 'status-yellow' : 'done'">
-                {{ scope.row['lever'] > 1 ? scope.row['lever'] + 'X' : '无' }}
+            <span class="flex items-center justify-center" v-else-if="item.prop === 'vip'">
+              <span class="status-bg plain" :class="scope.row['lever'] > 0 ? 'open' : 'done'">
+                {{ scope.row['lever'] > 0 ? scope.row['lever'] + 'X' : '无' }}
               </span>
             </span>
             <span v-else-if="item.prop === 'status'" class="status-bg"
               :class="scope.row['status']">
               {{ statusObj[scope.row[item.prop]] }}
             </span>
-            <!-- <span v-else-if="item.prop==='date'">
-              {{  dayjs(scope.row['date']).format('YYYY-MM-DD ')   }}
-            </span> -->
-            <template v-else-if="item.prop === 'order_no'">
-              <el-tooltip :content="scope.row[item.prop]" effect="dark" placement="bottom-start">
-                <span v-if="scope.row[item.prop]"> ...{{
-                  scope.row[item.prop].substring(scope.row[item.prop].length - 7) }}</span>
-              </el-tooltip>
-            </template>
+            <span v-else-if="item.prop == 'market'">
+              {{ marketMap[scope.row.market] || '--' }}
+            </span>
             <template v-else-if="item.prop === 'uid'">
               <span class="truncate cursor-pointer" @click="copy(scope.row[item.prop])"> {{ scope.row[item.prop]
                 }}</span>
@@ -67,14 +61,23 @@
         </el-table-column>
         <el-table-column label="操作" :min-width="gw(140)" align="center">
           <template #default="scope">
-            <el-button link  :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" @click="showDialog(scope.row, 'showWinDialog')">中签管理</el-button>
-            <el-button link type="primary" @click="showDialog(scope.row, 'showDialog')">详情</el-button>
+
+            <div class="w-full flex justify-center items-center">
+                <el-button link class="underline" :type="checkAuthCode(22101)?'primary':'info'" :disabled="!checkAuthCode(22101)" @click="showDialog(scope.row, 'showWinDialog')">中签管理</el-button>
+                <b class="split-line"></b>
+                <el-button link class="underline" type="primary" @click="showDialog(scope.row, 'showDialog')">详情</el-button>
+             
+            </div>
+
           </template>
         </el-table-column>
         <template v-slot:empty>
           <el-empty class="nodata" description="暂无数据" />
         </template>
       </el-table>
+      
+    </div>
+    <div class="py-[10px]">
       <Pagination @changePage="getDataList" v-if="tableData.length" :currentPage="currentLastPage" />
     </div>
   </div>
@@ -150,16 +153,29 @@ const optionStatus = [
   },
 ]
 
+const marketMap = ref({
+  us:"美国",
+  japan:"日本",
+  india:"印度",
+  korea:"韩国",
+  germany:"德国",
+  uk:"英国",
+  singapore:"新加坡",
+  hongkong:"香港",
+  malaysia:'马来西亚'
+})
+
 const gw = (w)=>{
   return Math.round(1400/1920 * w)
 }
 
 const columnBase = ref([
-  { prop: 'order_no', label: '订单号',minWidth:gw(300),  align: 'center' },
+  { prop: 'order_no', label: '订单号',minWidth:gw(200),  align: 'center' },
+  { prop: 'market', label: '市场',minWidth:gw(120), align: 'center'},
   { prop: 'uid', label: 'UID', align: 'center',minWidth:gw(120) },
   { prop: 'username',width: 130, label: '用户名',minWidth:gw(140), align: 'center' },
   // { prop: 'father_username', label: '代理', align: 'center' },
-  { prop: 'company_name', label: '公司名称',minWidth:gw(200), align: 'center' },
+  { prop: 'company_name', label: '公司名称',minWidth:gw(240), align: 'center' },
   // { prop: 'market', label: '市场', align: 'center' },
   // { prop: 'symbol', label: '交易代码', align: 'center' },
   { prop: 'issue_price', label: '认购价格',minWidth:gw(120), align: 'center' },

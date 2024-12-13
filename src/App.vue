@@ -1023,8 +1023,8 @@ small {
     margin: 10px auto;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e7e7e7;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
 
     &:last-child {
       border: none;
