@@ -13,6 +13,9 @@
           <el-input v-model="form.closeddates" type="textarea" autocomplete="off" :rows="2" />
           <small class="txt-gray2 pt-[10px]">逗号隔开，示例：2023-01-12,2023-01-13</small> 
         </el-form-item>
+        <el-form-item label="是否启用" required prop="enable">
+          <el-switch v-model="form.enable" />
+        </el-form-item>
     </el-form>
     <template #footer>
       <div class="p-[10px]">
@@ -54,7 +57,8 @@ const showGoogle = ref(false)
 const form = ref({
   timezone: '',
   closeddates: '',
-  tradinghours: ''
+  tradinghours: '',
+  enable:true
 })
  
 
@@ -71,6 +75,7 @@ const getData = ()=>{
   apiTimeConfig({
     market:props.market
   }).then(res=>{
+    res[0].enable = res[0].enable === 'true' ? true : false
     form.value = res[0];
     loading.value = false;
   })

@@ -20,7 +20,13 @@
          <el-table-column v-for="(item, index) in columnBase" :min-width="item.minWidth" :key="index" :width="item.width" :label="item.label"
            :align="item.align">
            <template #default="scope">
-             <span>
+            <span class="flex items-center justify-center" v-if="item.prop == 'enable'">
+              <span class="status-bg" :class="scope.row[item.prop] == 'true' ? 'success' : 'fail'">
+                {{ scope.row[item.prop] == 'true' ? '启用' : '禁用'}}
+              </span>
+            </span>
+            
+             <span v-else>
                {{ scope.row[item.prop] }}
              </span>
            </template>
@@ -137,6 +143,7 @@ getDataList()
  }
  const columnBase = ref([
    { prop: 'name', label: '市场', align: 'center',minWidth:gw(200) },
+   { prop: 'enable', label: '是否启用', align: 'center',minWidth:gw(200) },
    { prop: 'closeddates', label: '休市日期', align: 'center',minWidth:gw(400) }
  ])
 
